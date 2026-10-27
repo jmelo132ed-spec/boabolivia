@@ -880,6 +880,7 @@ html[lang="es-GT"] body.boa-page {
 
 html[lang="es-GT"] body.boa-page .page-main,
 html[lang="es-GT"] body.boa-page .payment-success,
+html[lang="es-GT"] body.boa-page .boa-kx,
 html[lang="es-GT"] body.boa-page .av-page {
   padding-top: 104px;
 }
@@ -937,6 +938,237 @@ html[lang="es-GT"] .offers-timeout__btn {
 
 .payment-success__cta {
   background: #0b2744 !important;
+}
+
+html[lang="es-GT"] body.boa-kx-page {
+  background: #f7f7f7 !important;
+  font-family: Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+
+.boa-kx {
+  min-height: calc(100vh - 104px);
+  background: #f7f7f7;
+  padding: 0 24px 48px;
+}
+
+.boa-kx__wrap {
+  max-width: 1296px;
+  margin: 0 auto;
+  padding: 48px 0 24px;
+}
+
+.boa-kx-thanks {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  margin: 24px 0 0;
+}
+
+.boa-kx-thanks__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.boa-kx-thanks__icon {
+  color: #212b36;
+  display: block;
+}
+
+.boa-kx-thanks h1 {
+  margin: 0;
+  font: 700 18px/28px Lato, "Fira Sans", Arial, sans-serif;
+  color: #002e6e;
+  text-align: center;
+}
+
+.boa-kx-thanks p {
+  margin: 0;
+  font: 400 15px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #808080;
+  text-align: center;
+}
+
+.boa-kx-thanks__mail {
+  max-width: 640px;
+  margin-top: 8px !important;
+  color: #637381 !important;
+}
+
+.boa-kx-thanks__mail strong {
+  display: inline;
+  font-weight: 700;
+  color: #002e6e;
+  word-break: break-all;
+}
+
+.boa-kx-pnr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #f3c035;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+}
+
+.boa-kx-pnr h2 {
+  margin: 0;
+  font: 700 24px/36px Lato, "Fira Sans", Arial, sans-serif;
+  color: #005b96;
+}
+
+.boa-kx-pnr strong {
+  font: 700 24px/36px Lato, "Fira Sans", Arial, sans-serif;
+  color: #002e6e;
+  letter-spacing: 0.5px;
+}
+
+.boa-kx-pay {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(145, 158, 171, 0.16);
+  overflow: hidden;
+}
+
+.boa-kx-pay__summary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(0, 2fr) 24px;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 16px 16px;
+  border: 0;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+}
+
+.boa-kx-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 37px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 0.8px solid rgba(145, 158, 171, 0.32);
+  background: #e5f5ff;
+  color: #212b36;
+  font: 700 15px/26px Lato, "Fira Sans", Arial, sans-serif;
+}
+
+.boa-kx-pay__copy {
+  font: 600 15px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+
+.boa-kx-pay__chev {
+  color: #212b36;
+  justify-self: end;
+  transition: transform 0.2s ease;
+}
+
+.boa-kx-pay.is-open .boa-kx-pay__chev {
+  transform: rotate(180deg);
+}
+
+.boa-kx-pay__body {
+  padding: 8px 16px 16px;
+}
+
+.boa-kx-pay__body p {
+  margin: 0;
+  padding: 10px 16px;
+  font: 400 15px/20px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+
+.boa-kx-pay__body b {
+  font-weight: 700;
+  color: #637381;
+}
+
+.boa-kx-itin {
+  margin: 24px 0 0;
+}
+
+.boa-kx-itin h2 {
+  margin: 0;
+  font: 700 18px/28px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+
+.boa-kx-itin > p {
+  margin: 0 0 8px;
+  font: 400 15px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #808080;
+}
+
+.boa-kx-legs {
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 20px 16px;
+}
+
+.boa-kx-legs__pax {
+  margin: 8px 0 4px;
+  font: 700 15px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+
+html[lang="es-GT"] body.boa-kx-page a.boa-kx-search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 28px 0 0;
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #e5f5ff;
+  color: #002e6e;
+  font: 700 15px/26px Lato, "Fira Sans", Arial, sans-serif;
+  text-decoration: none;
+}
+
+html[lang="es-GT"] body.boa-kx-page a.boa-kx-search:hover {
+  background: #d6eefc;
+  color: #002e6e;
+}
+
+@media (max-width: 900px) {
+  .boa-kx {
+    padding: 0 16px 40px;
+  }
+  .boa-kx__wrap {
+    padding: 16px 0 24px;
+  }
+  .boa-kx-thanks {
+    padding: 24px 16px;
+    margin-top: 8px;
+  }
+  .boa-kx-pnr {
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+  .boa-kx-pnr h2,
+  .boa-kx-pnr strong {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .boa-kx-pay__summary {
+    grid-template-columns: auto 1fr 24px;
+    align-items: start;
+  }
+  .boa-kx-pay__copy {
+    font-size: 13px;
+    line-height: 20px;
+  }
 }
 
 html[lang="es-GT"] .offers-wait-screen__logo {
@@ -1440,9 +1672,47 @@ html[lang="es-GT"] body.boa-reserva .boa-flight__path,
   justify-content: space-between;
   gap: 8px;
 }
-.boa-farebox strong {
+.boa-farebox strong,
+.boa-farebox .boa-deal__now {
   font: 700 20px/1.2 Lato, "Fira Sans", Arial, sans-serif;
   color: #002e6e;
+}
+
+.boa-deal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.boa-deal__was {
+  font: 400 13px/16px Lato, "Fira Sans", Arial, sans-serif;
+  color: #919eab;
+  text-decoration: line-through;
+}
+
+.boa-deal__note {
+  display: block;
+  margin-top: 4px;
+  font: 400 12px/16px Lato, "Fira Sans", Arial, sans-serif;
+  color: #005b96;
+}
+
+.boa-fare__price .boa-deal--fare {
+  display: block;
+}
+
+.boa-fare__price .boa-deal__was {
+  display: block;
+  font: 400 16px/20px Lato, "Fira Sans", Arial, sans-serif;
+  color: #919eab;
+}
+
+.boa-fare__price .boa-deal__now {
+  display: block;
+  font: 700 32px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #005b96;
 }
 .boa-farebox__chev {
   position: static;
@@ -2283,7 +2553,6 @@ html[lang="es-GT"] body.boa-reserva.is-review-page .boa-res-bar {
 }
 .boa-rev-plane.is-back {
   display: inline-block;
-  transform: scaleX(-1);
 }
 .boa-rev-tl { display: flex; flex-direction: column; margin: 0 0 8px; }
 .boa-rev-tl__stop { min-height: 22px; }

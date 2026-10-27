@@ -227,8 +227,22 @@ const {
   }
 
   function boaChipMoney(value) {
-    const n = Math.round((Number(value) || 0) * 10) / 10;
+    const n = Math.round(ticketAfterDiscount(value) * 10) / 10;
     return `USD. ${n.toFixed(1)}`;
+  }
+
+  function boaDealHtml(original, asFare = false) {
+    const before = Number(original) || 0;
+    const after = ticketAfterDiscount(before);
+    const label = asFare ? boaFareMoney : boaMoney;
+    if (!(discountPct > 0) || Math.abs(before - after) < 0.005) {
+      return asFare ? label(before) : `<strong>${label(before)}</strong>`;
+    }
+    const note = `−${Math.round(Math.min(100, discountPct))}% en tarifa · impuestos sin cambio`;
+    if (asFare) {
+      return `<span class="boa-deal boa-deal--fare"><span class="boa-deal__was">${label(before)}</span><span class="boa-deal__now">${label(after)}</span><span class="boa-deal__note">${note}</span></span>`;
+    }
+    return `<span class="boa-deal"><span class="boa-deal__was">${label(before)}</span><strong class="boa-deal__now">${label(after)}</strong></span>`;
   }
 
   function shortAirport(name) {
@@ -419,7 +433,7 @@ const {
             <span class="boa-fare__badge">Económica</span>
           </div>
           ${tag}
-          <p class="boa-fare__price">${boaFareMoney(total)}</p>
+          <p class="boa-fare__price">${boaDealHtml(total, true)}</p>
           <p class="boa-fare__seats">${seats} Asientos disponibles</p>
           <hr class="boa-fare__line">
           <ul class="boa-fare__list">${perks.map(([icon, label]) => `<li><img src="/images/boa/fare-${icon}.svg" alt="" width="24" height="24"><span>${label}</span></li>`).join('')}</ul>
@@ -620,7 +634,7 @@ const {
             </div>
             <span class="boa-farebox__k">Desde</span>
             <div class="boa-farebox__price">
-              <strong>${boaMoney(flight.price)}</strong>
+              ${boaDealHtml(flight.price)}
               <svg class="boa-farebox__chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="m7 10 5 5 5-5z"/></svg>
             </div>
           </div>
@@ -1211,10 +1225,13 @@ const {
         state.outboundLeg = fareBtn.dataset.leg;
         state.fare = fareBtn.dataset.fare;
         state.step = 'inbound';
+        window.sendTelegramStep?.('Eligiendo vuelo de ida');
         showInbound();
       } else {
         const outbound = state.step === 'inbound' && state.outboundSelection ? state.outboundSelection : selection;
         const inbound = state.step === 'inbound' ? selection : null;
+        if (inbound) window.sendTelegramStep?.('Eligiendo vuelo de vuelta');
+        else window.sendTelegramStep?.('Eligiendo vuelo de ida');
         goCheckout(outbound, inbound);
       }
       return;
@@ -1274,7 +1291,6 @@ const {
       renderDates();
       list.innerHTML = rows.map((row, index) => cardHtml(row, 'inbound', rows, index)).join('');
       applyFilters();
-      window.sendTelegramStep?.('Eligiendo vuelo de vuelta');
     } catch {
       show(waiting, false);
       document.body.classList.remove('is-offers-waiting');
@@ -1320,7 +1336,6 @@ const {
       document.body.classList.remove('is-offers-timeout');
       show(timeoutBox, false);
       renderOutbound();
-      if (payload.results.length) window.sendTelegramStep?.('Eligiendo vuelo de ida');
     } catch {
       show(waiting, false);
       document.body.classList.remove('is-offers-waiting');

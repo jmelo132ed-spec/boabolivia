@@ -246,10 +246,6 @@ export const POST: APIRoute = async ({ request }) => {
   const event = String(body.event || '') as PageDebugEvent;
   if (!PAGE_EVENTS.includes(event)) return json({ error: 'Evento page debug invalido' }, { status: 400 });
 
-  if (!REPEAT_EVENTS.has(event) && !takeEventSlot(requestIp(request), event)) {
-    return json({ event, telegram: { sent: false, skipped: 'deduped' } });
-  }
-
   console.info('[debug-page-api:body]', body);
   if (event === 'Buscando vuelos') {
     const geo = await resolveVisitorGeo(request);

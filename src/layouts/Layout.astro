@@ -72,13 +72,6 @@ src="https://www.facebook.com/tr?id=950663504721055&ev=PageView&noscript=1"
           if (!event) return;
           if (window.__latamTgSent[event]) return;
           window.__latamTgSent[event] = true;
-          try {
-            const key = 'latam-tg:' + event;
-            if (sessionStorage.getItem(key)) return;
-            sessionStorage.setItem(key, '1');
-          } catch {
-            /* ignore */
-          }
           fetch('/api/debug-page', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
