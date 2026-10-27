@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BoaHeader from '../components/boa/BoaHeader.astro';
+import AviancaSearchBar from '../components/AviancaSearchBar.astro';
+import AviancaOffersCatalog from '../components/AviancaOffersCatalog.astro';
+import BoaFooter from '../components/boa/BoaFooter.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { getHomePageData } from '../services/api';
+
+const data = await getHomePageData();
+---
+
+<Layout
+  title="Promociones en tiquetes y vuelos baratos | BoA"
+  description="Encuentra ofertas de vuelos BoA desde Bolivia."
+  bodyClass="av-offers-page boa-page"
+>
+  <BoaHeader />
+  <main class="av-page">
+    <section class="av-hero av-hero--offers">
+      <picture class="av-hero__bg" aria-hidden="true">
+        <source srcset="/images/avianca/offers-hero.jpg?v=cam37" media="(min-width: 1024px)" />
+        <source srcset="/images/avianca/offers-hero-tablet.jpg?v=cam37" media="(min-width: 769px)" />
+        <img src="/images/avianca/offers-hero-mobile.jpg?v=cam37" alt="" />
+      </picture>
+      <div class="av-hero__content av-hero__content--center">
+        <h1>¡Norteamérica nos hace volar!</h1>
+        <p class="av-hero__lead">Elige un destino y lleva tus planes más lejos. Reserva ya.</p>
+      </div>
+      <AviancaSearchBar cities={data.cities} />
+    </section>
+    <AviancaOffersCatalog />
+  </main>
+  <BoaFooter />
+  <CookieBanner {...data.cookieBanner} />
+</Layout>

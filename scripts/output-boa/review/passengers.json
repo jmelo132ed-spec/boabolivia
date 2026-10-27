@@ -1,0 +1,952 @@
+{
+  "url": "https://ef.boa.bo:5097/Availability/y1b0Ba4Vk9qbRFvBGZcm5Dk4vqz1FJlayEjPOFtmTCQ",
+  "title": "public: JourneyView",
+  "text": "Cochabamba a La Paz\nEditar\n\nmar.. 3 nov.\n\n1 Adulto\n\nResumen de compra USD.\n1\nVuelo de ida\n2\nPasajeros\n3\nReserva\n4\nPago\nSelecciona tu vuelo de ida\nmar.. 3 nov. 2026. - Hacia La Paz\n Previous\n\nSáB. 31 Oct.\n\nUSD. 66.7\n\nDom. 1 Nov.\n\nUSD. 74.8\n\nLun. 2 Nov.\n\nUSD. 82.8\n\nMar. 3 Nov.\n\nUSD. 225.4\n\nMié. 4 Nov.\n\nUSD. 74.8\n\nJue. 5 Nov.\n\nUSD. 58.7\n\nVie. 6 Nov.\n\nUSD. 58.7\n\n Next\n\nOrdenar por:\n\nMás relevante\nPrecio\nHorario de salida\nDuración\nVuelos directos\nVuelos con conexión\nmar. 03 nov. 2026\n22:25\nCBB\n\n1 Conexión \n\nCBB\nAir Int Jorge Wilstermann\nLPB\nAir Int El Alto\n8 horas y 15 minutos\nmié. 04 nov. 2026\n06:40\nLPB\nEconómica\n\nDesde\n\nUSD 225.4\nmar. 03 nov. 2026\n16:20\nCBB\n\n1 Conexión \n\nCBB\nAir Int Jorge Wilstermann\nLPB\nAir Int El Alto\n5 horas y 55 minutos\nmar. 03 nov. 2026\n22:15\nLPB\nEconómica\n\nDesde\n\nUSD 250.6\nmar. 03 nov. 2026\n13:35\nCBB\n\n1 Conexión \n\nCBB\nAir Int Jorge Wilstermann\nLPB\nAir Int El Alto\n4 horas y 55 minutos\nmar. 03 nov. 2026\n18:30\nLPB\nEconómica\n\nDesde\n\nUSD 256.4",
+  "body": {
+    "tag": "body",
+    "className": "",
+    "text": "Cochabamba a La Paz Editar mar.. 3 nov. 1 Adulto Resumen de compra USD. 1 Vuelo de ida 2 Pasajeros 3 Reserva 4 Pago Selecciona tu vuelo de ida mar.. 3 nov. 2026. - Hacia La Paz Previous SáB. 31 Oct. USD. 66.7 Dom. 1 Nov. USD. 74.8 Lun. 2 Nov. USD. 82.8 Mar. 3 Nov. USD. 225.4 Mié.",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "color": "rgb(33, 43, 54)",
+    "bg": "rgb(247, 247, 247)",
+    "bgImg": "none",
+    "font": "400 17px/25.5px Lato",
+    "pad": "0px 0px 0px 0px",
+    "margin": "0px 0px 0px 0px",
+    "radius": "0px",
+    "shadow": "none",
+    "border": "0px none rgb(33, 43, 54)"
+  },
+  "headings": [
+    {
+      "tag": "h4",
+      "className": "MuiTypography-root MuiTypography-h4 MuiTypography-noWrap css-142jc8s-MuiTypography-root",
+      "text": "Selecciona tu vuelo de ida",
+      "rect": {
+        "x": 88,
+        "y": 201,
+        "w": 281,
+        "h": 36
+      },
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "900 24px/36px Lato",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgb(255, 255, 255)"
+    }
+  ],
+  "buttons": [
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textWarning MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorWarning MuiButton-disableElevation MuiButton-root MuiButton-text MuiButton-textWarning M",
+      "text": "Editar",
+      "rect": {
+        "x": 191,
+        "y": 9,
+        "w": 62,
+        "h": 24
+      },
+      "color": "rgb(255, 171, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "700 14px/24px Lato",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "8px",
+      "shadow": "none",
+      "border": "0px none rgb(255, 171, 0)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButton-disableElevation MuiButton-root MuiButton-outlined MuiButt",
+      "text": "Resumen de compra USD.",
+      "rect": {
+        "x": 1193,
+        "y": 24,
+        "w": 223,
+        "h": 40
+      },
+      "color": "rgb(0, 46, 110)",
+      "bg": "rgb(229, 245, 255)",
+      "bgImg": "none",
+      "font": "700 15px/25.7143px Lato",
+      "pad": "5px 12px 5px 12px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "8px",
+      "shadow": "none",
+      "border": "2px solid rgb(0, 46, 110)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiStepButton-root MuiStepButton-horizontal css-u9i5ex-MuiButtonBase-root-MuiStepButton-root",
+      "text": "1 Vuelo de ida",
+      "rect": {
+        "x": 32,
+        "y": 93,
+        "w": 146,
+        "h": 44
+      },
+      "color": "rgb(33, 43, 54)",
+      "bg": "rgb(229, 245, 255)",
+      "bgImg": "none",
+      "font": "400 13.3333px/normal Arial",
+      "pad": "10px 16px 10px 16px",
+      "margin": "-24px -16px -24px -16px",
+      "radius": "100px",
+      "shadow": "none",
+      "border": "0px none rgb(33, 43, 54)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiStepButton-root MuiStepButton-horizontal css-u9i5ex-MuiButtonBase-root-MuiStepButton-root",
+      "text": "2 Pasajeros",
+      "rect": {
+        "x": 473,
+        "y": 93,
+        "w": 129,
+        "h": 44
+      },
+      "color": "rgb(33, 43, 54)",
+      "bg": "rgb(229, 245, 255)",
+      "bgImg": "none",
+      "font": "400 13.3333px/normal Arial",
+      "pad": "10px 16px 10px 16px",
+      "margin": "-24px -16px -24px -16px",
+      "radius": "100px",
+      "shadow": "none",
+      "border": "0px none rgb(33, 43, 54)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiStepButton-root MuiStepButton-horizontal css-u9i5ex-MuiButtonBase-root-MuiStepButton-root",
+      "text": "3 Reserva",
+      "rect": {
+        "x": 897,
+        "y": 93,
+        "w": 118,
+        "h": 44
+      },
+      "color": "rgb(33, 43, 54)",
+      "bg": "rgb(229, 245, 255)",
+      "bgImg": "none",
+      "font": "400 13.3333px/normal Arial",
+      "pad": "10px 16px 10px 16px",
+      "margin": "-24px -16px -24px -16px",
+      "radius": "100px",
+      "shadow": "none",
+      "border": "0px none rgb(33, 43, 54)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiStepButton-root MuiStepButton-horizontal css-u9i5ex-MuiButtonBase-root-MuiStepButton-root",
+      "text": "4 Pago",
+      "rect": {
+        "x": 1311,
+        "y": 93,
+        "w": 97,
+        "h": 44
+      },
+      "color": "rgb(33, 43, 54)",
+      "bg": "rgb(229, 245, 255)",
+      "bgImg": "none",
+      "font": "400 13.3333px/normal Arial",
+      "pad": "10px 16px 10px 16px",
+      "margin": "-24px -16px -24px -16px",
+      "radius": "100px",
+      "shadow": "none",
+      "border": "0px none rgb(33, 43, 54)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1wg1gvn-MuiButtonBase-root-MuiIconButton-root",
+      "text": "",
+      "rect": {
+        "x": 48,
+        "y": 371,
+        "w": 36,
+        "h": 36
+      },
+      "color": "rgba(255, 255, 255, 0.8)",
+      "bg": "rgb(255, 202, 56)",
+      "bgImg": "none",
+      "font": "400 24px/normal Arial",
+      "pad": "8px 8px 8px 8px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "50%",
+      "shadow": "rgba(0, 0, 0, 0.3) 0px 4px 6px -2px",
+      "border": "0px none rgba(255, 255, 255, 0.8)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "slick-arrow slick-prev",
+      "text": "Previous",
+      "rect": {
+        "x": 43,
+        "y": 377,
+        "w": 20,
+        "h": 20
+      },
+      "color": "rgba(0, 0, 0, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "400 0px/0px Arial",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgba(0, 0, 0, 0)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "slick-arrow slick-next slick-disabled",
+      "text": "Next",
+      "rect": {
+        "x": 1377,
+        "y": 377,
+        "w": 20,
+        "h": 20
+      },
+      "color": "rgba(0, 0, 0, 0)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "400 0px/0px Arial",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgba(0, 0, 0, 0)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected css-dowlzv-MuiButtonBase-root-MuiTab-root",
+      "text": "Más relevante",
+      "rect": {
+        "x": 950,
+        "y": 467,
+        "w": 99,
+        "h": 48
+      },
+      "color": "rgb(33, 43, 54)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "600 15px/18.75px Lato",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 40px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgb(33, 43, 54)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorInherit MuiButton-disableElevation MuiButton-fullWidth MuiButton-root MuiBu",
+      "text": "Más relevante",
+      "rect": {
+        "x": 950,
+        "y": 476,
+        "w": 99,
+        "h": 30
+      },
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(0, 46, 110)",
+      "bgImg": "none",
+      "font": "700 13px/22.2857px Lato",
+      "pad": "8px 8px 8px 8px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "6px",
+      "shadow": "none",
+      "border": "0px none rgb(255, 255, 255)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiTab-root MuiTab-textColorInherit css-dowlzv-MuiButtonBase-root-MuiTab-root",
+      "text": "Precio",
+      "rect": {
+        "x": 1089,
+        "y": 467,
+        "w": 48,
+        "h": 48
+      },
+      "color": "rgb(99, 115, 129)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "600 15px/18.75px Lato",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 40px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgb(99, 115, 129)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiTab-root MuiTab-textColorInherit css-dowlzv-MuiButtonBase-root-MuiTab-root",
+      "text": "Horario de salida",
+      "rect": {
+        "x": 1177,
+        "y": 467,
+        "w": 114,
+        "h": 48
+      },
+      "color": "rgb(99, 115, 129)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "600 15px/18.75px Lato",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 40px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgb(99, 115, 129)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiTab-root MuiTab-textColorInherit css-dowlzv-MuiButtonBase-root-MuiTab-root",
+      "text": "Duración",
+      "rect": {
+        "x": 1330,
+        "y": 467,
+        "w": 62,
+        "h": 48
+      },
+      "color": "rgb(99, 115, 129)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "font": "600 15px/18.75px Lato",
+      "pad": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "0px",
+      "shadow": "none",
+      "border": "0px none rgb(99, 115, 129)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButton-disableElevation MuiButton-fullWidth MuiButton-root Mui",
+      "text": "",
+      "rect": {
+        "x": 104,
+        "y": 1320,
+        "w": 1232,
+        "h": 50
+      },
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(0, 46, 110)",
+      "bgImg": "none",
+      "font": "700 15px/25.7143px Lato",
+      "pad": "12px 20px 12px 20px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "6px",
+      "shadow": "none",
+      "border": "0px none rgb(255, 255, 255)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButton-disableElevation MuiButton-fullWidth MuiButton-root Mui",
+      "text": "",
+      "rect": {
+        "x": 104,
+        "y": 1487,
+        "w": 1232,
+        "h": 50
+      },
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(0, 46, 110)",
+      "bgImg": "none",
+      "font": "700 15px/25.7143px Lato",
+      "pad": "12px 20px 12px 20px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "6px",
+      "shadow": "none",
+      "border": "0px none rgb(255, 255, 255)",
+      "aria": null
+    },
+    {
+      "tag": "button",
+      "className": "MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButton-disableElevation MuiButton-fullWidth MuiButton-root Mui",
+      "text": "",
+      "rect": {
+        "x": 104,
+        "y": 1653,
+        "w": 1232,
+        "h": 50
+      },
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(0, 46, 110)",
+      "bgImg": "none",
+      "font": "700 15px/25.7143px Lato",
+      "pad": "12px 20px 12px 20px",
+      "margin": "0px 0px 0px 0px",
+      "radius": "6px",
+      "shadow": "none",
+      "border": "0px none rgb(255, 255, 255)",
+      "aria": null
+    }
+  ],
+  "imgs": [
+    {
+      "src": "https://ef.boa.bo:5097/Content/Images/boa.svg",
+      "w": 185,
+      "h": 150,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "alt": ""
+    },
+    {
+      "src": "https://ef.boa.bo:5097/React/1dec18db9bb2ace1c2b1dd0ffb106f9a.png",
+      "w": 177,
+      "h": 37,
+      "rect": {
+        "x": 472,
+        "y": 693.09375,
+        "width": 160,
+        "height": 33.4375,
+        "top": 693.09375,
+        "right": 632,
+        "bottom": 726.53125,
+        "left": 472
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://ef.boa.bo:5097/React/2f9d089b3e65e32636247262e6f85699.png",
+      "w": 234,
+      "h": 128,
+      "rect": {
+        "x": 1080,
+        "y": 650.5,
+        "width": 60,
+        "height": 32.8125,
+        "top": 650.5,
+        "right": 1140,
+        "bottom": 683.3125,
+        "left": 1080
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/4e48f9b4-a527-4c2e-ae77-0bbe797425b1.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1008.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1008.0625,
+        "right": 128,
+        "bottom": 1032.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/b6ca13bf-170c-4e45-9a66-974fb43f4a63.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1040.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1040.0625,
+        "right": 128,
+        "bottom": 1064.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/7200ab56-630d-4c5b-a999-37c06664928b.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1072.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1072.0625,
+        "right": 128,
+        "bottom": 1096.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/4e48f9b4-a527-4c2e-ae77-0bbe797425b1.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1104.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1104.0625,
+        "right": 128,
+        "bottom": 1128.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/8131578f-1e94-4943-addf-643d293687fc.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1136.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1136.0625,
+        "right": 128,
+        "bottom": 1160.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d56d520e-9562-479b-8454-7b28aa0509a2.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1168.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1168.0625,
+        "right": 128,
+        "bottom": 1192.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d56d520e-9562-479b-8454-7b28aa0509a2.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1200.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1200.0625,
+        "right": 128,
+        "bottom": 1224.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d682fae0-6f74-4164-97ab-5ea640477dbc.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1232.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1232.0625,
+        "right": 128,
+        "bottom": 1256.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/8d06f80a-31ce-43ae-83be-d62576bfd753.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1264.0625,
+        "width": 24,
+        "height": 24,
+        "top": 1264.0625,
+        "right": 128,
+        "bottom": 1288.0625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://ef.boa.bo:5097/React/1dec18db9bb2ace1c2b1dd0ffb106f9a.png",
+      "w": 177,
+      "h": 37,
+      "rect": {
+        "x": 472,
+        "y": 859.65625,
+        "width": 160,
+        "height": 33.4375,
+        "top": 859.65625,
+        "right": 632,
+        "bottom": 893.09375,
+        "left": 472
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://ef.boa.bo:5097/React/2f9d089b3e65e32636247262e6f85699.png",
+      "w": 234,
+      "h": 128,
+      "rect": {
+        "x": 1080,
+        "y": 817.0625,
+        "width": 60,
+        "height": 32.8125,
+        "top": 817.0625,
+        "right": 1140,
+        "bottom": 849.875,
+        "left": 1080
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/4e48f9b4-a527-4c2e-ae77-0bbe797425b1.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1174.625,
+        "width": 24,
+        "height": 24,
+        "top": 1174.625,
+        "right": 128,
+        "bottom": 1198.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/b6ca13bf-170c-4e45-9a66-974fb43f4a63.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1206.625,
+        "width": 24,
+        "height": 24,
+        "top": 1206.625,
+        "right": 128,
+        "bottom": 1230.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/7200ab56-630d-4c5b-a999-37c06664928b.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1238.625,
+        "width": 24,
+        "height": 24,
+        "top": 1238.625,
+        "right": 128,
+        "bottom": 1262.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/4e48f9b4-a527-4c2e-ae77-0bbe797425b1.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1270.625,
+        "width": 24,
+        "height": 24,
+        "top": 1270.625,
+        "right": 128,
+        "bottom": 1294.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/8131578f-1e94-4943-addf-643d293687fc.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1302.625,
+        "width": 24,
+        "height": 24,
+        "top": 1302.625,
+        "right": 128,
+        "bottom": 1326.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d56d520e-9562-479b-8454-7b28aa0509a2.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1334.625,
+        "width": 24,
+        "height": 24,
+        "top": 1334.625,
+        "right": 128,
+        "bottom": 1358.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d56d520e-9562-479b-8454-7b28aa0509a2.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1366.625,
+        "width": 24,
+        "height": 24,
+        "top": 1366.625,
+        "right": 128,
+        "bottom": 1390.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d682fae0-6f74-4164-97ab-5ea640477dbc.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1398.625,
+        "width": 24,
+        "height": 24,
+        "top": 1398.625,
+        "right": 128,
+        "bottom": 1422.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/8d06f80a-31ce-43ae-83be-d62576bfd753.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1430.625,
+        "width": 24,
+        "height": 24,
+        "top": 1430.625,
+        "right": 128,
+        "bottom": 1454.625,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://ef.boa.bo:5097/React/1dec18db9bb2ace1c2b1dd0ffb106f9a.png",
+      "w": 177,
+      "h": 37,
+      "rect": {
+        "x": 472,
+        "y": 1026.21875,
+        "width": 160,
+        "height": 33.4375,
+        "top": 1026.21875,
+        "right": 632,
+        "bottom": 1059.65625,
+        "left": 472
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://ef.boa.bo:5097/React/2f9d089b3e65e32636247262e6f85699.png",
+      "w": 234,
+      "h": 128,
+      "rect": {
+        "x": 1080,
+        "y": 983.625,
+        "width": 60,
+        "height": 32.8125,
+        "top": 983.625,
+        "right": 1140,
+        "bottom": 1016.4375,
+        "left": 1080
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/4e48f9b4-a527-4c2e-ae77-0bbe797425b1.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1341.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1341.1875,
+        "right": 128,
+        "bottom": 1365.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/b6ca13bf-170c-4e45-9a66-974fb43f4a63.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1373.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1373.1875,
+        "right": 128,
+        "bottom": 1397.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/7200ab56-630d-4c5b-a999-37c06664928b.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1405.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1405.1875,
+        "right": 128,
+        "bottom": 1429.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/4e48f9b4-a527-4c2e-ae77-0bbe797425b1.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1437.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1437.1875,
+        "right": 128,
+        "bottom": 1461.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/8131578f-1e94-4943-addf-643d293687fc.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1469.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1469.1875,
+        "right": 128,
+        "bottom": 1493.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d56d520e-9562-479b-8454-7b28aa0509a2.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1501.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1501.1875,
+        "right": 128,
+        "bottom": 1525.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d56d520e-9562-479b-8454-7b28aa0509a2.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1533.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1533.1875,
+        "right": 128,
+        "bottom": 1557.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d682fae0-6f74-4164-97ab-5ea640477dbc.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1565.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1565.1875,
+        "right": 128,
+        "bottom": 1589.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/8d06f80a-31ce-43ae-83be-d62576bfd753.svg+xml",
+      "w": 150,
+      "h": 150,
+      "rect": {
+        "x": 104,
+        "y": 1597.1875,
+        "width": 24,
+        "height": 24,
+        "top": 1597.1875,
+        "right": 128,
+        "bottom": 1621.1875,
+        "left": 104
+      },
+      "alt": "empty content"
+    }
+  ]
+}

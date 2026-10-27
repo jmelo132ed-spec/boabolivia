@@ -1,0 +1,3147 @@
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/lato-300.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/lato-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/lato-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/lato-900.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.boa-page {
+  --boa-navy: #002f6e;
+  --boa-navy-2: #005d96;
+  --boa-gold: #ffca38;
+  --boa-gold-2: #ffbe30;
+  --boa-gold-text: #654700;
+  --boa-text: #1b2430;
+  --boa-muted: #5b6573;
+  --boa-max: 1280px;
+  font-family: Lato, sans-serif;
+  color: var(--boa-text);
+  background: #fff;
+}
+
+.boa-page a { text-decoration: none; color: inherit; }
+.boa-wrap { width: min(var(--boa-max), calc(100% - 48px)); margin: 0 auto; }
+
+.boa-nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+}
+.boa-nav__bar {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  background: rgba(255,255,255,.5);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+.boa-nav__inner {
+  width: min(var(--boa-max), 100%);
+  padding: 0 50px 0 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.boa-nav__left { display: flex; align-items: center; gap: 8px; }
+.boa-logo { width: 96px; height: auto; display: block; }
+.boa-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 16px;
+  border: 0;
+  background: none;
+  font: 400 16px/24px Lato, sans-serif;
+  color: #111;
+  cursor: pointer;
+}
+.boa-lang__pipe { opacity: .55; }
+.boa-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #111;
+}
+.boa-nav__links > a,
+.boa-drop > button {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+}
+.boa-nav__links > a:hover,
+.boa-drop:hover > button { color: var(--boa-navy); }
+.boa-drop { position: relative; }
+.boa-drop__menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(11,39,68,.16);
+  padding: 16px 18px;
+  z-index: 50;
+}
+.boa-drop:hover .boa-drop__menu,
+.boa-drop:focus-within .boa-drop__menu { display: grid; gap: 8px; }
+.boa-drop--lang .boa-drop__menu { left: 0; right: auto; min-width: 200px; }
+.boa-drop__menu p {
+  margin: 10px 0 2px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #000;
+}
+.boa-drop__menu p:first-child { margin-top: 0; }
+.boa-drop__menu a {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b4b4b;
+}
+.boa-drop__menu a:hover { color: var(--boa-navy); text-decoration: underline; }
+
+.boa-hero {
+  position: relative;
+  padding: 0 0 240px;
+  background: #fff;
+}
+.boa-hero__bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+}
+.boa-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: min(var(--boa-max), 100%);
+  margin: 0 auto;
+  height: 480px;
+  padding: 128px 48px 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+.boa-hero__card {
+  width: fit-content;
+  background: var(--boa-navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.boa-hero__card h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.boa-hero__card p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.boa-book { position: relative; z-index: 20; margin-top: 132px; }
+.boa-book__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 64px;
+}
+.boa-book__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  font: 500 14px/1 Lato, sans-serif;
+  cursor: pointer;
+  border-left: 1px solid rgba(31,41,55,.3);
+}
+.boa-book__tab:first-child { border-left: 0; border-radius: 16px 0 0 0; }
+.boa-book__tab:last-child { border-radius: 0 16px 0 0; }
+.boa-book__tab.is-on {
+  background: #fff;
+  color: var(--boa-navy);
+  font-weight: 700;
+}
+.boa-book__tab:not(.is-on):hover { background: rgba(0,0,0,.75); }
+.boa-book__panel {
+  background: #fff;
+  border-radius: 0 0 16px 16px;
+  padding: 20px 32px 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+}
+.boa-book__panel.hidden { display: none; }
+
+.boa-trip { display: flex; gap: 12px; margin-bottom: 16px; }
+.boa-trip__btn {
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font: 700 16px/24px Lato, sans-serif;
+  cursor: pointer;
+  background: #f1f5f9;
+  color: #1f2937;
+}
+.boa-trip__btn.is-on {
+  background: var(--boa-gold);
+  color: var(--boa-gold-text);
+}
+
+.boa-fields {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr .85fr;
+  gap: 12px;
+  align-items: stretch;
+  overflow: visible;
+}
+.boa-box {
+  position: relative;
+  min-height: 64px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+.boa-box--od { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; gap: 4px; overflow: visible; }
+.boa-box--od:focus-within {
+  border-color: #002f6e;
+  box-shadow: 0 0 0 1px #002f6e;
+}
+.boa-box--dates { display: grid; grid-template-columns: 1fr 28px 1fr; align-items: center; overflow: visible; z-index: 12; }
+.boa-box--dates.is-oneway { grid-template-columns: 1fr; }
+.boa-box--dates.is-oneway .boa-dates__dash,
+.boa-box--dates.is-oneway #boa-return-btn { display: none; }
+.boa-box--pax {
+  width: 100%;
+  text-align: left;
+  font: 700 16px/24px Lato, sans-serif;
+  color: #111;
+  cursor: pointer;
+}
+.boa-field { position: relative; display: flex; align-items: center; min-width: 0; height: 64px; }
+.boa-field input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: 700 16px/24px Lato, sans-serif;
+  color: #111;
+  outline: none;
+  padding: 18px 0 0;
+}
+.boa-field--btn {
+  border: 0;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.boa-field--btn.is-off { opacity: .35; pointer-events: none; }
+.boa-ph {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font: 400 16px/24px Lato, sans-serif;
+  pointer-events: none;
+  opacity: 0;
+}
+.boa-ph.is-on { opacity: 1; }
+.boa-val { font: 700 16px/24px Lato, sans-serif; color: #111; }
+.boa-val:empty { display: none; }
+.boa-swap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--boa-gold);
+  background: #fff;
+  color: #e8a317;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.boa-dates__dash {
+  width: 18px;
+  height: 3px;
+  background: var(--boa-gold);
+  border-radius: 2px;
+  justify-self: center;
+}
+.boa-form__foot {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  min-height: 64px;
+}
+.boa-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 160px;
+  height: 64px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--boa-navy);
+  color: #fff;
+  font: 700 16px/24px Lato, sans-serif;
+  cursor: pointer;
+}
+.boa-search-btn:hover { filter: brightness(1.08); }
+.boa-form__error { margin: 0 auto 0 0; color: #b42318; font-size: 14px; }
+.boa-form__error.hidden { display: none; }
+.boa-alt {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0 12px;
+}
+.boa-box--float {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 2px;
+  min-height: 64px;
+  padding: 8px 16px;
+}
+.boa-float {
+  position: static;
+  display: block;
+  transform: none;
+  opacity: 1;
+  color: #6b7280;
+  font: 400 12px/16px Lato, sans-serif;
+  pointer-events: none;
+}
+.boa-alt input {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: 700 16px/24px Lato, sans-serif;
+  color: #111;
+  outline: none;
+  padding: 0;
+  min-height: 24px;
+}
+.boa-alt input[type="date"] {
+  color: #111;
+}
+.boa-suggest.hidden,
+.boa-paxbox.hidden,
+.boa-cal.hidden { display: none; }
+.boa-paxbox {
+  position: fixed;
+  z-index: 80;
+  background: #fff;
+}
+.boa-paxbox {
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.16);
+}
+.boa-suggest {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 90;
+  width: 100%;
+  min-height: 320px;
+  max-height: min(40dvh, 360px);
+  overflow-y: auto;
+  padding: 4px;
+  background: #fff;
+  border: 2px solid #9ca3af;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+}
+.boa-st {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: 0;
+  background: none;
+  text-align: left;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.boa-st:hover { background: #f3f4f6; }
+.boa-st__left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.boa-st__ico {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.boa-st__ico svg {
+  width: 24px;
+  height: 24px;
+  transition: transform .3s ease;
+}
+.boa-st:hover .boa-st__ico svg { transform: translateY(-6px); }
+.boa-st__city {
+  display: flex;
+  flex-direction: column;
+  color: #2d2d2d;
+  transition: transform .3s ease;
+}
+.boa-st:hover .boa-st__city { transform: translateX(4px); }
+.boa-st__city strong { font: 900 16px/24px Lato, sans-serif; color: #2d2d2d; }
+.boa-st__city small { font: 400 12px/16px Lato, sans-serif; color: #6b7280; }
+.boa-st__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  min-width: 0;
+  color: #2d2d2d;
+}
+.boa-st__right strong { font: 500 16px/24px Lato, sans-serif; }
+.boa-st__right small {
+  font: 400 12px/16px Lato, sans-serif;
+  max-width: 220px;
+}
+.boa-paxbox { width: 280px; padding: 12px 14px; }
+.boa-paxrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+.boa-paxrow:last-child { border: 0; }
+.boa-paxrow small { display: block; color: #6b7280; font-size: 12px; }
+.boa-step { display: flex; align-items: center; gap: 10px; }
+.boa-step button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  cursor: pointer;
+}
+.boa-cal {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 95;
+  width: min(720px, calc(100vw - 32px));
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.16);
+  color: #000;
+  font-size: 14px;
+  user-select: none;
+}
+.boa-cal__display {
+  display: flex;
+  gap: 12px;
+  margin: 12px;
+  padding: 0;
+}
+.boa-cal__chip {
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 2px #23394236;
+  border: 1px solid transparent;
+  color: #849095;
+  font: 500 14px/20px Lato, sans-serif;
+}
+.boa-cal__chip.is-on { border-color: #002f6e; color: #002f6e; }
+.boa-cal__chip.is-off { display: none; }
+.boa-cal__nav {
+  position: relative;
+  height: 44px;
+}
+.boa-cal__nav button {
+  position: absolute;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 5px;
+  background: #eff2f7;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.boa-cal__nav button:hover { background: #e1e7f0; }
+.boa-cal__nav button[data-cal-nav="-1"] { left: 12px; }
+.boa-cal__nav button[data-cal-nav="1"] { right: 12px; }
+.boa-cal__nav i {
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.boa-cal__nav button[data-cal-nav="-1"] i {
+  border-width: 4px 6px 4px 0;
+  border-color: transparent #34495e transparent transparent;
+  margin-right: 2px;
+}
+.boa-cal__nav button[data-cal-nav="1"] i {
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent #34495e;
+  margin-left: 2px;
+}
+.boa-cal__months { display: flex; }
+.boa-cal__month { flex: 1; min-width: 0; padding: 0 12px 16px; }
+.boa-cal__name {
+  margin: 0;
+  padding: 0 8px 8px;
+  font: 700 14px/20px Lato, sans-serif;
+  color: #002e6e;
+  text-align: left;
+}
+.boa-cal__weeks {
+  display: flex;
+  color: #849095;
+  font: 400 13px/2.667em Lato, sans-serif;
+}
+.boa-cal__weeks span { flex: 1; text-align: center; }
+.boa-cal__days { display: flex; flex-wrap: wrap; }
+.boa-cal__day {
+  position: relative;
+  width: calc(100% / 7);
+  height: 3em;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  color: #1d2429;
+}
+.boa-cal__day.is-empty { pointer-events: none; }
+.boa-cal__edge {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+.boa-cal__num {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 500;
+}
+.boa-cal__day.is-today .boa-cal__num::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: 20px;
+  height: 2px;
+  border-radius: 8px;
+  background: #0844c5;
+  transform: translateX(-50%);
+}
+.boa-cal__day.is-in .boa-cal__edge { background: #abdcf3; }
+.boa-cal__day.is-start .boa-cal__edge,
+.boa-cal__day.is-end .boa-cal__edge {
+  background: #002f6e;
+  border-radius: 8px;
+}
+.boa-cal__day.is-start:not(.is-solo) .boa-cal__edge {
+  border-radius: 8px 0 0 8px;
+  right: 0;
+  left: 2px;
+}
+.boa-cal__day.is-end:not(.is-solo) .boa-cal__edge {
+  border-radius: 0 8px 8px 0;
+  left: 0;
+  right: 2px;
+}
+.boa-cal__day.is-in.is-sow .boa-cal__edge { border-radius: 8px 0 0 8px; left: 2px; }
+.boa-cal__day.is-in.is-eow .boa-cal__edge { border-radius: 0 8px 8px 0; right: 2px; }
+.boa-cal__day.is-start .boa-cal__num,
+.boa-cal__day.is-end .boa-cal__num { color: #fff; font-weight: 700; }
+.boa-cal__day.is-start.is-today .boa-cal__num::after,
+.boa-cal__day.is-end.is-today .boa-cal__num::after { background: #fff; }
+.boa-cal__day.is-off { cursor: not-allowed; background: #f8f8f8; }
+.boa-cal__day.is-off .boa-cal__num { color: #aeb9bf; }
+.boa-cal__day:not(.is-off):not(.is-empty):hover .boa-cal__num {
+  box-shadow: inset 0 0 0 1px #002f6e;
+  border-radius: 8px;
+}
+@media (max-width: 860px) {
+  .boa-cal__months { flex-direction: column; }
+  .boa-cal__month:last-child { display: none; }
+}
+
+.boa-cookie {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  background: #fff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -8px 32px rgba(0,0,0,.12);
+  padding: 28px 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+  color: #374151;
+  font-size: 15px;
+}
+.boa-cookie a { color: #2563eb; text-decoration: underline; }
+.boa-cookie__actions { display: flex; gap: 12px; }
+.boa-cookie__ghost,
+.boa-cookie__ok {
+  min-width: 110px;
+  height: 40px;
+  border-radius: 8px;
+  font: 700 15px Lato, sans-serif;
+  cursor: pointer;
+}
+.boa-cookie__ghost { border: 0; background: #dbeafe; color: #1e3a8a; }
+.boa-cookie__ok { border: 0; background: var(--boa-navy); color: #fff; }
+.boa-cookie.hidden { display: none; }
+
+.boa-exp { padding: 56px 0 64px; background: #fff; }
+.boa-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+.boa-kicker::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: var(--boa-gold);
+}
+.boa-title { font-size: 32px; font-weight: 900; margin: 0 0 24px; color: var(--boa-navy); }
+.boa-exp__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: 240px 240px; gap: 16px; }
+.boa-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  color: #fff;
+  display: flex;
+  align-items: flex-end;
+  min-height: 240px;
+  text-decoration: none;
+}
+.boa-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.boa-card__shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(8,20,36,.78)); }
+.boa-card__txt { position: relative; z-index: 1; padding: 18px; }
+.boa-card__txt h3 { margin: 0 0 8px; font-size: 22px; font-weight: 800; }
+.boa-card__txt span { font-weight: 700; font-size: 14px; }
+.boa-card--wide { grid-row: 1 / span 2; }
+
+.boa-info { padding: 24px 0 72px; }
+.boa-info h2 { font-size: 28px; font-weight: 900; color: var(--boa-navy); margin: 0 0 8px; }
+.boa-info__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 24px; }
+.boa-info__item {
+  display: block;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(11,39,68,.08);
+  padding: 22px 18px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.boa-info__item:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(11,39,68,.12); }
+.boa-info__item img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 12px; }
+.boa-info__item h3 { margin: 0 0 8px; font-size: 16px; }
+.boa-info__item p { margin: 0; color: var(--boa-muted); font-size: 14px; line-height: 1.45; }
+
+.boa-svc {
+  position: relative;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  overflow: hidden;
+}
+.boa-svc img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.boa-svc__copy { position: relative; z-index: 1; text-align: center; }
+.boa-svc__copy small { font-weight: 700; }
+.boa-svc__copy h2 { font-size: 36px; margin: 8px 0 18px; }
+.boa-svc__copy a {
+  display: inline-block;
+  background: var(--boa-gold);
+  color: #1b2430;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 10px 22px;
+}
+
+.boa-prep { padding: 56px 0; }
+.boa-prep__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.boa-prep__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 220px;
+  color: #fff;
+  text-decoration: none;
+}
+.boa-prep__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.boa-prep__card span { position: relative; z-index: 1; display: block; padding: 16px; font-weight: 800; background: linear-gradient(180deg, transparent, rgba(0,0,0,.55)); margin-top: auto; }
+
+.boa-inspire {
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: #fff;
+}
+.boa-inspire img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.boa-inspire__copy { position: relative; z-index: 1; width: min(var(--boa-max), calc(100% - 40px)); margin: 0 auto; }
+.boa-inspire h2 { margin: 0 0 8px; font-size: 32px; }
+.boa-inspire a {
+  display: inline-block;
+  margin-top: 12px;
+  background: var(--boa-gold);
+  color: #1b2430;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 10px 18px;
+}
+
+.boa-inner { padding: 120px 0 72px; }
+.boa-inner h1 {
+  margin: 0 0 8px;
+  color: var(--boa-navy);
+  font: 900 36px/1.15 Lato, sans-serif;
+}
+.boa-crumb {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 18px;
+  color: #6b7280;
+  font-size: 14px;
+}
+.boa-crumb a { color: var(--boa-navy); }
+.boa-article { max-width: 760px; }
+.boa-article__intro {
+  font-size: 18px;
+  line-height: 1.55;
+  color: #1b2430;
+  margin: 0 0 24px;
+}
+.boa-article__block { margin: 0 0 28px; }
+.boa-article__block h2 {
+  margin: 0 0 10px;
+  color: var(--boa-navy);
+  font: 800 22px/1.3 Lato, sans-serif;
+}
+.boa-article__block p,
+.boa-article__block li {
+  margin: 0 0 10px;
+  color: #374151;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.boa-article__block ul { margin: 0 0 12px; padding-left: 18px; }
+.boa-article__block a { color: var(--boa-navy); text-decoration: underline; }
+.boa-article__cta { margin: 32px 0 0; }
+.boa-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin: 0 0 24px;
+}
+.boa-status label { display: grid; gap: 6px; font-size: 13px; color: #6b7280; }
+.boa-status input {
+  height: 48px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0 12px;
+  font: 700 16px Lato, sans-serif;
+}
+.boa-status__result {
+  background: #f4f7fb;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 0 0 24px;
+}
+@media (max-width: 720px) {
+  .boa-status { grid-template-columns: 1fr; }
+}
+
+.boa-foot { background: var(--boa-navy); color: #d7e4f2; padding: 42px 0 18px; font-size: 13px; }
+.boa-foot a { color: #d7e4f2; }
+.boa-foot__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 24px; }
+.boa-foot h4 { color: #fff; margin: 0 0 12px; font-size: 14px; }
+.boa-foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.boa-foot__social { display: flex; gap: 10px; margin-top: 14px; }
+.boa-foot__social img { width: 28px; height: 28px; }
+.boa-foot__badges { display: flex; align-items: center; gap: 14px; }
+.boa-foot__badges img { height: 36px; width: auto; }
+.boa-foot__copy { border-top: 1px solid rgba(255,255,255,.12); margin-top: 28px; padding-top: 14px; text-align: center; font-size: 12px; }
+.boa-foot__seal { display: block; margin: 12px auto 0; height: 48px; }
+
+@media (max-width: 900px) {
+  .boa-nav__links { display: none; }
+  .boa-nav__inner { padding: 0 16px; }
+  .boa-hero__bg { height: 360px; }
+  .boa-hero__inner { padding-top: 100px; }
+  .boa-hero__card { padding: 24px 20px; }
+  .boa-hero__card h1 { font-size: 20px; line-height: 28px; }
+  .boa-hero__card p { font-size: 14px; line-height: 20px; }
+  .boa-fields, .boa-alt { grid-template-columns: 1fr; }
+  .boa-book__tab { font-size: 12px; padding: 0 8px; }
+  .boa-book__panel { padding: 16px; }
+  .boa-search-btn { width: 100%; }
+  .boa-exp__grid, .boa-info__grid, .boa-prep__grid, .boa-foot__grid { grid-template-columns: 1fr 1fr; }
+  .boa-card--wide { grid-row: auto; min-height: 280px; }
+}
+@media (max-width: 640px) {
+  .boa-exp__grid, .boa-info__grid, .boa-prep__grid, .boa-foot__grid { grid-template-columns: 1fr; }
+  .boa-lang span:last-child, .boa-lang__pipe { display: none; }
+}
+
+html[lang="es-GT"] body.av-booking-page,
+html[lang="es-GT"] body.boa-page {
+  --av-red: #0b2744;
+  --color-latam-red: #0b2744;
+}
+
+html[lang="es-GT"] body.boa-page {
+  padding-top: 0;
+}
+
+html[lang="es-GT"] body.boa-page .page-main,
+html[lang="es-GT"] body.boa-page .payment-success,
+html[lang="es-GT"] body.boa-page .av-page {
+  padding-top: 104px;
+}
+
+html[lang="es-GT"] .av-book-chrome__modify,
+html[lang="es-GT"] .av-book-heading__dates,
+html[lang="es-GT"] .av-flight__stops,
+html[lang="es-GT"] body.av-booking-page .av-book-chrome__modify {
+  color: #0b2744 !important;
+}
+
+html[lang="es-GT"] .av-book-steps li.is-current span,
+html[lang="es-GT"] body.av-booking-page .av-book-steps li.is-current span {
+  background: #e8b93a !important;
+  border-color: #e8b93a !important;
+  color: #1b2430 !important;
+}
+
+html[lang="es-GT"] .av-cal__pick.is-active,
+html[lang="es-GT"] .av-book-date.is-selected {
+  border-color: #e8b93a !important;
+  box-shadow: inset 0 0 0 1px #e8b93a !important;
+}
+
+html[lang="es-GT"] .av-cal-day.is-depart,
+html[lang="es-GT"] .av-cal-day.is-return {
+  background: #0b2744 !important;
+  color: #fff !important;
+}
+
+html[lang="es-GT"] .av-cal-day.is-range {
+  background: #e8eef4 !important;
+}
+
+html[lang="es-GT"] .av-fare--light .av-fare__cta {
+  background: #0b2744 !important;
+}
+
+html[lang="es-GT"] .fare-col__more,
+html[lang="es-GT"] .av-trip-fare--light {
+  color: #0b2744 !important;
+}
+
+html[lang="es-GT"] body.av-booking-page.is-store-page .store-switch.is-on {
+  background: #e8b93a !important;
+}
+
+html[lang="es-GT"] .av-cookie__accept,
+html[lang="es-GT"] .btn-primary,
+html[lang="es-GT"] .fare-col__cta,
+html[lang="es-GT"] .offers-timeout__btn {
+  background: #0b2744 !important;
+  color: #fff !important;
+}
+
+.payment-success__cta {
+  background: #0b2744 !important;
+}
+
+html[lang="es-GT"] .offers-wait-screen__logo {
+  object-fit: contain;
+  height: 72px;
+  width: auto;
+}
+
+html[lang="es-GT"] .flight-card__mark,
+html[lang="es-GT"] .it-flight__num img {
+  object-fit: contain;
+  height: 15px;
+  width: auto;
+  max-width: 48px;
+}
+
+/* Reserva / rutas */
+html[lang="es-GT"] body.boa-reserva {
+  background: #eef3f8 !important;
+  font-family: Lato, sans-serif;
+  padding-top: 0 !important;
+}
+html[lang="es-GT"] body.boa-reserva .offers-scroll,
+html[lang="es-GT"] body.boa-reserva .offers-main,
+html[lang="es-GT"] body.boa-reserva .av-book-main {
+  background: #eef3f8;
+  font-family: Lato, sans-serif;
+  max-width: none;
+  padding: 0 0 48px;
+}
+html[lang="es-GT"] body.boa-reserva .av-book-terms,
+html[lang="es-GT"] body.boa-reserva .av-book-copy,
+html[lang="es-GT"] body.boa-reserva .av-book-heading__dates { display: none !important; }
+
+.boa-res-nav {
+  background: #eef3f8;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.boa-res-nav__inner {
+  width: 100%;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.boa-res-nav__logo img { width: 88px; height: auto; display: block; }
+.boa-res-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font: 400 15px/1 Lato, sans-serif;
+  color: #1b2430;
+}
+.boa-res-nav__links a,
+.boa-res-nav__links button {
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.boa-res-bar { background: #00539c; color: #fff; flex-shrink: 0; }
+.boa-res-bar__inner {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 40px;
+}
+.boa-res-bar__route {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 700 18px/1.2 Lato, sans-serif;
+}
+.boa-res-bar__edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: none;
+  color: #ffab00;
+  font: 700 14px/24px Lato, sans-serif;
+  cursor: pointer;
+}
+.boa-res-bar__meta {
+  margin: 6px 0 0;
+  display: flex;
+  gap: 18px;
+  font: 400 13px/1 Lato, sans-serif;
+  opacity: .95;
+}
+.boa-res-bar__meta span { display: inline-flex; align-items: center; gap: 6px; }
+
+.boa-res-sum { position: relative; }
+.boa-res-sum__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 39px;
+  padding: 5px 12px;
+  border: 1.6px solid #002e6e;
+  border-radius: 8px;
+  background: #e5f5ff;
+  color: #002e6e;
+  font: 700 15px/1 Lato, sans-serif;
+  cursor: pointer;
+}
+.boa-res-sum__menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 40;
+  width: 260px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fff;
+  color: #1b2430;
+  box-shadow: 0 12px 32px rgba(0,47,110,.18);
+  font: 400 14px/1.4 Lato, sans-serif;
+}
+.boa-res-sum__total { margin: 8px 0 0; font-weight: 700; }
+
+.boa-steps {
+  width: 100%;
+  margin: 8px 0 8px;
+  padding: 8px 40px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  flex-shrink: 0;
+  background: #f7f7f7;
+}
+.boa-steps li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font: 400 15px/24px Lato, sans-serif;
+  color: #637381;
+  position: relative;
+}
+.boa-steps li + li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 50%;
+  top: 50%;
+  height: 1px;
+  background: #c9d6e3;
+  transform: translateY(-50%);
+}
+.boa-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+.boa-step > span {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #d7e9f7;
+  color: #5b6573;
+  font: 700 13px/1 Lato, sans-serif;
+  flex: 0 0 24px;
+}
+.boa-steps em { font-style: normal; font-weight: 700; }
+html[lang="es-GT"] body.boa-reserva .boa-steps li.is-current .boa-step,
+html[lang="es-GT"] body.boa-reserva .boa-steps li.is-done .boa-step,
+.boa-steps li.is-current .boa-step,
+.boa-steps li.is-done .boa-step {
+  background: #e5f5ff;
+}
+html[lang="es-GT"] body.boa-reserva .boa-steps li.is-current .boa-step > span,
+html[lang="es-GT"] body.boa-reserva .boa-steps li.is-done .boa-step > span,
+.boa-steps li.is-current .boa-step > span,
+.boa-steps li.is-done .boa-step > span {
+  background: #002e6e !important;
+  color: #fff !important;
+}
+.boa-steps li.is-current,
+.boa-steps li.is-done { color: #0072bc; }
+
+.boa-res-modify {
+  display: none;
+  width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+.boa-res-modify.is-open { display: block; }
+.boa-book--embed {
+  margin: 12px 0 0;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,47,110,.12);
+}
+.boa-book--embed .boa-book__tabs,
+.boa-book--embed [data-boa-panel="checkin"],
+.boa-book--embed [data-boa-panel="estado"] { display: none !important; }
+.boa-book--embed [data-boa-panel="reserva"] { display: block !important; }
+
+.boa-res-main { width: 100%; padding: 0 40px; box-sizing: border-box; }
+html[lang="es-GT"] body.boa-reserva .boa-offers,
+body.boa-reserva .boa-offers {
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  margin: 0;
+}
+
+.boa-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  min-height: 132px;
+  margin: 8px 0 18px;
+  background:
+    linear-gradient(90deg, rgba(11,39,68,.62) 0%, rgba(11,39,68,.18) 55%, rgba(11,39,68,.05) 100%),
+    url('/images/boa/destinos.jpg') center/cover no-repeat;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 28px 36px;
+}
+.boa-banner__copy { max-width: 520px; }
+html[lang="es-GT"] body.boa-reserva .boa-banner .offers-title,
+.boa-banner .offers-title {
+  margin: 0;
+  color: #fff !important;
+  font: 700 28px/1.15 Lato, sans-serif;
+}
+.boa-banner__sub {
+  margin: 8px 0 0;
+  font: 400 15px/1.3 Lato, sans-serif;
+  color: #fff;
+}
+
+.boa-dates {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin: 0 0 18px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+html[lang="es-GT"] body.boa-reserva .boa-date,
+.boa-date {
+  flex: 1;
+  min-width: 140px;
+  height: 72px;
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: #cfe4f6 !important;
+  color: #002f6e !important;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  font: 700 14px/1.15 Lato, sans-serif;
+  text-transform: uppercase;
+}
+.boa-date small {
+  font: 700 15px/1 Lato, sans-serif;
+  color: inherit;
+}
+html[lang="es-GT"] body.boa-reserva .boa-date.is-selected,
+.boa-date.is-selected {
+  background: #002f6e !important;
+  color: #fff !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.boa-date.is-disabled { opacity: .45; }
+.boa-date-prev,
+.boa-date-next {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin: auto 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ffca38;
+  color: #654700;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.boa-date-prev:disabled,
+.boa-date-next:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.boa-sort {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  margin: 4px 0 18px;
+  font: 400 14px/1 Lato, sans-serif;
+  color: #5b6573;
+}
+.boa-sort button {
+  border: 0;
+  background: none;
+  color: #5b6573;
+  font: 400 14px/1 Lato, sans-serif;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+html[lang="es-GT"] body.boa-reserva .boa-sort button[aria-selected="true"],
+.boa-sort button[aria-selected="true"] {
+  background: #002f6e !important;
+  color: #fff !important;
+}
+
+.boa-offers__group {
+  margin: 8px 0 12px;
+  font: 400 22px/1.2 Lato, sans-serif;
+  color: #7b8794;
+}
+
+html[lang="es-GT"] body.boa-reserva .boa-flight,
+.boa-flight {
+  background: #fff;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: rgba(145, 158, 171, 0.2) 0 0 2px, rgba(145, 158, 171, 0.12) 0 12px 24px -4px;
+  margin: 0 0 14px;
+  overflow: visible;
+}
+html[lang="es-GT"] body.boa-reserva .boa-flight__main,
+.boa-flight__main {
+  display: flex !important;
+  grid-template-columns: none !important;
+  grid-template-areas: none !important;
+  align-items: stretch !important;
+  gap: 8px !important;
+  min-height: 143px;
+  padding: 0 0 0 16px !important;
+}
+.boa-flight__end {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  color: #212b36;
+  padding: 16px 0;
+  flex: 0 0 140px;
+  width: 140px;
+}
+.boa-flight__day {
+  font: 400 13px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+  white-space: nowrap;
+}
+.boa-flight__end strong {
+  font: 700 18px/1.25 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-flight__plus {
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 2px;
+  vertical-align: super;
+}
+.boa-flight__iata {
+  font: 400 13px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+html[lang="es-GT"] body.boa-reserva .boa-flight__path,
+.boa-flight__path {
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  flex: 1 1 auto;
+  max-width: none;
+  margin: 0;
+  padding: 8px 0;
+}
+.boa-flight__codes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 560px;
+  gap: 0;
+}
+.boa-flight__air {
+  width: 200px;
+  min-width: 0;
+  max-width: 38%;
+}
+.boa-flight__air--from { text-align: right; }
+.boa-flight__air--to { text-align: left; }
+.boa-flight__air strong {
+  display: block;
+  font: 700 18px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #002e6e;
+}
+.boa-flight__air small {
+  display: block;
+  font: 400 13px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.boa-flight__route {
+  width: 160px;
+  height: 33px;
+  flex: 0 0 160px;
+  object-fit: contain;
+  display: block;
+}
+.boa-flight__direct {
+  margin: 0 0 2px;
+  border: 0;
+  background: none;
+  color: #0072bc;
+  font: 900 15px/24px Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.boa-flight__info {
+  width: 16px;
+  height: 16px;
+  color: #0072bc;
+}
+.boa-flight__i { display: none; }
+.boa-flight__dur {
+  margin: 2px 0 0;
+  font: 400 13px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+
+.boa-farebox {
+  position: relative;
+  align-self: stretch;
+  background: #e5f5ff;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 16px 16px 24px;
+  color: #002e6e;
+  min-height: 143px;
+  flex: 0 0 280px;
+  width: 280px;
+}
+.boa-farebox__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.boa-farebox img { width: 60px; height: 33px; object-fit: contain; margin: 0; }
+.boa-farebox__tag {
+  position: static;
+  background: #002e6e;
+  color: #fff;
+  font: 700 11.2px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  padding: 2.4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.boa-farebox__k {
+  font: 400 15px/1.3 Lato, "Fira Sans", Arial, sans-serif;
+  color: #454f5b;
+}
+.boa-farebox__price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.boa-farebox strong {
+  font: 700 20px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #002e6e;
+}
+.boa-farebox__chev {
+  position: static;
+  width: 28px;
+  height: 28px;
+  color: #002e6e;
+  flex: 0 0 28px;
+  transition: transform .2s;
+}
+.boa-flight.is-open .boa-farebox__chev { transform: rotate(180deg); }
+
+html[lang="es-GT"] body.boa-reserva .fare-panel,
+body.boa-reserva .boa-flight .fare-panel {
+  background: #f4f6f8;
+  border-radius: 0 0 16px 16px;
+  margin: 0;
+  padding: 8px 16px 16px;
+}
+
+html[lang="es-GT"] body.boa-reserva .av-fares__cabin,
+body.boa-reserva .av-fares__cabin { display: none !important; }
+
+html[lang="es-GT"] body.boa-reserva .boa-fares,
+body.boa-reserva .boa-fares {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 0;
+  width: 1360px !important;
+  max-width: 100% !important;
+  min-width: 850px;
+  margin: 0 auto;
+  overflow: visible;
+  background: transparent !important;
+  grid-template-columns: none !important;
+}
+
+html[lang="es-GT"] body.boa-reserva .boa-fare,
+body.boa-reserva .boa-fare {
+  flex: 0 1 auto !important;
+  width: 50% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 608px;
+  min-height: 608px;
+  box-sizing: border-box;
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  box-shadow: 0 0 2px rgba(145, 158, 171, .2), 0 12px 24px -4px rgba(145, 158, 171, .12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  color: #212b36 !important;
+  font-family: Lato, "Fira Sans", Arial, sans-serif !important;
+}
+
+html[lang="es-GT"] body.boa-reserva .boa-fare:only-child,
+body.boa-reserva .boa-fare:only-child {
+  width: 100% !important;
+}
+
+.boa-fare__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.boa-fare__top h3 {
+  margin: 0;
+  font: 700 20px/1.3 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-fare__badge {
+  background: #002e6e;
+  color: #fff;
+  font: 700 11.2px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  padding: 2.4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.boa-fare__more {
+  margin: 8px 0 0;
+  font: 400 15px/21px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-fare__price {
+  margin: 8px 0 0;
+  font: 700 32px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #005b96;
+}
+.boa-fare__seats {
+  margin: 8px 0 0;
+  font: 700 15px/21px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-fare__line {
+  border: 0;
+  border-top: 0.8px solid #dadada;
+  margin: 16px 0 0;
+}
+.boa-fare__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+.boa-fare__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 8px;
+  font: 400 15px/21px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-fare__list img {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+}
+.boa-fare__pay { margin-top: 32px; }
+.boa-fare__cta,
+html[lang="es-GT"] body.boa-reserva .boa-fare__cta,
+html[lang="es-GT"] body.boa-reserva .boa-fare .fare-col__cta {
+  width: 100% !important;
+  height: 50px !important;
+  background: #002e6e !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  font: 700 15px/1 Lato, "Fira Sans", Arial, sans-serif !important;
+  cursor: pointer;
+}
+html[lang="es-GT"] body.boa-reserva .boa-fare__cta:hover,
+html[lang="es-GT"] body.boa-reserva .boa-fare .fare-col__cta:hover {
+  background: #00255a !important;
+}
+.boa-fare__pay small {
+  display: block;
+  margin-top: 16px;
+  text-align: center;
+  font: 400 15px/1.3 Lato, "Fira Sans", Arial, sans-serif;
+  color: #919eab;
+}
+
+html[lang="es-GT"] body.boa-reserva .offers-wait-screen,
+body.boa-reserva .offers-wait-screen {
+  background: #fff !important;
+  gap: 0 !important;
+}
+html[lang="es-GT"] body.boa-reserva .offers-wait-screen__logo,
+html[lang="es-GT"] body.boa-reserva .offers-wait-screen__text,
+html[lang="es-GT"] body.boa-reserva .offers-wait-screen__spin { display: none !important; }
+
+.boa-loader {
+  width: 72px;
+  height: 72px;
+  position: relative;
+}
+.boa-loader__ring,
+.boa-loader__mid,
+.boa-loader__dot {
+  position: absolute;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.boa-loader__ring {
+  width: 72px;
+  height: 72px;
+  background: #b7d0e6;
+  animation: boa-pulse 1.15s ease-in-out infinite;
+}
+.boa-loader__mid {
+  width: 42px;
+  height: 42px;
+  background: #3a7eb3;
+  animation: boa-pulse 1.15s ease-in-out infinite .12s;
+}
+.boa-loader__dot {
+  width: 14px;
+  height: 14px;
+  background: #0d4d86;
+}
+@keyframes boa-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(.86); opacity: .85; }
+  50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@media (max-width: 900px) {
+  .boa-res-nav__inner, .boa-res-bar__inner, .boa-steps, .boa-res-main, .boa-res-modify {
+    padding-left: 16px;
+    padding-right: 16px;
+    width: 100%;
+  }
+  .boa-res-bar__inner { flex-wrap: wrap; }
+  .boa-steps { flex-wrap: wrap; gap: 10px; }
+  .boa-steps li + li::before { display: none; }
+  html[lang="es-GT"] body.boa-reserva .boa-flight__main,
+  .boa-flight__main {
+    grid-template-columns: none !important;
+    padding: 0 0 0 10px !important;
+  }
+  html[lang="es-GT"] body.boa-reserva .boa-flight__path,
+  html[lang="es-GT"] body.boa-reserva .av-flight__path {
+    display: flex !important;
+  }
+  html[lang="es-GT"] body.boa-reserva .boa-flight__end,
+  html[lang="es-GT"] body.boa-reserva .boa-flight__path,
+  html[lang="es-GT"] body.boa-reserva .boa-farebox,
+  html[lang="es-GT"] body.boa-reserva .av-flight__price,
+  html[lang="es-GT"] body.boa-reserva .av-flight__time {
+    grid-area: auto !important;
+  }
+  .boa-flight__end { flex-basis: 96px; width: 96px; }
+  .boa-flight__air { width: auto; max-width: 34%; }
+  .boa-flight__air small { font-size: 11px; }
+  .boa-flight__route { width: 120px; flex-basis: 120px; height: 26px; }
+  .boa-farebox { padding: 12px; min-height: 120px; flex-basis: 200px; width: 200px; }
+  .boa-banner { padding: 20px 16px; min-height: 110px; }
+  .boa-sort { justify-content: flex-start; flex-wrap: wrap; gap: 8px; }
+  html[lang="es-GT"] body.boa-reserva .boa-fares,
+  body.boa-reserva .boa-fares { min-width: 0; }
+  html[lang="es-GT"] body.boa-reserva .boa-fare,
+  html[lang="es-GT"] body.boa-reserva .boa-fare:only-child,
+  body.boa-reserva .boa-fare,
+  body.boa-reserva .boa-fare:only-child {
+    width: 100% !important;
+    height: auto;
+    min-height: 0;
+  }
+}
+@media (max-width: 720px) {
+  html[lang="es-GT"] body.boa-reserva .boa-flight__main,
+  .boa-flight__main {
+    flex-wrap: wrap !important;
+    grid-template-columns: none !important;
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+  html[lang="es-GT"] body.boa-reserva .boa-flight__path {
+    order: 3;
+    flex: 1 1 100%;
+    max-width: none;
+  }
+  .boa-flight__end { flex: 1 1 40%; width: auto; }
+  .boa-flight__end--in { order: 2; text-align: right; align-items: flex-end; }
+  .boa-farebox {
+    order: 4;
+    flex: 1 1 100%;
+    width: auto;
+    min-height: 88px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 12px 14px;
+  }
+  .boa-farebox__top { margin: 0 0 4px; }
+  .boa-farebox__price { margin-left: 0; }
+  .boa-flight__air { max-width: 40%; }
+  .boa-flight__route { width: 110px; flex-basis: 110px; }
+}
+
+html[lang="es-GT"] body.boa-reserva.is-passengers-page .av-pax-dock,
+html[lang="es-GT"] body.boa-reserva.is-passengers-page .av-pax-sheet-bg,
+html[lang="es-GT"] body.boa-reserva.is-passengers-page .av-pax__continue {
+  display: none !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-passengers-page .checkout-scroll,
+html[lang="es-GT"] body.boa-reserva.is-passengers-page {
+  background: #f7f7f7 !important;
+  font-family: Lato, "Fira Sans", Arial, sans-serif !important;
+}
+
+html[lang="es-GT"] body.boa-reserva .boa-pax,
+body.boa-reserva .boa-pax {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 40px 48px;
+  box-sizing: border-box;
+  font-family: Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-pax__intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 16px;
+}
+.boa-pax__intro h1 {
+  margin: 0;
+  font: 700 18px/28px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-pax__lead {
+  margin: 0;
+  font: 400 17px/26px Lato, "Fira Sans", Arial, sans-serif;
+  color: #808080;
+}
+.boa-pax__badge {
+  background: #002e6e;
+  color: #fff;
+  font: 700 12px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  padding: 3.2px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.boa-pax-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 2px rgba(145, 158, 171, .2), 0 12px 24px -4px rgba(145, 158, 171, .12);
+  overflow: hidden;
+  margin: 0 0 16px;
+}
+.boa-pax-card.is-open { overflow: visible; }
+.boa-pax-card__head {
+  width: 100%;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 8px 0 16px;
+  border: 0;
+  background: transparent;
+  font: 700 17px/1.3 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+  cursor: pointer;
+  text-align: left;
+}
+.boa-pax-card.is-open .boa-pax-card__head svg { transform: rotate(180deg); }
+.boa-pax-card__body { padding: 0 24px 24px; }
+.boa-ff {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 62px;
+  font: 400 17px/1.3 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+  cursor: pointer;
+}
+.boa-switch {
+  position: relative;
+  width: 58px;
+  height: 38px;
+  flex: 0 0 58px;
+}
+.boa-switch input { opacity: 0; width: 34px; height: 20px; margin: 9px 12px; cursor: pointer; }
+.boa-switch i {
+  position: absolute;
+  inset: 9px 12px;
+  width: 34px;
+  height: 20px;
+  border-radius: 10px;
+  background: #919eab;
+  pointer-events: none;
+}
+.boa-switch i::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  transition: transform .15s;
+}
+.boa-switch input:checked + i { background: #002e6e; }
+.boa-switch input:checked + i::after { transform: translateX(14px); }
+.boa-ff-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 0 0 8px;
+}
+.boa-ff-fields[hidden] { display: none !important; }
+.boa-pax-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 24px;
+}
+.boa-pax-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.boa-pax-field > span {
+  font: 600 19px/21px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+  margin: 0 0 6px;
+}
+.boa-pax-field__ghost { visibility: hidden; }
+.boa-pax-field input,
+.boa-pax-field select {
+  height: 55px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0.8px solid #a3a3a3;
+  border-radius: 4px;
+  padding: 16.5px 14px;
+  font: 400 15px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+  background: #fff;
+  appearance: none;
+}
+.boa-pax-field input::placeholder {
+  color: #919eab;
+  font-style: italic;
+  opacity: 1;
+}
+.boa-pax-field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.4 6 6.4 11 1.4' stroke='%23637381' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.boa-pax-field small {
+  margin: 8px 14px 0 0;
+  font: 400 13px/20px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-pax-field.is-error input,
+.boa-pax-field.is-error select,
+.boa-pax-field.is-error .boa-dial__control { border-color: #c20000; }
+.boa-pax .av-pax__error:not([hidden]):not(.hidden) {
+  display: block;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fde8ef;
+  color: #c20000;
+  font: 400 14px/20px Lato, "Fira Sans", Arial, sans-serif;
+}
+.boa-pax-card [data-pax-err]:not([hidden]) {
+  display: block;
+  margin: 12px 0 0;
+  color: #c20000;
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+}
+.boa-pax-field--dob { position: relative; }
+.boa-pax-field--dob input[name$="-dob"] { padding-right: 48px; }
+.boa-pax-field--dob::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 42px;
+  width: 22px;
+  height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23637381' d='M7 2h2v2h6V2h2v2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V2zm13 8H4v10h16V10z'/%3E%3C/svg%3E") center/22px no-repeat;
+  pointer-events: none;
+}
+.boa-phone {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 1fr;
+  gap: 16px;
+  align-items: end;
+}
+.boa-pax-field--dial { position: relative; z-index: 8; }
+.boa-dial {
+  position: relative;
+  min-width: 0;
+}
+.boa-dial__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 55px;
+  min-width: 0;
+  padding: 0 40px 0 14px;
+  border: 0.8px solid #a3a3a3;
+  border-radius: 4px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.4 6 6.4 11 1.4' stroke='%23637381' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  cursor: pointer;
+}
+.boa-dial.is-open .boa-dial__control {
+  border-color: #002e6e;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 6.6 6 1.6 11 6.6' stroke='%23637381' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.boa-dial__flag {
+  position: static;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.boa-dial__text {
+  flex: 1;
+  min-width: 0;
+  margin-left: 10px;
+  font: 400 16px/1.5 Roboto, Lato, Arial, sans-serif;
+  color: #212b36;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+.boa-dial__search {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 55px;
+  border: 0 !important;
+  border-radius: 4px;
+  padding: 16.5px 40px 16.5px 14px !important;
+  background: transparent !important;
+  opacity: 0;
+  font: 400 16px/1.5 Roboto, Lato, Arial, sans-serif !important;
+  color: #212b36;
+  cursor: text;
+}
+.boa-dial:not(.is-open) .boa-dial__search { pointer-events: none; }
+.boa-dial.is-open .boa-dial__flag,
+.boa-dial.is-open .boa-dial__text { visibility: hidden; }
+.boa-dial.is-open .boa-dial__search { opacity: 1; z-index: 2; pointer-events: auto; }
+.boa-dial__list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 4px);
+  z-index: 30;
+  max-height: 372px;
+  margin: 0;
+  padding: 8px 0;
+  overflow-y: auto;
+  list-style: none;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+.boa-dial__list[hidden] { display: none !important; }
+.boa-dial__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 4px 16px;
+  font: 400 16px/1.5 Roboto, Lato, Arial, sans-serif;
+  color: rgba(0,0,0,.87);
+  cursor: pointer;
+}
+.boa-dial__item:hover,
+.boa-dial__item:focus { background: rgba(0,0,0,.04); }
+.boa-dial__item img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 20px;
+}
+.boa-dial__item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.boa-pax-field--phone { position: relative; }
+.boa-phone__prefix {
+  position: absolute;
+  left: 14px;
+  top: 40px;
+  font: 400 15px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-pax-field--phone input { padding-left: 28px; }
+.boa-pax__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 24px 0 0;
+}
+.boa-pax__back {
+  border: 0;
+  background: transparent;
+  color: #212b36;
+  font: 700 15px/1 Lato, "Fira Sans", Arial, sans-serif;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.boa-pax__cta {
+  height: 54px;
+  padding: 14px 24px;
+  border: 0;
+  border-radius: 6px;
+  background: #002e6e;
+  color: #fff;
+  font: 900 15px/1 Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+}
+.boa-pax__cta:hover { background: #00255a; }
+
+@media (max-width: 900px) {
+  html[lang="es-GT"] body.boa-reserva .boa-pax,
+  body.boa-reserva .boa-pax { padding: 16px; }
+  .boa-pax-grid,
+  .boa-ff-fields,
+  .boa-phone { grid-template-columns: 1fr; }
+  .boa-pax__intro { flex-wrap: wrap; }
+}
+
+html[lang="es-GT"] body.boa-reserva.is-review-page .av-pax-dock,
+html[lang="es-GT"] body.boa-reserva.is-review-page .av-pax-sheet-bg,
+html[lang="es-GT"] body.boa-reserva.is-review-page .checkout-scroll,
+html[lang="es-GT"] body.boa-reserva.is-review-page {
+  background: #f7f7f7 !important;
+  font-family: Lato, "Fira Sans", Arial, sans-serif !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-review-page .boa-res-bar {
+  display: none !important;
+}
+.boa-rev {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 40px 48px;
+  box-sizing: border-box;
+  color: #212b36;
+}
+.boa-rev__intro { margin: 0 0 20px; }
+.boa-rev__intro h1 {
+  margin: 0;
+  font: 700 24px/32px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev__intro p,
+.boa-rev__block > p {
+  margin: 4px 0 0;
+  font: 400 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #808080;
+}
+.boa-rev__block { margin: 28px 0 0; }
+.boa-rev__block h2 {
+  margin: 0;
+  font: 700 20px/28px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  min-height: 176px;
+  margin: 0 0 16px;
+}
+.boa-rev-banner img {
+  display: block;
+  width: 100%;
+  height: 176px;
+  object-fit: cover;
+}
+.boa-rev-banner__copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 32px;
+  background: rgba(0, 46, 110, 0.5);
+  color: #fff;
+}
+.boa-rev-banner__copy h3 {
+  margin: 0;
+  font: 700 28px/34px Lato, "Fira Sans", Arial, sans-serif;
+  text-shadow: 0 1px 8px rgba(0,0,0,.35);
+}
+.boa-rev-banner__copy p {
+  margin: 6px 0 14px;
+  font: 400 15px/22px Lato, "Fira Sans", Arial, sans-serif;
+}
+.boa-rev-banner__copy span {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 32px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: rgba(255,255,255,.18);
+  backdrop-filter: blur(4px);
+  font: 700 14px/1.2 Lato, "Fira Sans", Arial, sans-serif;
+}
+.boa-rev-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 2px rgba(145, 158, 171, .2), 0 12px 24px -4px rgba(145, 158, 171, .12);
+  margin: 12px 0 0;
+  overflow: hidden;
+}
+.boa-rev-pax,
+.boa-rev-card__row {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  border: 0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+.boa-rev-pax__who {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-pax__ok {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #002e6e;
+  display: grid;
+  place-items: center;
+  flex: 0 0 22px;
+}
+.boa-rev-pax__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 400 15px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-card.is-open .boa-rev-pax__more svg,
+.boa-rev-card.is-open .boa-rev-card__price svg,
+.boa-rev-card.is-open .boa-rev-terms__head svg { transform: rotate(180deg); }
+.boa-rev-card__chip {
+  height: 40px;
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #e5f5ff;
+  color: #002e6e;
+  font: 700 15px/1 Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+}
+.boa-rev-card__price {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: right;
+  color: #212b36;
+}
+.boa-rev-card__price span {
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-card__price em { font-style: normal; }
+.boa-rev-card__price strong {
+  font: 700 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-card__body {
+  padding: 12px 24px 20px;
+  border-top: 1px solid #eef1f4;
+}
+.boa-rev-kv {
+  margin: 0;
+  display: grid;
+  gap: 8px 0;
+}
+.boa-rev-kv > div {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  align-items: baseline;
+  column-gap: 24px;
+}
+.boa-rev-kv dt {
+  font: 400 14px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-kv dd {
+  margin: 0;
+  font: 700 14px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+  margin: 0;
+}
+.boa-rev-dl dt {
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-dl dd {
+  margin: 2px 0 0;
+  font: 400 15px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-dl .is-total dd { font-weight: 700; }
+.boa-rev-itin {
+  padding: 8px 0 4px;
+  border-top: 1px solid #eef1f4;
+}
+.boa-rev-itin h3 {
+  margin: 8px 0 2px;
+  font: 700 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-itin__date,
+.boa-rev-tl__stop,
+.boa-rev-tl__mid {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  align-items: center;
+  column-gap: 8px;
+}
+.boa-rev-itin__date {
+  margin: 0 0 2px;
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-itin__date .boa-rev-plane {
+  width: 16px;
+  height: 14px;
+  justify-self: center;
+  color: #212b36;
+}
+.boa-rev-plane.is-back {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+.boa-rev-tl { display: flex; flex-direction: column; margin: 0 0 8px; }
+.boa-rev-tl__stop { min-height: 22px; }
+.boa-rev-tl__stop p {
+  margin: 0;
+  font: 400 14px/20px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-tl__stop strong {
+  font-weight: 700;
+  margin-right: 6px;
+}
+.boa-rev-tl__stop b {
+  color: #0072bc;
+  font-weight: 700;
+}
+.boa-rev-tl__dot {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #002e6e;
+  border-radius: 50%;
+  background: #fff;
+  justify-self: center;
+  box-sizing: border-box;
+}
+.boa-rev-tl__mid { min-height: 28px; align-items: stretch; }
+.boa-rev-tl__line {
+  justify-self: center;
+  width: 0;
+  border-left: 2px dotted #90a4ae;
+}
+.boa-rev-tl__mid p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-tl__mid .boa-rev-plane {
+  width: 14px;
+  height: 12px;
+  color: #212b36;
+  flex: 0 0 14px;
+}
+.boa-rev-tl__wait {
+  margin: 0 0 12px 24px;
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-prices { padding: 8px 0 4px; }
+.boa-rev-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 32px;
+  font: 400 14px/20px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-line strong { font-weight: 700; }
+.boa-rev-line.is-tax { color: #0072bc; }
+.boa-rev-line.is-tax strong { color: #0072bc; }
+.boa-rev-tax {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  width: 100%;
+  margin: 4px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #637381;
+  font: 400 13px/20px Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+}
+.boa-rev-tax__note {
+  margin: 6px 0 0;
+  font: 400 13px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-rev-terms { margin-top: 16px; }
+.boa-rev-terms__head {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border: 0;
+  background: #fff;
+  color: #212b36;
+  font: 400 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+  text-align: left;
+}
+.boa-rev-terms__head svg { color: #637381; flex: 0 0 22px; }
+.boa-rev-terms__body {
+  padding: 0 24px 20px;
+  border-top: 1px solid #eef1f4;
+}
+.boa-rev-terms__body ul {
+  margin: 12px 0 16px;
+  padding: 0 0 0 22px;
+  list-style: disc outside;
+}
+.boa-rev-terms__body li {
+  display: list-item;
+  list-style: disc outside;
+  margin: 0 0 8px;
+  font: 400 14px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-rev-accept {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 4px;
+  background: #e3f2fd;
+  color: #212b36;
+  font: 400 14px/22px Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+}
+.boa-rev-accept input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  flex: 0 0 18px;
+  accent-color: #002e6e;
+  cursor: pointer;
+}
+.boa-rev-accept a {
+  color: #1976d2;
+  text-decoration: underline;
+}
+.boa-rev__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 28px 0 0;
+}
+.boa-rev__back {
+  border: 0;
+  background: transparent;
+  color: #212b36;
+  font: 700 15px/1 Lato, "Fira Sans", Arial, sans-serif;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.boa-rev__pay {
+  height: 48px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 8px;
+  background: #002e6e;
+  color: #fff;
+  font: 700 15px/1 Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+}
+.boa-rev__pay:hover { background: #00255a; }
+.boa-rev__pay:disabled,
+.boa-rev__pay:disabled:hover {
+  background: #cfd8dc;
+  color: #fff;
+  cursor: default;
+}
+.boa-rev__empty { color: #637381; }
+
+html[lang="es-GT"] body.boa-reserva .boa-pay-overlay,
+body.boa-reserva .boa-pay-overlay,
+.boa-pay-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  opacity: 0.5;
+  pointer-events: auto;
+}
+html[lang="es-GT"] body.boa-reserva .boa-pay-overlay.is-on,
+body.boa-reserva .boa-pay-overlay.is-on,
+.boa-pay-overlay.is-on {
+  display: flex !important;
+}
+.boa-pay-splash {
+  position: relative;
+  width: 192px;
+  height: 192px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.boa-pay-splash__logo {
+  width: 64px;
+  height: 64px;
+  display: block;
+  position: relative;
+  z-index: 1;
+  animation: boa-pay-logo 3s ease-in-out infinite;
+}
+.boa-pay-splash__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: rgba(0, 91, 150, 0.24);
+}
+.boa-pay-splash__ring--in {
+  width: 100px;
+  height: 100px;
+  margin: -50px 0 0 -50px;
+  border-width: 3px;
+  animation: boa-pay-ring-in 3.2s linear infinite;
+}
+.boa-pay-splash__ring--out {
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-width: 8px;
+  animation: boa-pay-ring-out 3.2s linear infinite;
+}
+@keyframes boa-pay-logo {
+  0% { transform: scale(1); opacity: 1; }
+  16.67% { transform: scale(0.9); opacity: 0.48; }
+  33.33% { transform: scale(0.9); opacity: 0.48; }
+  50% { transform: scale(1); opacity: 1; }
+  66.67%, 100% { transform: scale(1); opacity: 1; }
+}
+@keyframes boa-pay-ring-in {
+  0% { transform: scale(1.6) rotate(270deg); opacity: 0.25; border-radius: 25%; }
+  25% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 25%; }
+  50% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 50%; }
+  75% { transform: scale(1.6) rotate(270deg); opacity: 1; border-radius: 50%; }
+  100% { transform: scale(1.6) rotate(270deg); opacity: 0.25; border-radius: 25%; }
+}
+@keyframes boa-pay-ring-out {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 25%; }
+  25% { transform: scale(1.2) rotate(270deg); opacity: 0.25; border-radius: 25%; }
+  50% { transform: scale(1.2) rotate(270deg); opacity: 0.25; border-radius: 50%; }
+  75% { transform: scale(1) rotate(0deg); opacity: 0.25; border-radius: 50%; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 25%; }
+}
+
+@media (max-width: 900px) {
+  .boa-rev { padding: 16px; }
+  .boa-rev-banner__copy { padding: 20px; }
+  .boa-rev-banner__copy h3 { font-size: 22px; line-height: 28px; }
+  .boa-rev-dl { grid-template-columns: 1fr; }
+  .boa-rev-kv > div { grid-template-columns: 1fr; gap: 0; }
+  .boa-rev-card__row { flex-wrap: wrap; }
+}
+
+html[lang="es-GT"] body.boa-reserva.is-boa-pay,
+html[lang="es-GT"] body.boa-reserva.is-pagos-page {
+  padding-top: 0 !important;
+  background: #f7f7f7 !important;
+  font-family: Lato, "Fira Sans", Arial, sans-serif !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .av-header,
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .av-topbar,
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .pagos-promo {
+  display: none !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .boa-res-bar__edit {
+  display: none !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .boa-res-sum__btn {
+  background: #fff !important;
+  border-color: #fff !important;
+  color: #002e6e !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .checkout-scroll,
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .pagos-scroll {
+  background: #f7f7f7 !important;
+  font-family: Lato, "Fira Sans", Arial, sans-serif !important;
+}
+
+.boa-pay {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 40px 48px;
+  box-sizing: border-box;
+  color: #212b36;
+}
+.boa-pay__intro { margin: 8px 0 18px; }
+.boa-pay__intro h1 {
+  margin: 0;
+  font: 600 20px/32px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-pay__intro p {
+  margin: 2px 0 0;
+  font: 400 14px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #808080;
+}
+.boa-pay__invoice {
+  max-width: 1180px;
+}
+.boa-pay-nit,
+.boa-pay-method,
+.boa-pay-sum {
+  background: #fff;
+  border-radius: 8px;
+  margin: 0 0 8px;
+}
+.boa-pay-nit {
+  padding: 28px 24px 32px;
+}
+.boa-pay-nit[hidden],
+.boa-pay-method[hidden],
+.boa-pay__invoice[hidden] { display: none !important; }
+.boa-pay-nit__row {
+  display: grid;
+  grid-template-columns: minmax(210px, auto) 1fr 1fr;
+  gap: 16px 20px;
+  align-items: start;
+}
+.boa-pay-nit__row h2 {
+  margin: 8px 0 0;
+  font: 600 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+  white-space: nowrap;
+}
+.boa-pay-field { display: block; min-width: 0; }
+.boa-pay-field input {
+  width: 100%;
+  height: 40px;
+  padding: 8.5px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  background: #fff;
+  color: #212b36;
+  font: 400 16px/1.4 Lato, "Fira Sans", Arial, sans-serif;
+  outline: none;
+  box-sizing: border-box;
+}
+.boa-pay-field input::placeholder { color: #9e9e9e; opacity: 1; }
+.boa-pay-field input:hover { border-color: #212b36; }
+.boa-pay-field input:focus {
+  border-color: #002e6e;
+  border-width: 2px;
+  padding: 7.5px 13px;
+}
+.boa-pay-field.is-error input {
+  border-color: #d32f2f;
+}
+.boa-pay-field.is-error input:focus {
+  border-color: #d32f2f;
+}
+.boa-pay-field__err {
+  display: block;
+  margin: 3px 0 0 14px;
+  font: 400 12px/1.6 Lato, "Fira Sans", Arial, sans-serif;
+  color: #d32f2f;
+}
+.boa-pay-method__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 24px 8px;
+}
+.boa-pay-method__head h2 {
+  margin: 0;
+  font: 600 16px/24px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-pay-method__check {
+  display: grid;
+  place-items: center;
+  color: #002e6e;
+}
+.boa-pay-method__body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 140px;
+  padding: 8px 24px 28px;
+}
+.boa-pay-method__body p {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 130px;
+  text-align: center;
+  font: 400 15px/22px Lato, "Fira Sans", Arial, sans-serif;
+  color: #212b36;
+}
+.boa-pay-stack {
+  width: 92px;
+  height: 92px;
+  flex: 0 0 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 6px;
+  box-sizing: border-box;
+  border: 2.5px solid #e6b33a;
+  border-radius: 14px;
+  background: #fff;
+}
+.boa-pay-stack__mc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.boa-pay-stack__mc img { display: block; width: 54px; height: auto; }
+.boa-pay-stack__mc i {
+  position: absolute;
+  left: -6px;
+  top: -4px;
+  width: 14px;
+  height: 14px;
+}
+.boa-pay-stack__visa img { display: block; width: 54px; height: auto; }
+.boa-pay-sum__row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  border: 0;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+.boa-pay-sum__detail {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: #b7dbf2;
+  color: #002e6e;
+  font: 900 14px/1 Lato, "Fira Sans", Arial, sans-serif;
+}
+.boa-pay-sum__price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #002e6e;
+  position: relative;
+  padding-right: 28px;
+}
+.boa-pay-sum__price small {
+  font: 400 12px/18px Lato, "Fira Sans", Arial, sans-serif;
+  color: #637381;
+}
+.boa-pay-sum__price strong {
+  font: 900 20px/28px Lato, "Fira Sans", Arial, sans-serif;
+  color: #002e6e;
+}
+.boa-pay-sum__price svg {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #637381;
+}
+.boa-pay-sum.is-open .boa-pay-sum__price svg { transform: translateY(-50%) rotate(180deg); }
+.boa-pay-sum__body {
+  padding: 0 24px 18px;
+}
+.boa-pay-sum__line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 6px 0;
+  color: #002e6e;
+  font: 500 14px/22px Lato, "Fira Sans", Arial, sans-serif;
+  text-align: right;
+}
+.boa-pay-sum__line strong { font-weight: 800; }
+.boa-pay__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 8px 0 24px;
+}
+#boa-pasarela[hidden],
+#boa-pay[hidden],
+#boa-wp[hidden],
+.boa-pay-method__body[hidden],
+.boa-pay-sum[hidden],
+.boa-pay__nav[hidden],
+.boa-wp-bill__body[hidden],
+.boa-wp-bill__sum[hidden],
+.boa-wp-ok[hidden] { display: none !important; }
+
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .pagos-layout {
+  display: none !important;
+}
+html[lang="es-GT"] body.boa-reserva.is-boa-pay #pagos-board {
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .pasarela-wait,
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .pasarela-challenge,
+html[lang="es-GT"] body.boa-reserva.is-boa-pay .pagos-debug-modal {
+  z-index: 10050 !important;
+}
+
+.boa-pay.is-wp .boa-pay-method {
+  overflow: hidden;
+  padding-bottom: 16px;
+}
+.boa-wp {
+  width: calc(100% - 64px);
+  max-width: 920px;
+  margin: 8px auto 32px;
+  padding: 20px 22px 18px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #c5c5c5;
+  border-radius: 6px;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.boa-wp-card {
+  margin-top: 4px;
+  padding: 18px 20px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: #fff;
+}
+.boa-wp h3 {
+  margin: 0;
+  font: 700 18px/24px Arial, Helvetica, sans-serif;
+  color: #222;
+}
+.boa-wp-express { margin: 0 0 16px; padding: 0 4px; }
+.boa-wp-samsung {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  height: 44px;
+  padding: 0 18px 0 20px;
+  border: 0;
+  border-radius: 4px;
+  background: #000;
+  color: #fff;
+  font: 600 16px/1 Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.boa-wp-samsung:hover { background: #111; }
+.boa-wp-samsung strong {
+  font: 800 17px/1 Arial, Helvetica, sans-serif;
+  letter-spacing: 0.04em;
+}
+.boa-wp-samsung em {
+  margin-left: 8px;
+  font: 700 18px/1 Arial, Helvetica, sans-serif;
+  font-style: normal;
+}
+.boa-wp-details {
+  padding: 0 0 8px;
+}
+.boa-wp-payhead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.boa-wp-hint {
+  margin: 4px 0 0;
+  font: 400 12px/18px Arial, Helvetica, sans-serif;
+  color: #767676;
+}
+.boa-wp-hint span,
+.boa-wp abbr {
+  color: #c00;
+  font-weight: 700;
+  text-decoration: none;
+}
+.boa-wp-brands {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+.boa-wp-brands img {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+.boa-wp-brands img.is-off { display: none; }
+.boa-wp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+}
+.boa-wp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font: 400 14px/20px Arial, Helvetica, sans-serif;
+  color: #333;
+}
+.boa-wp-field input,
+.boa-wp-row input,
+.boa-wp-row select {
+  width: 100%;
+  height: 34px;
+  padding: 4px 8px;
+  border: 1px solid #b0b0b0;
+  border-radius: 0;
+  background: #fff;
+  color: #222;
+  font: 400 14px/20px Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  outline: none;
+}
+.boa-wp-field input:focus,
+.boa-wp-row input:focus,
+.boa-wp-row select:focus {
+  border-color: #6a6a6a;
+}
+.boa-wp-field.is-bad input,
+.boa-wp-field.is-bad .boa-wp-exp input,
+.boa-wp-field.is-bad .boa-wp-cvc input,
+.boa-wp-row.is-bad input,
+.boa-wp-row.is-bad select {
+  border-color: #c00;
+  box-shadow: inset 0 0 0 1px #c00;
+  background: #fff6f6;
+}
+.boa-wp-field.is-bad input:focus,
+.boa-wp-row.is-bad input:focus,
+.boa-wp-row.is-bad select:focus {
+  border-color: #c00;
+}
+.boa-wp-field.is-ok input,
+.boa-wp-field.is-ok .boa-wp-exp input,
+.boa-wp-field.is-ok .boa-wp-cvc input {
+  border-color: #1b7a4e;
+}
+.boa-wp-ok {
+  display: inline;
+  margin-left: 6px;
+  color: #1b7a4e;
+  font: 700 15px/1 Arial, Helvetica, sans-serif;
+  vertical-align: middle;
+}
+.boa-wp-err {
+  margin: 0;
+  font: 400 12px/16px Arial, Helvetica, sans-serif;
+  color: #c00;
+}
+.boa-wp-err[hidden] { display: none !important; }
+.boa-wp-exp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.boa-wp-exp input {
+  width: 64px;
+  text-align: left;
+}
+.boa-wp-exp__sep {
+  color: #666;
+  font: 400 16px/1 Arial, Helvetica, sans-serif;
+}
+.boa-wp-cvc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.boa-wp-cvc input {
+  width: 64px;
+  flex: 0 0 64px;
+  text-align: center;
+}
+.boa-wp-cvc img {
+  display: block;
+  width: 48px;
+  height: 32px;
+  flex: 0 0 48px;
+}
+.boa-wp-cvc small {
+  font: 400 12px/16px Arial, Helvetica, sans-serif;
+  color: #767676;
+  min-width: 0;
+}
+.boa-wp-bill {
+  margin-top: 18px;
+  padding-top: 8px;
+}
+.boa-wp-bill__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.boa-wp-bill__head h3 {
+  display: flex;
+  align-items: center;
+}
+.boa-wp-bill__sum {
+  margin: 0 0 16px;
+  font: 400 14px/22px Arial, Helvetica, sans-serif;
+  color: #333;
+}
+.boa-wp-bill__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #555;
+  font: 400 13px/1 Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+.boa-wp-bill__close i {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 6px 5px;
+  border-color: transparent transparent #555 transparent;
+}
+.boa-wp-bill.is-closed .boa-wp-bill__close i {
+  border-width: 6px 5px 0 5px;
+  border-color: #555 transparent transparent transparent;
+}
+.boa-wp-bill__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.boa-wp-row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 10px 16px;
+  align-items: center;
+  font: 400 14px/20px Arial, Helvetica, sans-serif;
+  color: #333;
+}
+.boa-wp-row > span { text-align: right; }
+.boa-wp-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.boa-wp-actions--bill { margin: 14px 0 6px; }
+.boa-wp-actions--pay { margin: 12px 0 0; }
+.boa-wp-bill.is-closed .boa-wp-actions--bill { display: none; }
+.boa-wp-btn {
+  height: 36px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 4px;
+  font: 700 14px/1 Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+.boa-wp-btn--ghost,
+.boa-wp-btn--pay:disabled {
+  background: #ececec;
+  color: #b0b0b0;
+  cursor: default;
+}
+.boa-wp-btn--ok {
+  background: #1b8f53;
+  color: #fff;
+}
+.boa-wp-btn--ok:hover { background: #167a46; }
+.boa-wp-btn--back {
+  background: #6a6a6a;
+  color: #fff;
+}
+.boa-wp-btn--back:hover { background: #585858; }
+.boa-wp-btn--pay:not(:disabled) {
+  background: #1b8f53;
+  color: #fff;
+  cursor: pointer;
+}
+.boa-wp-btn--pay:not(:disabled):hover { background: #167a46; }
+.boa-wp-btn--ghost:not(:disabled) {
+  background: #e4e4e4;
+  color: #555;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .boa-wp {
+    width: auto;
+    max-width: none;
+    margin: 0 10px 18px;
+    padding: 14px 12px;
+  }
+  .boa-wp-grid { grid-template-columns: 1fr; }
+  .boa-wp-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .boa-wp-row > span { text-align: left; }
+  .boa-wp-cvc { flex-wrap: wrap; }
+}
+.boa-pay__go {
+  height: auto;
+  padding: 14px 24px;
+  border: 0;
+  border-radius: 8px;
+  background: #002e6e;
+  color: #fff;
+  font: 900 15px/1 Lato, "Fira Sans", Arial, sans-serif;
+  cursor: pointer;
+}
+.boa-pay__go:hover { background: #00255a; }
+
+@media (max-width: 900px) {
+  .boa-pay { padding: 12px 16px 40px; }
+  .boa-pay-nit { padding: 20px 16px; }
+  .boa-pay-nit__row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .boa-pay-nit__row h2 { white-space: normal; margin: 0; }
+  .boa-pay-method__body {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 0;
+    padding: 4px 16px 20px;
+  }
+  .boa-pay-method__body p {
+    position: static;
+    display: block;
+    padding: 12px 4px 0;
+  }
+  .boa-pay-sum__row { flex-wrap: wrap; padding: 16px; }
+  .boa-pay-sum__price { margin-left: auto; }
+}
+

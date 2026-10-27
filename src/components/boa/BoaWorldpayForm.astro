@@ -1,0 +1,589 @@
+---
+const countries = [
+  ['AF', 'Afghanistan'], ['AL', 'Albania'], ['DZ', 'Algeria'], ['AD', 'Andorra'],
+  ['AO', 'Angola'], ['AR', 'Argentina'], ['AM', 'Armenia'], ['AU', 'Australia'],
+  ['AT', 'Austria'], ['AZ', 'Azerbaijan'], ['BS', 'Bahamas'], ['BH', 'Bahrain'],
+  ['BD', 'Bangladesh'], ['BB', 'Barbados'], ['BY', 'Belarus'], ['BE', 'Belgium'],
+  ['BZ', 'Belize'], ['BJ', 'Benin'], ['BM', 'Bermuda'], ['BT', 'Bhutan'],
+  ['BO', 'Bolivia'], ['BA', 'Bosnia and Herzegovina'], ['BW', 'Botswana'],
+  ['BR', 'Brazil'], ['BN', 'Brunei'], ['BG', 'Bulgaria'], ['BF', 'Burkina Faso'],
+  ['BI', 'Burundi'], ['KH', 'Cambodia'], ['CM', 'Cameroon'], ['CA', 'Canada'],
+  ['CV', 'Cape Verde'], ['KY', 'Cayman Islands'], ['CL', 'Chile'], ['CN', 'China'],
+  ['CO', 'Colombia'], ['CR', 'Costa Rica'], ['HR', 'Croatia'], ['CU', 'Cuba'],
+  ['CY', 'Cyprus'], ['CZ', 'Czech Republic'], ['DK', 'Denmark'], ['DO', 'Dominican Republic'],
+  ['EC', 'Ecuador'], ['EG', 'Egypt'], ['SV', 'El Salvador'], ['EE', 'Estonia'],
+  ['ET', 'Ethiopia'], ['FI', 'Finland'], ['FR', 'France'], ['GF', 'French Guiana'],
+  ['DE', 'Germany'], ['GH', 'Ghana'], ['GR', 'Greece'], ['GT', 'Guatemala'],
+  ['GY', 'Guyana'], ['HT', 'Haiti'], ['HN', 'Honduras'], ['HK', 'Hong Kong'],
+  ['HU', 'Hungary'], ['IS', 'Iceland'], ['IN', 'India'], ['ID', 'Indonesia'],
+  ['IR', 'Iran'], ['IQ', 'Iraq'], ['IE', 'Ireland'], ['IL', 'Israel'],
+  ['IT', 'Italy'], ['JM', 'Jamaica'], ['JP', 'Japan'], ['JO', 'Jordan'],
+  ['KZ', 'Kazakhstan'], ['KE', 'Kenya'], ['KR', 'Korea, Republic of'],
+  ['KW', 'Kuwait'], ['LV', 'Latvia'], ['LB', 'Lebanon'], ['LY', 'Libya'],
+  ['LI', 'Liechtenstein'], ['LT', 'Lithuania'], ['LU', 'Luxembourg'],
+  ['MO', 'Macau'], ['MY', 'Malaysia'], ['MV', 'Maldives'], ['MT', 'Malta'],
+  ['MX', 'Mexico'], ['MD', 'Moldova'], ['MC', 'Monaco'], ['MN', 'Mongolia'],
+  ['ME', 'Montenegro'], ['MA', 'Morocco'], ['MZ', 'Mozambique'], ['MM', 'Myanmar'],
+  ['NA', 'Namibia'], ['NP', 'Nepal'], ['NL', 'Netherlands'], ['NZ', 'New Zealand'],
+  ['NI', 'Nicaragua'], ['NG', 'Nigeria'], ['NO', 'Norway'], ['OM', 'Oman'],
+  ['PK', 'Pakistan'], ['PA', 'Panama'], ['PY', 'Paraguay'], ['PE', 'Peru'],
+  ['PH', 'Philippines'], ['PL', 'Poland'], ['PT', 'Portugal'], ['PR', 'Puerto Rico'],
+  ['QA', 'Qatar'], ['RO', 'Romania'], ['RU', 'Russian Federation'], ['SA', 'Saudi Arabia'],
+  ['SN', 'Senegal'], ['RS', 'Serbia'], ['SG', 'Singapore'], ['SK', 'Slovakia'],
+  ['SI', 'Slovenia'], ['ZA', 'South Africa'], ['ES', 'Spain'], ['LK', 'Sri Lanka'],
+  ['SR', 'Suriname'], ['SE', 'Sweden'], ['CH', 'Switzerland'], ['TW', 'Taiwan'],
+  ['TZ', 'Tanzania'], ['TH', 'Thailand'], ['TT', 'Trinidad and Tobago'],
+  ['TN', 'Tunisia'], ['TR', 'Turkey'], ['UA', 'Ukraine'], ['AE', 'United Arab Emirates'],
+  ['GB', 'United Kingdom'], ['US', 'United States'], ['UY', 'Uruguay'],
+  ['UZ', 'Uzbekistan'], ['VE', 'Venezuela'], ['VN', 'Vietnam'], ['YE', 'Yemen'],
+  ['ZM', 'Zambia'], ['ZW', 'Zimbabwe'],
+];
+---
+
+<div class="boa-wp" id="boa-wp" hidden>
+  <form class="boa-wp__form" id="boa-wp-form" autocomplete="on" novalidate onsubmit="return false;">
+    <section class="boa-wp-express">
+      <h3>Express Checkout</h3>
+      <button type="button" class="boa-wp-samsung" id="boa-wp-samsung" aria-label="Pay with Samsung Pay">
+        <span>Pay with</span>
+        <strong>SAMSUNG</strong>
+        <span>Pay</span>
+        <em aria-hidden="true">&gt;</em>
+      </button>
+    </section>
+
+    <div class="boa-wp-card">
+    <section class="boa-wp-details">
+      <div class="boa-wp-payhead">
+        <div>
+          <h3>Payment details</h3>
+          <p class="boa-wp-hint"><span>*</span> Indicates a required field</p>
+        </div>
+        <div class="boa-wp-brands" aria-hidden="true">
+          <img src="/images/boa/pay/visa.png" alt="" width="52" height="18" data-wp-brand="visa" />
+          <img src="/images/boa/pay/master.png" alt="" width="48" height="30" data-wp-brand="mastercard" />
+        </div>
+      </div>
+
+      <div class="boa-wp-grid">
+        <label class="boa-wp-field" data-wp-field="pan">
+          <span>Card number <abbr title="required">*</abbr> <b class="boa-wp-ok" hidden>✓</b></span>
+          <input
+            id="boa-wp-pan"
+            name="cardNumber"
+            type="text"
+            inputmode="numeric"
+            autocomplete="cc-number"
+            maxlength="23"
+            spellcheck="false"
+            aria-describedby="boa-wp-pan-err"
+          />
+          <p class="boa-wp-err" id="boa-wp-pan-err" hidden></p>
+        </label>
+        <label class="boa-wp-field" data-wp-field="name">
+          <span>Cardholder's name <abbr title="required">*</abbr> <b class="boa-wp-ok" hidden>✓</b></span>
+          <input
+            id="boa-wp-name"
+            name="cardholderName"
+            type="text"
+            autocomplete="cc-name"
+            maxlength="80"
+            spellcheck="false"
+            aria-describedby="boa-wp-name-err"
+          />
+          <p class="boa-wp-err" id="boa-wp-name-err" hidden></p>
+        </label>
+        <div class="boa-wp-field" data-wp-field="exp">
+          <span>Expiry date <abbr title="required">*</abbr> <b class="boa-wp-ok" hidden>✓</b></span>
+          <div class="boa-wp-exp">
+            <input
+              id="boa-wp-mm"
+              name="expiryMonth"
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-exp-month"
+              maxlength="2"
+              placeholder="MM"
+              aria-label="Expiry month"
+            />
+            <span class="boa-wp-exp__sep" aria-hidden="true">/</span>
+            <input
+              id="boa-wp-yy"
+              name="expiryYear"
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-exp-year"
+              maxlength="2"
+              placeholder="YY"
+              aria-label="Expiry year"
+            />
+          </div>
+          <p class="boa-wp-err" id="boa-wp-exp-err" hidden></p>
+        </div>
+        <div class="boa-wp-field" data-wp-field="cvc">
+          <span>Security code <abbr title="required">*</abbr> <b class="boa-wp-ok" hidden>✓</b></span>
+          <div class="boa-wp-cvc">
+            <input
+              id="boa-wp-cvc"
+              name="securityCode"
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              maxlength="4"
+              aria-label="Security code"
+            />
+            <img src="/images/boa/pay/cvv.svg" alt="" width="48" height="32" />
+            <small id="boa-wp-cvc-hint">Last 3 digits on the back of card</small>
+          </div>
+          <p class="boa-wp-err" id="boa-wp-cvc-err" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="boa-wp-bill" id="boa-wp-bill">
+      <header class="boa-wp-bill__head">
+        <h3>Billing address <b class="boa-wp-ok" id="boa-wp-bill-ok" hidden>✓</b></h3>
+        <button type="button" class="boa-wp-bill__close" id="boa-wp-bill-close" aria-expanded="true">
+          <span id="boa-wp-bill-close-txt">Close</span> <i aria-hidden="true"></i>
+        </button>
+      </header>
+      <p class="boa-wp-bill__sum" id="boa-wp-bill-sum" hidden></p>
+      <div class="boa-wp-bill__body" id="boa-wp-bill-body">
+        <label class="boa-wp-row">
+          <span>First name</span>
+          <input id="boa-wp-fn" name="billingFirstName" type="text" autocomplete="billing given-name" maxlength="40" />
+        </label>
+        <label class="boa-wp-row">
+          <span>Last name</span>
+          <input id="boa-wp-ln" name="billingLastName" type="text" autocomplete="billing family-name" maxlength="40" />
+        </label>
+        <label class="boa-wp-row" data-wp-req="addr1">
+          <span>Address 1 <abbr title="required">*</abbr></span>
+          <input id="boa-wp-a1" name="address1" type="text" autocomplete="billing address-line1" maxlength="80" />
+        </label>
+        <label class="boa-wp-row">
+          <span>Address 2</span>
+          <input id="boa-wp-a2" name="address2" type="text" autocomplete="billing address-line2" maxlength="80" />
+        </label>
+        <label class="boa-wp-row">
+          <span>Address 3</span>
+          <input id="boa-wp-a3" name="address3" type="text" autocomplete="billing address-line3" maxlength="80" />
+        </label>
+        <label class="boa-wp-row" data-wp-req="city">
+          <span>Town/City <abbr title="required">*</abbr></span>
+          <input id="boa-wp-city" name="city" type="text" autocomplete="billing address-level2" maxlength="50" />
+        </label>
+        <label class="boa-wp-row">
+          <span>State/Region</span>
+          <input id="boa-wp-state" name="state" type="text" autocomplete="billing address-level1" maxlength="50" />
+        </label>
+        <label class="boa-wp-row" data-wp-req="zip">
+          <span>Postcode/Zip code <abbr title="required">*</abbr></span>
+          <input id="boa-wp-zip" name="postalCode" type="text" autocomplete="billing postal-code" maxlength="16" />
+        </label>
+        <label class="boa-wp-row" data-wp-req="country">
+          <span>Country <abbr title="required">*</abbr></span>
+          <select id="boa-wp-country" name="country" autocomplete="billing country">
+            <option value="">Select</option>
+            {countries.map(([code, name]) => (
+              <option value={code}>{name}</option>
+            ))}
+          </select>
+        </label>
+        <div class="boa-wp-actions boa-wp-actions--bill">
+          <button type="button" class="boa-wp-btn boa-wp-btn--ghost" id="boa-wp-reset" disabled>Cancel changes</button>
+          <button type="button" class="boa-wp-btn boa-wp-btn--ok" id="boa-wp-confirm">Confirm</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="boa-wp-actions boa-wp-actions--pay">
+      <button type="button" class="boa-wp-btn boa-wp-btn--back" id="boa-wp-cancel">Cancel</button>
+      <button type="button" class="boa-wp-btn boa-wp-btn--pay" id="boa-wp-pay" disabled>Make Payment</button>
+    </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  import {
+    cardNumberMaxLength,
+    detectCardBrand,
+    formatCardNumber,
+    onlyDigits,
+    validateCardExp,
+    validateCardNumber,
+  } from '../../services/cardPaymentValidation';
+
+  const pan = document.getElementById('boa-wp-pan');
+  const name = document.getElementById('boa-wp-name');
+  const mm = document.getElementById('boa-wp-mm');
+  const yy = document.getElementById('boa-wp-yy');
+  const cvc = document.getElementById('boa-wp-cvc');
+  const payBtn = document.getElementById('boa-wp-pay');
+  const confirmBtn = document.getElementById('boa-wp-confirm');
+  const resetBtn = document.getElementById('boa-wp-reset');
+  const billBody = document.getElementById('boa-wp-bill-body');
+  const closeBtn = document.getElementById('boa-wp-bill-close');
+  const cvcHint = document.getElementById('boa-wp-cvc-hint');
+  const billFields = ['boa-wp-fn', 'boa-wp-ln', 'boa-wp-a1', 'boa-wp-a2', 'boa-wp-a3', 'boa-wp-city', 'boa-wp-state', 'boa-wp-zip', 'boa-wp-country'];
+  let billingOk = false;
+  let billSnapshot = '';
+
+  function digits(value) {
+    return onlyDigits(String(value || ''));
+  }
+
+  function val(id) {
+    return String(document.getElementById(id)?.value || '').trim();
+  }
+
+  function setErr(fieldName, message, valid = false) {
+    const field = document.querySelector(`[data-wp-field="${fieldName}"]`);
+    const err = document.getElementById(`boa-wp-${fieldName}-err`);
+    const tick = field?.querySelector('.boa-wp-ok');
+    const bad = Boolean(message);
+    const ok = Boolean(valid) && !bad;
+    field?.classList.toggle('is-bad', bad);
+    field?.classList.toggle('is-ok', ok);
+    field?.querySelector('input')?.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    if (fieldName === 'exp') {
+      mm?.setAttribute('aria-invalid', bad ? 'true' : 'false');
+      yy?.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    }
+    if (tick) tick.hidden = !ok;
+    if (err) {
+      err.textContent = message || '';
+      err.hidden = !bad;
+    }
+  }
+
+  function nameCheck() {
+    const value = String(name?.value || '').trim();
+    if (!value) return { valid: false, incomplete: true, message: 'Please enter the cardholder name' };
+    if (value.length < 2) {
+      return { valid: false, incomplete: false, message: 'Please enter the name as it appears on the card' };
+    }
+    return { valid: true, incomplete: false, message: '' };
+  }
+
+  function cvcCheck(brand) {
+    const value = digits(cvc?.value);
+    const len = brand?.cvvLength || 3;
+    if (!value) return { valid: false, incomplete: true, message: 'Please enter a valid security code' };
+    if (value.length < len) {
+      return { valid: false, incomplete: true, message: `Enter the ${len} digits on the card` };
+    }
+    if (value.length !== len) {
+      return { valid: false, incomplete: false, message: 'Please enter a valid security code' };
+    }
+    return { valid: true, incomplete: false, message: '' };
+  }
+
+  function panCheck() {
+    const result = validateCardNumber(pan?.value || '');
+    if (result.valid) return result;
+    if (!result.incomplete) {
+      return { ...result, message: 'Please enter a valid card number' };
+    }
+    if (!digits(pan?.value)) {
+      return { ...result, message: 'Please enter a valid card number' };
+    }
+    if (result.brand?.length) {
+      return { ...result, message: `Please enter ${result.brand.length} digits` };
+    }
+    return result;
+  }
+
+  function expCheck() {
+    const result = validateCardExp(`${digits(mm?.value)}${digits(yy?.value)}`);
+    if (result.valid) return result;
+    if (result.message?.includes('vencida')) {
+      return { ...result, message: 'This card has expired' };
+    }
+    if (result.incomplete) {
+      return { ...result, message: digits(mm?.value) || digits(yy?.value) ? 'Enter expiry as MM YY' : 'Enter expiry as MM YY' };
+    }
+    return { ...result, message: 'Please enter a valid expiry date' };
+  }
+
+  function cardOk() {
+    const number = panCheck();
+    const holder = nameCheck();
+    const exp = expCheck();
+    const code = cvcCheck(number.brand);
+    return Boolean(number.valid && holder.valid && exp.valid && code.valid);
+  }
+
+  function paintCard(opts = {}) {
+    const forceAll = Boolean(opts.force);
+    const forceOf = (field) => forceAll || opts.field === field;
+    const number = panCheck();
+    const holder = nameCheck();
+    const exp = expCheck();
+    const code = cvcCheck(number.brand);
+    const brand = number.brand;
+
+    if (pan) pan.maxLength = cardNumberMaxLength(brand);
+    if (cvc) cvc.maxLength = brand.cvvLength;
+    if (cvcHint) {
+      cvcHint.textContent = brand.brand === 'amex'
+        ? '4 digits on the front of the card'
+        : 'Last 3 digits on the back of card';
+    }
+    document.querySelectorAll('[data-wp-brand]').forEach((logo) => {
+      const key = logo.getAttribute('data-wp-brand');
+      const known = brand.brand === 'visa' || brand.brand === 'mastercard';
+      logo.classList.toggle('is-off', known && key !== brand.brand);
+    });
+
+    const showPan = forceOf('pan') ? !number.valid : (!number.incomplete && Boolean(number.message));
+    setErr('pan', showPan ? (number.message || 'Please enter a valid card number') : '', number.valid);
+    const showName = forceOf('name') ? !holder.valid : (!holder.incomplete && Boolean(holder.message));
+    setErr('name', showName ? holder.message : '', holder.valid);
+    const showExp = forceOf('exp') ? !exp.valid : (!exp.incomplete && Boolean(exp.message));
+    setErr('exp', showExp ? (exp.message || 'Please enter a valid expiry date') : '', exp.valid);
+    const showCvc = forceOf('cvc') ? !code.valid : (!code.incomplete && Boolean(code.message));
+    setErr('cvc', showCvc ? (code.message || 'Please enter a valid security code') : '', code.valid);
+    syncPay();
+  }
+
+  function billState() {
+    return billFields.map((id) => String(document.getElementById(id)?.value || '')).join('|');
+  }
+
+  function billDirty() {
+    return billState() !== billSnapshot;
+  }
+
+  function markReq(name, ok) {
+    document.querySelector(`[data-wp-req="${name}"]`)?.classList.toggle('is-bad', !ok);
+  }
+
+  function requiredBill() {
+    const addr1 = val('boa-wp-a1');
+    const city = val('boa-wp-city');
+    const zip = val('boa-wp-zip');
+    const country = val('boa-wp-country');
+    markReq('addr1', Boolean(addr1));
+    markReq('city', Boolean(city));
+    markReq('zip', Boolean(zip));
+    markReq('country', Boolean(country));
+    return Boolean(addr1 && city && zip && country);
+  }
+
+  function billSummary() {
+    const country = document.getElementById('boa-wp-country');
+    const countryName = country?.value ? String(country.selectedOptions?.[0]?.text || '') : '';
+    return [
+      val('boa-wp-fn'),
+      val('boa-wp-ln'),
+      val('boa-wp-a1'),
+      val('boa-wp-a2'),
+      val('boa-wp-a3'),
+      val('boa-wp-city'),
+      val('boa-wp-state'),
+      val('boa-wp-zip'),
+      countryName,
+    ].filter(Boolean).join(', ');
+  }
+
+  function collapseBill() {
+    const bill = document.getElementById('boa-wp-bill');
+    const sum = document.getElementById('boa-wp-bill-sum');
+    const ok = document.getElementById('boa-wp-bill-ok');
+    const txt = document.getElementById('boa-wp-bill-close-txt');
+    billBody?.setAttribute('hidden', '');
+    bill?.classList.add('is-closed');
+    if (billingOk) bill?.classList.add('is-confirmed');
+    closeBtn?.setAttribute('aria-expanded', 'false');
+    if (txt) txt.textContent = billingOk ? 'Edit' : 'Close';
+    if (sum) {
+      sum.textContent = billingOk ? billSummary() : '';
+      sum.hidden = !billingOk;
+    }
+    if (ok) ok.hidden = !billingOk;
+  }
+
+  function expandBill() {
+    const bill = document.getElementById('boa-wp-bill');
+    const sum = document.getElementById('boa-wp-bill-sum');
+    const ok = document.getElementById('boa-wp-bill-ok');
+    const txt = document.getElementById('boa-wp-bill-close-txt');
+    billBody?.removeAttribute('hidden');
+    bill?.classList.remove('is-closed');
+    closeBtn?.setAttribute('aria-expanded', 'true');
+    if (txt) txt.textContent = 'Close';
+    if (sum) sum.hidden = true;
+    if (ok) ok.hidden = true;
+  }
+
+  function syncPay() {
+    if (resetBtn) resetBtn.disabled = !billDirty();
+    if (payBtn) payBtn.disabled = !(billingOk && cardOk());
+  }
+
+  function primeBoard() {
+    const toggle = document.getElementById('pagos-add-card-toggle');
+    if (toggle && toggle.getAttribute('aria-expanded') !== 'true') toggle.click();
+    const terms = document.getElementById('pagos-terms');
+    if (terms && !terms.checked) {
+      terms.checked = true;
+      terms.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function setBoardInput(el, value) {
+    if (!el) return;
+    el.removeAttribute('readonly');
+    try { el.focus({ preventScroll: true }); } catch { el.focus(); }
+    el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function submitToBoard() {
+    primeBoard();
+    const panDigits = digits(pan?.value);
+    const holder = String(name?.value || '').trim();
+    const month = digits(mm?.value).padStart(2, '0').slice(-2);
+    let year = digits(yy?.value);
+    if (year.length === 4) year = year.slice(-2);
+    const code = digits(cvc?.value);
+
+    setBoardInput(document.getElementById('pagos-card-number'), panDigits);
+    setBoardInput(document.getElementById('pagos-card-name'), holder);
+    const monthEl = document.getElementById('pagos-card-month');
+    const yearEl = document.getElementById('pagos-card-year');
+    if (monthEl) {
+      monthEl.value = month;
+      monthEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (yearEl) {
+      yearEl.value = year;
+      yearEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    setBoardInput(document.getElementById('pagos-card-cvv'), code);
+
+    const tryPay = (left) => {
+      const hiddenPay = document.getElementById('pagos-pay');
+      if (hiddenPay && !hiddenPay.disabled) {
+        hiddenPay.click();
+        return;
+      }
+      if (left > 0) window.setTimeout(() => tryPay(left - 1), 70);
+    };
+    window.setTimeout(() => tryPay(10), 40);
+  }
+
+  pan?.addEventListener('input', () => {
+    const brand = detectCardBrand(pan.value);
+    const prev = pan.value;
+    const start = pan.selectionStart;
+    const formatted = formatCardNumber(prev, brand);
+    pan.value = formatted;
+    if (typeof start === 'number') {
+      const diff = formatted.length - prev.length;
+      try { pan.setSelectionRange(Math.max(0, start + diff), Math.max(0, start + diff)); } catch { /* ignore */ }
+    }
+    paintCard();
+  });
+  pan?.addEventListener('blur', () => paintCard({ field: 'pan' }));
+  name?.addEventListener('input', () => {
+    paintCard();
+  });
+  name?.addEventListener('blur', () => paintCard({ field: 'name' }));
+  mm?.addEventListener('input', () => {
+    mm.value = digits(mm.value).slice(0, 2);
+    if (mm.value.length === 2) yy?.focus();
+    paintCard();
+  });
+  mm?.addEventListener('blur', () => paintCard({ field: 'exp' }));
+  yy?.addEventListener('input', () => {
+    yy.value = digits(yy.value).slice(0, 2);
+    paintCard();
+  });
+  yy?.addEventListener('blur', () => paintCard({ field: 'exp' }));
+  cvc?.addEventListener('input', () => {
+    const brand = detectCardBrand(pan?.value || '');
+    cvc.value = digits(cvc.value).slice(0, brand.cvvLength);
+    paintCard();
+  });
+  cvc?.addEventListener('blur', () => paintCard({ field: 'cvc' }));
+
+  billFields.forEach((id) => {
+    document.getElementById(id)?.addEventListener('input', () => {
+      billingOk = false;
+      document.getElementById('boa-wp-bill')?.classList.remove('is-confirmed');
+      const ok = document.getElementById('boa-wp-bill-ok');
+      if (ok) ok.hidden = true;
+      document.getElementById(id)?.closest('.boa-wp-row')?.classList.remove('is-bad');
+      syncPay();
+    });
+    document.getElementById(id)?.addEventListener('change', () => {
+      billingOk = false;
+      document.getElementById('boa-wp-bill')?.classList.remove('is-confirmed');
+      document.getElementById(id)?.closest('.boa-wp-row')?.classList.remove('is-bad');
+      syncPay();
+    });
+  });
+
+  confirmBtn?.addEventListener('click', () => {
+    billingOk = requiredBill();
+    if (!billingOk) return;
+    billSnapshot = billState();
+    collapseBill();
+    syncPay();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    billFields.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+      el?.closest('.boa-wp-row')?.classList.remove('is-bad');
+    });
+    billingOk = false;
+    billSnapshot = billState();
+    document.getElementById('boa-wp-bill')?.classList.remove('is-confirmed');
+    const ok = document.getElementById('boa-wp-bill-ok');
+    if (ok) ok.hidden = true;
+    syncPay();
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    const open = closeBtn.getAttribute('aria-expanded') === 'true';
+    if (open) collapseBill();
+    else expandBill();
+  });
+
+  document.getElementById('boa-wp-cancel')?.addEventListener('click', () => {
+    document.dispatchEvent(new CustomEvent('boa-wp-cancel'));
+  });
+
+  payBtn?.addEventListener('click', () => {
+    paintCard({ force: true });
+    if (!cardOk()) return;
+    if (!requiredBill()) {
+      billingOk = false;
+      expandBill();
+      syncPay();
+      return;
+    }
+    submitToBoard();
+  });
+
+  document.getElementById('boa-wp-samsung')?.addEventListener('click', (event) => {
+    event.preventDefault();
+  });
+
+  billSnapshot = billState();
+  paintCard();
+
+  document.addEventListener('boa-wp-open', () => {
+    primeBoard();
+    billingOk = false;
+    billSnapshot = billState();
+    expandBill();
+    syncPay();
+  });
+</script>

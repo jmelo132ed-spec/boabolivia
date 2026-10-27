@@ -1,0 +1,115 @@
+---
+export const prerender = false;
+
+import { existsSync, readFileSync } from 'node:fs';
+import { extname, join } from 'node:path';
+import InnerLayout from '../layouts/InnerLayout.astro';
+import BoaArticle from '../components/boa/BoaArticle.astro';
+import { getBoaPage, getBoaPageSlugs } from '../data/boaPages';
+
+const assetPath = decodeURIComponent(Astro.url.pathname);
+if (/\.(svg|png|jpe?g|webp|gif|ico)$/i.test(assetPath)) {
+  const file = join(process.cwd(), 'public', assetPath.replace(/^[/\\]+/, ''));
+  if (existsSync(file)) {
+    const ext = extname(file).toLowerCase();
+    const mime = ext === '.svg'
+      ? 'image/svg+xml'
+      : ext === '.png'
+        ? 'image/png'
+        : ext === '.webp'
+          ? 'image/webp'
+          : ext === '.gif'
+            ? 'image/gif'
+            : ext === '.ico'
+              ? 'image/x-icon'
+              : 'image/jpeg';
+    return new Response(readFileSync(file), {
+      headers: { 'Content-Type': mime, 'Cache-Control': 'public, max-age=31536000' },
+    });
+  }
+}
+
+export function getStaticPaths() {
+  const extra = [
+    'destinos/rio-de-janeiro',
+    'destinos/santiago',
+    'destinos/sao-paulo',
+    'destinos/buenos-aires',
+    'destinos/europa',
+    'destinos/estados-unidos',
+    'destinos/argentina',
+    'paquetes',
+    'alojamientos',
+    'autos',
+    'universal',
+    'actividades',
+    'esim',
+    'traslados',
+    'asistencia',
+    'servicios',
+    'mis-viajes',
+    'check-in',
+    'canje-millas',
+    'upgrade',
+    'experiencia',
+    'experiencia/prepara-tu-viaje',
+    'experiencia/embarque',
+    'experiencia/a-bordo',
+    'prepara-tu-viaje',
+    'wallet',
+    'corporate',
+    'inversionistas',
+    'tarjeta-latam-pass',
+    'legal/cargos',
+    'legal/uso',
+    'legal/slots-gru',
+    'staff-travel',
+    'trade',
+    'mascotas',
+    'equipaje',
+    'menores',
+    'embarazadas',
+    'clase-business',
+    'avisos',
+    'oficinas',
+    'hora-limite',
+    'asistencia-especial',
+    'metodos-de-pago',
+    'documentos',
+    'tarifas',
+    'somos-iosa',
+    'mapa-de-sitio',
+    'legal/derechos',
+  ];
+  const slugs = [...new Set([...getBoaPageSlugs(), ...extra])];
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const aliases: Record<string, string> = {
+  'check-in': 'ayuda',
+  asistencia: 'asistencia-especial',
+  experiencia: 'clase-business',
+  'prepara-tu-viaje': 'documentos',
+  corporate: 'acerca-de',
+  prensa: 'prensa',
+};
+
+const raw = Array.isArray(Astro.params.slug) ? Astro.params.slug.join('/') : Astro.params.slug || '';
+const slug = aliases[raw] || raw;
+const page = getBoaPage(slug);
+const title = page?.title || raw.split('/').pop()?.replace(/-/g, ' ') || 'BoA';
+const query = Object.fromEntries(Astro.url.searchParams.entries());
+---
+
+<InnerLayout title={title} heading={title}>
+  {page ? (
+    <BoaArticle page={page} query={query} />
+  ) : (
+    <article class="boa-article">
+      <p>
+        Esta sección forma parte de BoA — Boliviana de Aviación. Vuelve al
+        <a href="/#buscar">buscador</a> para cotizar vuelos.
+      </p>
+    </article>
+  )}
+</InnerLayout>

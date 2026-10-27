@@ -1,0 +1,702 @@
+---
+import type { City } from '../data/mockData';
+import { BOA_DESTINATIONS, BOA_ORIGINS } from '../data/boaStations';
+
+interface Prefill {
+  origin?: string;
+  destination?: string;
+  depart?: string;
+  returnDate?: string;
+  trip?: string;
+  adults?: number | string;
+  children?: number | string;
+  infants?: number | string;
+}
+
+interface Props {
+  cities: City[];
+  embedded?: boolean;
+  prefill?: Prefill;
+}
+
+const { cities, embedded = false, prefill } = Astro.props;
+const stations = [...BOA_ORIGINS, ...BOA_DESTINATIONS];
+
+function stationLabel(code?: string) {
+  if (!code) return '';
+  const hit = stations.find((item) => item.code === code);
+  return hit ? `${hit.city} (${hit.code})` : code;
+}
+
+const tripVal = prefill?.trip === 'oneway' ? 'oneway' : 'roundtrip';
+const originCode = prefill?.origin || 'VVI';
+const destCode = prefill?.destination || '';
+const originLabel = stationLabel(originCode) || 'Santa Cruz de la Sierra (VVI)';
+const destLabelText = stationLabel(destCode);
+const departVal = prefill?.depart || '';
+const returnVal = prefill?.returnDate || '';
+const adultsVal = String(prefill?.adults ?? 1);
+const childrenVal = String(prefill?.children ?? 0);
+const infantsVal = String(prefill?.infants ?? 0);
+const paxTotal = Number(adultsVal) + Number(childrenVal) + Number(infantsVal);
+void cities;
+---
+
+<section class:list={['av-search', embedded && 'av-search--embedded']} id="av-search">
+  <form class="av-search__form" id="av-flight-form" action="/ofertas-vuelos" method="get">
+    <input type="hidden" name="trip" id="av-trip" value={tripVal} />
+    <input type="hidden" name="origin" id="av-origin" value={originCode} />
+    <input type="hidden" name="destination" id="av-dest" value={destCode} />
+    <input type="hidden" name="depart" id="av-depart" value={departVal} />
+    <input type="hidden" name="return" id="av-return" value={returnVal} />
+    <input type="hidden" name="adults" id="av-adults" value={adultsVal} />
+    <input type="hidden" name="children" id="av-children" value={childrenVal} />
+    <input type="hidden" name="infants" id="av-infants" value={infantsVal} />
+    <input type="hidden" name="cabin" value="Economy" />
+
+    <div class="av-search__top">
+      <div class="av-trip">
+        <label class="av-trip__opt">
+          <input type="radio" name="tripType" value="roundtrip" checked={tripVal === 'roundtrip'} />
+          <span class="av-trip__dot"></span>
+          Ida y vuelta
+        </label>
+        <label class="av-trip__opt">
+          <input type="radio" name="tripType" value="oneway" checked={tripVal === 'oneway'} />
+          <span class="av-trip__dot"></span>
+          Solo ida
+        </label>
+      </div>
+      <div class="av-search__links">
+        <a class="av-chip av-chip--miles" href="/ofertas-vuelos" rel="noreferrer">
+          Reservar con millas
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 3h9v9H11.5V5.56L4.53 12.53 3.47 11.47 10.44 4.5H4V3Z" fill="currentColor"/></svg>
+        </a>
+        <div class="av-chip av-chip--promo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5h8.8L20 12.7 12.8 20 4 11.2V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8.2" cy="9.2" r="1.35" fill="currentColor"/></svg>
+          <input type="text" name="promo" placeholder="Código Promocional" aria-label="Código Promocional" />
+          <button type="button" class="av-promo-go" aria-label="Aplicar código">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 3h7v7h-1.6V5.7L4.7 12.4 3.6 11.3 10.3 4.6H6V3Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="av-search__bottom">
+      <div class="av-od">
+        <div class="av-field" data-av-field="origin">
+          <img class="av-field__ico" src="/icons/avianca/takeoff.svg" alt="" width="17" height="15" />
+          <div class="av-field__text">
+            <label for="av-origin-input">Origen</label>
+            <input id="av-origin-input" type="text" autocomplete="off" value={originLabel} />
+          </div>
+        </div>
+        <button class="av-swap" type="button" aria-label="Intercambiar origen y destino">
+          <svg class="av-swap__desktop" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 7h10l-2.2-2.2L16 3.6 21 8.6l-5 5-1.2-1.2L17 10H7V7Zm10 10H7l2.2 2.2L8 20.4 3 15.4l5-5 1.2 1.2L7 14h10v3Z" fill="currentColor"/></svg>
+          <svg class="av-swap__mobile" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M8 16.5V5.5M8 5.5 5 8.5M8 5.5l3 3M16 7.5v11M16 18.5l3-3M16 18.5l-3-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="av-field" data-av-field="destination">
+          <img class="av-field__ico" src="/icons/avianca/land.svg" alt="" width="16" height="17" />
+          <div class="av-field__text">
+            <label for="av-dest-input" class:list={['av-placeholder', destLabelText && 'is-hidden']} id="av-dest-label">Destino</label>
+            <input id="av-dest-input" type="text" autocomplete="off" placeholder="" value={destLabelText} />
+          </div>
+        </div>
+        <div class="av-suggest hidden" data-av-suggest="origin"></div>
+        <div class="av-suggest hidden" data-av-suggest="destination"></div>
+      </div>
+
+      <div class="av-dates" data-av-dates>
+        <button class="av-field av-field--date" type="button" id="av-depart-btn" data-av-cal="depart" aria-haspopup="dialog" aria-expanded="false">
+          <svg class="av-field__ico" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V3h-2v2H10V3H8Zm10 8H6v8h12v-8Z" fill="currentColor"/></svg>
+          <span class="av-field__text">
+            <span class="av-placeholder" id="av-depart-label">Ida</span>
+            <span class="av-date-value" id="av-depart-pretty"></span>
+          </span>
+        </button>
+        <span class="av-dates__split" aria-hidden="true"></span>
+        <button class:list={['av-field', 'av-field--date', tripVal === 'oneway' && 'is-off']} type="button" id="av-return-wrap" data-av-cal="return" aria-haspopup="dialog" aria-expanded="false">
+          <svg class="av-field__ico" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V3h-2v2H10V3H8Zm10 8H6v8h12v-8Z" fill="currentColor"/></svg>
+          <span class="av-field__text">
+            <span class="av-placeholder" id="av-return-label">Vuelta</span>
+            <span class="av-date-value" id="av-return-pretty"></span>
+          </span>
+        </button>
+      </div>
+
+      <button class="av-pax" type="button" id="av-pax-btn" aria-label="Pasajeros">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="8" r="3.1" stroke="currentColor" stroke-width="1.7"/><path d="M4.2 19c.4-3.2 2.7-5.2 5.8-5.2 3.1 0 5.4 2 5.8 5.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M17.2 7.2v6M14.2 10.2h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span id="av-pax-count">{paxTotal}</span>
+        <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <div class="av-paxbox hidden" id="av-paxbox">
+        <div class="av-paxrow">
+          <div><strong>Adultos</strong><small>12 años o más</small></div>
+          <div class="av-step">
+            <button type="button" data-av-pax="adults" data-dir="-">−</button>
+            <span data-av-n="adults">{adultsVal}</span>
+            <button type="button" data-av-pax="adults" data-dir="+">+</button>
+          </div>
+        </div>
+        <div class="av-paxrow">
+          <div><strong>Niños</strong><small>De 2 a 11 años</small></div>
+          <div class="av-step">
+            <button type="button" data-av-pax="children" data-dir="-">−</button>
+            <span data-av-n="children">{childrenVal}</span>
+            <button type="button" data-av-pax="children" data-dir="+">+</button>
+          </div>
+        </div>
+        <div class="av-paxrow">
+          <div><strong>Bebés</strong><small>Menores de 2 años</small></div>
+          <div class="av-step">
+            <button type="button" data-av-pax="infants" data-dir="-">−</button>
+            <span data-av-n="infants">{infantsVal}</span>
+            <button type="button" data-av-pax="infants" data-dir="+">+</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="av-search__btn" type="submit">Buscar</button>
+    </div>
+    <p class="av-search__error hidden" id="av-form-error">Debes completar origen, destino y fechas para buscar vuelos.</p>
+  </form>
+  <div class="av-cal hidden" id="av-cal" hidden>
+    <div class="av-cal__backdrop" data-av-cal-close></div>
+    <div class="av-cal__panel" role="dialog" aria-modal="true" aria-labelledby="av-cal-title">
+      <header class="av-cal__head">
+        <button type="button" class="av-cal__back" data-av-cal-close aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h2 id="av-cal-title">Fechas</h2>
+        <button type="button" class="av-cal__close" data-av-cal-close aria-label="Cerrar">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1l12 12M13 1 1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <div class="av-cal__picks">
+        <button type="button" class="av-cal__pick is-active" data-av-cal-pick="depart">
+          <svg class="av-cal__pick-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V3h-2v2H10V3H8Zm10 8H6v8h12v-8Z" fill="currentColor"/></svg>
+          <span class="av-cal__pick-text">
+            <span>Ida</span>
+            <strong id="av-cal-ida">—</strong>
+          </span>
+        </button>
+        <button type="button" class="av-cal__pick" data-av-cal-pick="return" id="av-cal-return-pick">
+          <svg class="av-cal__pick-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3v2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V3h-2v2H10V3H8Zm10 8H6v8h12v-8Z" fill="currentColor"/></svg>
+          <span class="av-cal__pick-text">
+            <span>Vuelta</span>
+            <strong id="av-cal-vuelta">—</strong>
+          </span>
+        </button>
+      </div>
+      <div class="av-cal__modes" hidden>
+        <button type="button" class="is-active" data-av-cal-mode="cal">Calendario</button>
+        <button type="button" data-av-cal-mode="chart">Gráfico de precios <span class="av-cal__nuevo">Nuevo</span></button>
+      </div>
+      <button type="button" class="av-cal__clear" data-av-cal-clear hidden>Limpiar la selección</button>
+      <div class="av-cal__nav">
+        <button type="button" data-av-cal-nav="prev" aria-label="Mes anterior">‹</button>
+        <button type="button" data-av-cal-nav="next" aria-label="Mes siguiente">›</button>
+      </div>
+      <div class="av-cal__months" id="av-cal-months"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { BOA_DESTINATIONS, BOA_ORIGINS } from '../data/boaStations';
+
+  const form = document.getElementById('av-flight-form');
+  const originInput = document.getElementById('av-origin-input');
+  const destInput = document.getElementById('av-dest-input');
+  const originCode = document.getElementById('av-origin');
+  const destCode = document.getElementById('av-dest');
+  const tripHidden = document.getElementById('av-trip');
+  const departHidden = document.getElementById('av-depart');
+  const returnHidden = document.getElementById('av-return');
+  const adultsHidden = document.getElementById('av-adults');
+  const childrenHidden = document.getElementById('av-children');
+  const infantsHidden = document.getElementById('av-infants');
+  const returnWrap = document.getElementById('av-return-wrap');
+  const destLabel = document.getElementById('av-dest-label');
+  const error = document.getElementById('av-form-error');
+  const paxBox = document.getElementById('av-paxbox');
+
+  const pax = {
+    adults: Number(adultsHidden?.value || 1),
+    children: Number(childrenHidden?.value || 0),
+    infants: Number(infantsHidden?.value || 0),
+  };
+  let destFilter = 'avianca';
+
+  function labelCity(c) {
+    return `${c.city} (${c.code})`;
+  }
+
+  function listLabel(c) {
+    return `${c.city} (${c.country}) (${c.code})`;
+  }
+
+  function stationSource(which) {
+    if (which === 'origin') return BOA_ORIGINS;
+    return BOA_DESTINATIONS;
+  }
+
+  function filterStations(q, which) {
+    const query = String(q || '').trim().toLowerCase();
+    const source = stationSource(which);
+    if (query.length < 1) return source;
+    return source.filter((c) => `${c.city} ${c.code} ${c.country}`.toLowerCase().includes(query));
+  }
+
+  function placeSuggest(box, which) {
+    const field = document.querySelector(`[data-av-field="${which}"]`);
+    const rect = field?.getBoundingClientRect();
+    if (!box || !rect) return;
+    const width = which === 'destination'
+      ? Math.min(720, window.innerWidth - 24)
+      : Math.min(Math.max(rect.width, 320), window.innerWidth - 24);
+    const left = Math.max(12, Math.min(rect.left, window.innerWidth - width - 12));
+    let top = rect.bottom + 6;
+    const maxH = Math.min(which === 'destination' ? 420 : 280, Math.max(160, window.innerHeight - top - 16));
+    if (top + 180 > window.innerHeight) {
+      top = Math.max(12, rect.top - Math.min(maxH, 280) - 6);
+    }
+    box.style.left = `${left}px`;
+    box.style.top = `${top}px`;
+    box.style.width = `${width}px`;
+    box.style.maxHeight = `${maxH}px`;
+  }
+
+  function renderSuggest(which, items) {
+    const box = document.querySelector(`[data-av-suggest="${which}"]`);
+    if (!box) return;
+    const filters =
+      which === 'destination'
+        ? `<div class="av-suggest__filters">
+            <span>Filtrar por:</span>
+            <div class="av-suggest__tabs">
+              <label class="av-suggest__tab">
+                <input type="radio" name="av-dest-filter" value="avianca" ${destFilter === 'avianca' ? 'checked' : ''} />
+                <span class="av-trip__dot"></span>
+                Destinos BoA
+              </label>
+              <label class="av-suggest__tab">
+                <input type="radio" name="av-dest-filter" value="allies" ${destFilter === 'allies' ? 'checked' : ''} />
+                <span class="av-trip__dot"></span>
+                Destinos con aliados
+              </label>
+            </div>
+          </div>`
+        : `<p class="av-suggest__title">Orígenes</p>`;
+    box.innerHTML =
+      filters +
+      `<div class="av-suggest__grid">${items
+        .map(
+          (c) =>
+            `<button type="button" data-code="${c.code}" data-label="${labelCity(c)}">${listLabel(c)}</button>`,
+        )
+        .join('')}</div>`;
+    document.querySelectorAll('.av-suggest').forEach((el) => {
+      if (el !== box) el.classList.add('hidden');
+    });
+    if (box.parentElement !== document.body) document.body.append(box);
+    box.classList.add('is-portaled', 'av-suggest--stations');
+    box.classList.remove('hidden');
+    placeSuggest(box, which);
+  }
+
+  function hideSuggests() {
+    document.querySelectorAll('.av-suggest').forEach((el) => el.classList.add('hidden'));
+  }
+
+  function bindField(input, which) {
+    input?.addEventListener('input', () => {
+      if (which === 'destination') destLabel?.classList.add('is-hidden');
+      renderSuggest(which, filterStations(input.value, which));
+    });
+    input?.addEventListener('focus', () => {
+      renderSuggest(which, filterStations('', which));
+    });
+  }
+
+  bindField(originInput, 'origin');
+  bindField(destInput, 'destination');
+
+  document.querySelectorAll('.av-suggest').forEach((box) => {
+    box.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const filter = e.target.closest('input[name="av-dest-filter"]');
+      if (filter) {
+        destFilter = filter.value;
+        renderSuggest('destination', filterStations(destInput.value, 'destination'));
+        destInput.focus();
+        return;
+      }
+      const btn = e.target.closest('button[data-code]');
+      if (!btn) return;
+      const which = box.getAttribute('data-av-suggest');
+      if (which === 'origin') {
+        originInput.value = btn.dataset.label;
+        originCode.value = btn.dataset.code;
+      } else {
+        destInput.value = btn.dataset.label;
+        destCode.value = btn.dataset.code;
+        destLabel?.classList.add('is-hidden');
+      }
+      hideSuggests();
+    });
+    box.addEventListener('change', (e) => {
+      const filter = e.target.closest('input[name="av-dest-filter"]');
+      if (!filter) return;
+      destFilter = filter.value;
+      renderSuggest('destination', filterStations(destInput.value, 'destination'));
+    });
+  });
+
+  document.querySelector('.av-swap')?.addEventListener('click', () => {
+    const oL = originInput.value;
+    const oC = originCode.value;
+    originInput.value = destInput.value;
+    originCode.value = destCode.value;
+    destInput.value = oL;
+    destCode.value = oC;
+    destLabel?.classList.toggle('is-hidden', Boolean(destInput.value));
+  });
+
+  const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const WEEK_DESK = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+  const WEEK_SHEET = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
+  const cal = document.getElementById('av-cal');
+  const calMonths = document.getElementById('av-cal-months');
+  const departBtn = document.getElementById('av-depart-btn');
+
+  function startOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+  }
+  function addMonths(date, n) {
+    return new Date(date.getFullYear(), date.getMonth() + n, 1);
+  }
+  function today() {
+    const n = new Date();
+    return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  }
+  function toIso(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+  function fromIso(value) {
+    if (!value) return null;
+    const [y, m, d] = String(value).split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d);
+  }
+  function sameDay(a, b) {
+    return a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  }
+  function isSheet() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+  const calState = { picking: 'depart', month: startOfMonth(new Date()) };
+
+  function prettyDate(iso) {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    const days = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    return `${days[dt.getDay()]}. ${dt.getDate()} ${months[dt.getMonth()]}.`;
+  }
+
+  function paintDate(hidden, label, prettyEl) {
+    label?.classList.toggle('is-hidden', Boolean(hidden?.value));
+    if (prettyEl) prettyEl.textContent = prettyDate(hidden?.value || '');
+  }
+
+  function prettyDateDMY(iso) {
+    if (!iso) return '—';
+    const [y, m, d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  function syncDateLabels() {
+    paintDate(departHidden, document.getElementById('av-depart-label'), document.getElementById('av-depart-pretty'));
+    paintDate(returnHidden, document.getElementById('av-return-label'), document.getElementById('av-return-pretty'));
+    const ida = document.getElementById('av-cal-ida');
+    const vuelta = document.getElementById('av-cal-vuelta');
+    if (ida) ida.textContent = isSheet() ? prettyDateDMY(departHidden?.value) : (prettyDate(departHidden?.value) || '—');
+    if (vuelta) vuelta.textContent = isSheet() ? prettyDateDMY(returnHidden?.value) : (prettyDate(returnHidden?.value) || '—');
+  }
+
+  function minSelectable(picking) {
+    const t = today();
+    const depart = fromIso(departHidden?.value);
+    if (picking === 'return' && depart && depart > t) return depart;
+    return t;
+  }
+
+  function renderMonth(base) {
+    const year = base.getFullYear();
+    const month = base.getMonth();
+    const first = new Date(year, month, 1);
+    const startWeekday = (first.getDay() + 6) % 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const min = minSelectable(calState.picking);
+    const max = addMonths(today(), 12);
+    const depart = fromIso(departHidden?.value);
+    const back = fromIso(returnHidden?.value);
+    const week = isSheet() ? WEEK_SHEET : WEEK_DESK;
+    let html = `<div class="av-cal-month"><h4>${MONTHS[month]} ${year}</h4><div class="av-cal-grid">`;
+    html += week.map((d) => `<span class="av-cal-dow">${d}</span>`).join('');
+    for (let i = 0; i < startWeekday; i += 1) html += '<span class="av-cal-pad" aria-hidden="true"></span>';
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const date = new Date(year, month, day);
+      const disabled = date < min || date > max;
+      const isDepart = sameDay(date, depart);
+      const isReturn = sameDay(date, back);
+      const inRange = depart && back && date > depart && date < back;
+      const cls = ['av-cal-day', disabled && 'is-disabled', isDepart && 'is-depart', isReturn && 'is-return', inRange && 'is-range'].filter(Boolean).join(' ');
+      html += `<button type="button" class="${cls}" data-iso="${toIso(date)}" ${disabled ? 'disabled' : ''}>${day}</button>`;
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderCalendar() {
+    if (!calMonths) return;
+    const months = isSheet() ? 13 : 2;
+    const start = isSheet() ? startOfMonth(today()) : calState.month;
+    calMonths.innerHTML = Array.from({ length: months }, (_, i) => renderMonth(addMonths(start, i))).join('');
+    cal?.querySelectorAll('[data-av-cal-pick]').forEach((btn) => {
+      btn.classList.toggle('is-active', btn.dataset.avCalPick === calState.picking);
+    });
+    const returnPick = document.getElementById('av-cal-return-pick');
+    returnPick?.classList.toggle('is-off', tripHidden?.value === 'oneway');
+    const modes = cal?.querySelector('.av-cal__modes');
+    const clear = cal?.querySelector('.av-cal__clear');
+    if (isSheet()) {
+      modes?.removeAttribute('hidden');
+      clear?.removeAttribute('hidden');
+    } else {
+      modes?.setAttribute('hidden', '');
+      clear?.setAttribute('hidden', '');
+    }
+    syncDateLabels();
+  }
+
+  function placeCalendar() {
+    if (!cal) return;
+    const panel = cal.querySelector('.av-cal__panel');
+    if (!panel) return;
+    if (isSheet()) {
+      panel.style.top = '';
+      panel.style.left = '';
+      panel.style.right = '';
+      panel.style.width = '';
+      return;
+    }
+    const anchor = document.querySelector('[data-av-dates]');
+    const rect = anchor?.getBoundingClientRect();
+    if (!rect) return;
+    const width = Math.min(640, window.innerWidth - 24);
+    let left = Math.max(12, Math.min(rect.left, window.innerWidth - width - 12));
+    let top = rect.bottom + 8;
+    if (top + 380 > window.innerHeight) top = Math.max(12, rect.top - 388);
+    panel.style.top = `${top}px`;
+    panel.style.left = `${left}px`;
+    panel.style.width = `${width}px`;
+  }
+
+  function closeCalendar() {
+    cal?.classList.add('hidden');
+    cal?.classList.remove('is-open', 'is-sheet');
+    cal?.setAttribute('hidden', '');
+    document.body.classList.remove('is-av-cal-open');
+    departBtn?.setAttribute('aria-expanded', 'false');
+    returnWrap?.setAttribute('aria-expanded', 'false');
+  }
+
+  function openCalendar(picking) {
+    let next = picking;
+    if (next === 'return' && tripHidden?.value === 'oneway') next = 'depart';
+    if (next === 'return' && !departHidden?.value) next = 'depart';
+    calState.picking = next;
+    const anchor = fromIso(next === 'return' ? (returnHidden?.value || departHidden?.value) : departHidden?.value) || today();
+    calState.month = startOfMonth(anchor);
+    if (cal && cal.parentElement !== document.body) document.body.append(cal);
+    cal?.classList.toggle('is-sheet', isSheet());
+    cal?.classList.remove('hidden');
+    cal?.removeAttribute('hidden');
+    cal?.classList.add('is-open');
+    document.body.classList.add('is-av-cal-open');
+    hideSuggests();
+    paxBox?.classList.add('hidden');
+    departBtn?.setAttribute('aria-expanded', next === 'depart' ? 'true' : 'false');
+    returnWrap?.setAttribute('aria-expanded', next === 'return' ? 'true' : 'false');
+    renderCalendar();
+    placeCalendar();
+  }
+
+  document.querySelectorAll('input[name="tripType"]').forEach((el) => {
+    el.addEventListener('change', () => {
+      const one = el.value === 'oneway';
+      tripHidden.value = one ? 'oneway' : 'roundtrip';
+      returnWrap?.classList.toggle('is-off', one);
+      if (one) {
+        returnHidden.value = '';
+        syncDateLabels();
+        if (calState.picking === 'return') closeCalendar();
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-av-cal]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const picking = btn.dataset.avCal;
+      const open = cal?.classList.contains('is-open') && calState.picking === picking;
+      if (open) closeCalendar();
+      else openCalendar(picking);
+    });
+  });
+
+  cal?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (e.target.closest('[data-av-cal-close]')) {
+      closeCalendar();
+      return;
+    }
+    if (e.target.closest('[data-av-cal-clear]')) {
+      if (departHidden) departHidden.value = '';
+      if (returnHidden) returnHidden.value = '';
+      calState.picking = 'depart';
+      renderCalendar();
+      return;
+    }
+    if (e.target.closest('[data-av-cal-mode]')) {
+      return;
+    }
+    const pick = e.target.closest('[data-av-cal-pick]');
+    if (pick) {
+      if (pick.dataset.avCalPick === 'return' && (tripHidden?.value === 'oneway' || !departHidden?.value)) return;
+      calState.picking = pick.dataset.avCalPick;
+      renderCalendar();
+      return;
+    }
+    const nav = e.target.closest('[data-av-cal-nav]');
+    if (nav) {
+      const nextMonth = addMonths(calState.month, nav.dataset.avCalNav === 'next' ? 1 : -1);
+      const minMonth = startOfMonth(today());
+      const maxMonth = startOfMonth(addMonths(today(), 11));
+      if (nextMonth < minMonth || nextMonth > maxMonth) return;
+      calState.month = nextMonth;
+      renderCalendar();
+      return;
+    }
+    const day = e.target.closest('.av-cal-day');
+    if (!day || day.disabled) return;
+    const date = fromIso(day.dataset.iso);
+    if (!date) return;
+    if (calState.picking === 'depart') {
+      departHidden.value = toIso(date);
+      const back = fromIso(returnHidden.value);
+      if (back && back < date) returnHidden.value = '';
+      syncDateLabels();
+      if (tripHidden.value === 'oneway') closeCalendar();
+      else openCalendar('return');
+    } else {
+      if (fromIso(departHidden.value) && date < fromIso(departHidden.value)) return;
+      returnHidden.value = toIso(date);
+      syncDateLabels();
+      closeCalendar();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (cal?.classList.contains('is-open')) {
+      cal.classList.toggle('is-sheet', isSheet());
+      renderCalendar();
+      placeCalendar();
+    }
+  });
+
+  syncDateLabels();
+
+  function syncPax() {
+    adultsHidden.value = String(pax.adults);
+    childrenHidden.value = String(pax.children);
+    infantsHidden.value = String(pax.infants);
+    document.getElementById('av-pax-count').textContent = String(pax.adults + pax.children + pax.infants);
+    document.querySelector('[data-av-n="adults"]').textContent = String(pax.adults);
+    document.querySelector('[data-av-n="children"]').textContent = String(pax.children);
+    document.querySelector('[data-av-n="infants"]').textContent = String(pax.infants);
+  }
+
+  function placePaxBox() {
+    const btn = document.getElementById('av-pax-btn');
+    const rect = btn?.getBoundingClientRect();
+    if (!paxBox || !rect) return;
+    const width = Math.min(280, window.innerWidth - 24);
+    const left = Math.max(12, Math.min(rect.right - width, window.innerWidth - width - 12));
+    let top = rect.bottom + 8;
+    if (top + 220 > window.innerHeight) top = Math.max(12, rect.top - 228);
+    paxBox.style.left = `${left}px`;
+    paxBox.style.top = `${top}px`;
+    paxBox.style.width = `${width}px`;
+    paxBox.style.right = 'auto';
+  }
+
+  document.getElementById('av-pax-btn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = paxBox?.classList.contains('hidden');
+    if (open) {
+      if (paxBox && paxBox.parentElement !== document.body) document.body.append(paxBox);
+      paxBox.classList.add('is-portaled');
+      paxBox.classList.remove('hidden');
+      placePaxBox();
+    } else {
+      paxBox?.classList.add('hidden');
+    }
+  });
+  paxBox?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-av-pax]');
+    if (!btn) return;
+    const key = btn.dataset.avPax;
+    const dir = btn.dataset.dir === '+' ? 1 : -1;
+    const min = key === 'adults' ? 1 : 0;
+    pax[key] = Math.max(min, Math.min(9, pax[key] + dir));
+    syncPax();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#av-search') && !e.target.closest('.av-suggest')) hideSuggests();
+    if (!e.target.closest('#av-paxbox') && !e.target.closest('#av-pax-btn')) {
+      paxBox?.classList.add('hidden');
+    }
+    if (!e.target.closest('#av-cal') && !e.target.closest('[data-av-cal]')) closeCalendar();
+  });
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.av-suggest:not(.hidden)').forEach((box) => {
+      placeSuggest(box, box.getAttribute('data-av-suggest'));
+    });
+    if (paxBox && !paxBox.classList.contains('hidden')) placePaxBox();
+  });
+  document.addEventListener('offers-modify-close', () => {
+    hideSuggests();
+    paxBox?.classList.add('hidden');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCalendar();
+  });
+
+  form?.addEventListener('submit', (e) => {
+    if (!originCode.value || !destCode.value || !departHidden.value || (tripHidden.value === 'roundtrip' && !returnHidden.value)) {
+      e.preventDefault();
+      error?.classList.remove('hidden');
+    }
+  });
+
+  destLabel?.classList.toggle('is-hidden', Boolean(destInput?.value));
+  syncPax();
+</script>

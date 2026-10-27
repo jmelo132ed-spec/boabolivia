@@ -1,0 +1,91 @@
+---
+const experiences = [
+  { href: '/mascotas', src: '/images/boa/exp-mascota.jpg', title: '¡Lleva a tu amigo peludo!', wide: true },
+  { href: '/equipaje', src: '/images/boa/exp-equipaje.jpg', title: 'Empaca tranquilo, el equipaje está incluido' },
+  { href: '/menores', src: '/images/boa/exp-ninos.jpg', title: 'Viaja y crea recuerdos con los más pequeños' },
+  { href: '/clase-business', src: '/images/boa/exp-asiento.jpg', title: 'La libertad de elegir tu asiento, SIN COSTO' },
+  { href: '/embarazadas', src: '/images/boa/exp-mamas.png', title: 'Comodidad y seguridad para futuras mamás' },
+];
+
+const infos = [
+  { href: '/avisos', src: '/images/boa/icon-avisos.png', title: 'Avisos Importantes', text: 'Entérate de las últimas noticias, eventos y anuncios importantes.' },
+  { href: '/oficinas', src: '/images/boa/icon-avisos.png', title: 'Nuestras Oficinas', text: 'Descubre nuestras oficinas y horarios de atención. Estamos aquí para ayudarte cuando lo necesites.' },
+  { href: '/hora-limite', src: '/images/boa/icon-avisos.png', title: 'Hora Límite', text: 'Asegúrate de llegar a tiempo para iniciar tu viaje y mejorar tu experiencia.' },
+  { href: '/asistencia-especial', src: '/images/boa/icon-avisos.png', title: 'Asistencia Especial', text: 'Nos preocupamos por tus necesidades. Por eso contamos con servicio exclusivo ante los requerimientos de nuestros clientes.' },
+];
+
+const prep = [
+  { href: '/metodos-de-pago', src: '/images/boa/info-pago.png', title: '¿Cómo pago mi boleto?' },
+  { href: '/asistencia-especial', src: '/images/boa/info-especiales.png', title: '¿Cómo solicito Servicios Especiales?' },
+  { href: '/documentos', src: '/images/boa/info-docs.jpg', title: '¿Qué documentos necesito?' },
+  { href: '/destinos', src: '/images/boa/destinos.jpg', title: 'Nuestros destinos' },
+];
+---
+
+<section class="boa-exp" id="experiencia">
+  <div class="boa-wrap">
+    <p class="boa-kicker">Experiencia</p>
+    <h2 class="boa-title">¡Más beneficios para tu viaje!</h2>
+    <div class="boa-exp__grid">
+      {experiences.map((item) => (
+        <a class:list={['boa-card', item.wide && 'boa-card--wide']} href={item.href}>
+          <img src={item.src} alt={item.title} />
+          <div class="boa-card__shade"></div>
+          <div class="boa-card__txt">
+            <h3>{item.title}</h3>
+            <span>Ver más &gt;</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="boa-info">
+  <div class="boa-wrap">
+    <p class="boa-kicker">Información</p>
+    <h2>Accesos Rápidos</h2>
+    <div class="boa-info__grid">
+      {infos.map((item) => (
+        <a class="boa-info__item" href={item.href}>
+          <img src={item.src} alt="" />
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="boa-svc">
+  <img class="bg" src="/images/boa/hero-madrid.jpg" alt="" />
+  <div class="boa-svc__copy">
+    <small>Otros Servicios</small>
+    <h2>Tenemos más facilidades para ofrecerte</h2>
+    <a href="/clase-business">Clase Business</a>
+  </div>
+</section>
+
+<section class="boa-prep" id="destinos">
+  <div class="boa-wrap">
+    <p class="boa-kicker">Prepárate</p>
+    <h2 class="boa-title">Mejora tu experiencia</h2>
+    <div class="boa-prep__grid">
+      {prep.map((item) => (
+        <a class="boa-prep__card" href={item.href}>
+          <img src={item.src} alt={item.title} />
+          <span>{item.title}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="boa-inspire">
+  <img src="/images/boa/inspire.png" alt="" />
+  <div class="boa-inspire__copy">
+    <h2>¡Inspírate!</h2>
+    <p>Conoce nuestros destinos y elige tu próximo destino.</p>
+    <a href="/destinos">Ver más</a>
+  </div>
+</section>

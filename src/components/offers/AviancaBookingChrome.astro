@@ -1,0 +1,121 @@
+---
+interface Props {
+  origin: string;
+  destination: string;
+  depart: string;
+  returnDate: string;
+  trip: string;
+  adults: number;
+  children: number;
+  infants: number;
+  startOpen?: boolean;
+  currentStep?: number;
+  compact?: boolean;
+}
+
+const {
+  origin,
+  destination,
+  depart,
+  returnDate,
+  trip,
+  adults,
+  children,
+  infants,
+  startOpen = false,
+  currentStep = 1,
+  compact = false,
+} = Astro.props;
+
+const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'Sept', 'oct', 'nov', 'dic'];
+
+function shortDate(iso: string) {
+  if (!iso) return '';
+  const d = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+const datesText = trip === 'oneway' || !returnDate
+  ? shortDate(depart)
+  : `${shortDate(depart)} - ${shortDate(returnDate)}`;
+
+const paxTotal = adults + children + infants;
+const paxText = `${paxTotal} ${paxTotal === 1 ? 'Pasajero' : 'Pasajeros'}`;
+---
+
+<header class="av-book-chrome" id="offers-summary">
+  <div class="av-book-chrome__row">
+    <a class="av-book-chrome__logo" href="/" aria-label="Logo BoA, ir al inicio">
+      <img src="/images/boa/logo.png" alt="BoA" />
+    </a>
+
+    {!compact && (
+      <div class="av-book-chrome__facts">
+        <p class="av-book-chrome__route">
+          <span>{origin || '—'}</span>
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M3.2 4.2 5.4 2l.9.9-1.3 1.3H12v1.3H5l1.3 1.3-.9.9L3.2 5.2V4.2Zm9.6 7.6L10.6 14l-.9-.9 1.3-1.3H4V10.5h7.6l-1.3-1.3.9-.9 2.2 2.2v1.3Z"/></svg>
+          <span>{destination || '—'}</span>
+        </p>
+        <p class="av-book-chrome__item">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 3v2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V3h-2v2H10V3H8Zm10 8H6v8h12v-8Z" fill="currentColor"/></svg>
+          {datesText}
+        </p>
+        <p class="av-book-chrome__item">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0H5Z" fill="currentColor"/></svg>
+          {paxText}
+        </p>
+        <button class="av-book-chrome__modify" type="button" id="modify-search" aria-expanded={startOpen ? 'true' : 'false'}>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M4 17.3 16.7 4.6l2.7 2.7L6.7 20H4v-2.7ZM19.8 3.2a1.2 1.2 0 0 0-1.7 0l-1 1 2.7 2.7 1-1a1.2 1.2 0 0 0 0-1.7l-1-1Z" fill="currentColor"/></svg>
+          Modificar
+        </button>
+      </div>
+    )}
+
+    <ol class="av-book-steps" aria-label="Progreso de reserva">
+      {[1, 2, 3, 4].map((step) => (
+        <li class:list={[step === currentStep && 'is-current', step < currentStep && 'is-done']}>
+          {step < currentStep ? (
+            <span aria-label={`Paso ${step} completado`}>
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M9.2 16.2 5 12l1.4-1.4 2.8 2.8 8.4-8.4L19 6.4 9.2 16.2Z"/></svg>
+            </span>
+          ) : (
+            <span>{step}</span>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class:list={['av-book-modify', startOpen && 'is-open']} id="modify-panel">
+    <div class="av-book-modify__clip">
+      <slot />
+    </div>
+  </div>
+</header>
+<div class:list={['offers-modify-backdrop', !startOpen && 'hidden']} id="offers-modify-backdrop" hidden={!startOpen}></div>
+
+<script>
+  const btn = document.getElementById('modify-search');
+  const panel = document.getElementById('modify-panel');
+  const backdrop = document.getElementById('offers-modify-backdrop');
+  if (backdrop && backdrop.parentElement !== document.body) document.body.append(backdrop);
+
+  function setModifyOpen(open) {
+    document.getElementById('offers-summary')?.classList.toggle('is-modify-open', open);
+    panel?.classList.toggle('is-open', open);
+    backdrop?.classList.toggle('hidden', !open);
+    if (open) backdrop?.removeAttribute('hidden');
+    else backdrop?.setAttribute('hidden', '');
+    btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('is-offers-modify-open', open);
+    document.documentElement.classList.toggle('is-offers-modify-open', open);
+  }
+
+  btn?.addEventListener('click', () => {
+    setModifyOpen(!panel?.classList.contains('is-open'));
+  });
+  backdrop?.addEventListener('click', () => setModifyOpen(false));
+  document.addEventListener('offers-modify-close', () => setModifyOpen(false));
+  if (panel?.classList.contains('is-open')) setModifyOpen(true);
+</script>

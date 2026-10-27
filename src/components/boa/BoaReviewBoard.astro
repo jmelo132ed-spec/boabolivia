@@ -1,0 +1,518 @@
+<section class="boa-rev" id="boa-review">
+  <header class="boa-rev__intro">
+    <h1>Revisar y Pagar</h1>
+    <p>Asegúrate de revisar toda la información de tu viaje antes de proceder a pagar.</p>
+  </header>
+  <div id="boa-rev-legs"></div>
+  <section class="boa-rev__block">
+    <h2>Pasajeros</h2>
+    <p>Estos son los pasajeros que viajarán, verifica que su información está correcta antes de continuar.</p>
+    <div id="boa-rev-pax"></div>
+  </section>
+  <section class="boa-rev__block">
+    <h2>Detalle de la reserva</h2>
+    <p>Para ver la información completa del precio de tu reserva haz click en “Ver detalle”.</p>
+    <article class="boa-rev-card" id="boa-rev-fare" data-rev-acc>
+      <div class="boa-rev-card__row">
+        <button type="button" class="boa-rev-card__chip" data-rev-toggle>
+          Ver detalle
+        </button>
+        <button type="button" class="boa-rev-card__price" data-rev-toggle>
+          <span>Precio del viaje por <em id="boa-rev-paxn">1</em></span>
+          <strong id="boa-rev-total">USD. 0.00</strong>
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M7.4 10.6 6 12l6 6 6-6-1.4-1.4L12 15.2z"/></svg>
+        </button>
+      </div>
+      <div class="boa-rev-card__body" hidden data-rev-body></div>
+    </article>
+  </section>
+  <article class="boa-rev-card is-open boa-rev-terms" id="boa-rev-terms" data-rev-acc>
+    <button type="button" class="boa-rev-terms__head" data-rev-toggle>
+      <span>Condiciones tarifarias</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M7.4 10.6 6 12l6 6 6-6-1.4-1.4L12 15.2z"/></svg>
+    </button>
+    <div class="boa-rev-terms__body" data-rev-body>
+      <ul>
+        <li>Has escogido diferentes tarifas en tu itinerario. Las condiciones tarifarias específicas aplican únicamente para el trayecto asociado.</li>
+        <li>Dependiendo de las tarifas que hayas seleccionado, es posible que los reembolsos no estén permitidos y que los cambios de itinerario impliquen cargos adicionales y penalidades.</li>
+        <li>Si deseas conocer más, puedes consultar las condiciones tarifarias</li>
+        <li>La clase Business está disponible solo en vuelos internacionales, operados por Boliviana de Aviación. No está disponible en tramos nacionales.</li>
+      </ul>
+      <label class="boa-rev-accept">
+        <input type="checkbox" id="boa-rev-accept">
+        <span>He leído y acepto los <a href="/legal/terminos" target="_blank" rel="noopener">Términos y Condiciones de Uso</a>, <a href="/tarifas" target="_blank" rel="noopener">Condiciones Tarifarias</a> y <a href="/legal/contrato" target="_blank" rel="noopener">Contrato de Transporte</a></span>
+      </label>
+    </div>
+  </article>
+  <div class="boa-rev__nav">
+    <button type="button" class="boa-rev__back" id="boa-rev-back">Atrás</button>
+    <button type="button" class="boa-rev__pay" id="boa-rev-pay" disabled>Proceder al pago</button>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'latam-checkout-selection';
+  const PAX_KEY = 'latam-passenger-draft';
+  const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  const GENDERS = { Male: 'MASCULINO', Female: 'FEMENINO' };
+  const DOCS = { CI: 'Cédula de identidad', PP: 'Pasaporte', CE: 'Cédula de extranjería' };
+
+  function readJson(key, fallback) {
+    try {
+      return JSON.parse(sessionStorage.getItem(key) || 'null') ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function cityName(value) {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    return value.city || value.code || '';
+  }
+
+  function cityCode(value) {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    return value.code || '';
+  }
+
+  function moneyDot(value) {
+    return (Number(value) || 0).toFixed(2);
+  }
+
+  function clock(value) {
+    const raw = String(value || '').trim();
+    const m = raw.match(/(\d{1,2}):(\d{2})/);
+    if (!m) return raw;
+    return `${String(m[1]).padStart(2, '0')}:${m[2]}`;
+  }
+
+  function ampm(value) {
+    const m = String(value || '').match(/(\d{1,2}):/);
+    const hh = m ? Number(m[1]) : 0;
+    return hh >= 12 ? 'PM' : 'AM';
+  }
+
+  function bannerWhen(iso, time) {
+    if (!iso) return '';
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return `${iso} ${clock(time)}`;
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${DAYS[d.getDay()]}. ${dd} ${MONTHS[d.getMonth()]}. ${d.getFullYear()} ${clock(time)} ${ampm(time)}`;
+  }
+
+  function fareLabel(leg) {
+    return String(leg?.fareName || 'FLEX').toUpperCase();
+  }
+
+  function bannerSrc(code) {
+    const cc = String(code || '').toLowerCase();
+    if (cc === 'lpb' || cc === 'cbb' || cc === 'vvi') return `/images/boa/cities/${cc}.jpg`;
+    return '/images/boa/destinos.jpg';
+  }
+
+  function publishedTotal(selection) {
+    const out = Number(selection?.outbound?.price || 0);
+    const back = Number(selection?.inbound?.price || 0);
+    const pax = Math.max(1, Number(selection?.adults || 1) + Number(selection?.children || 0));
+    return Math.round((out + back) * pax * 100) / 100;
+  }
+
+  function asText(value) {
+    if (value == null || value === '') return '';
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+    if (typeof value === 'object') return String(value.name || value.label || value.code || value.city || '');
+    return '';
+  }
+
+  function travelers(selection, draft) {
+    const list = Array.isArray(draft?.travelers) ? draft.travelers : [];
+    const count = Math.max(1, Number(selection?.adults || 1) + Number(selection?.children || 0) + Number(selection?.infants || 0));
+    const types = [];
+    for (let i = 0; i < (selection.adults || 1); i += 1) types.push('Adulto');
+    for (let i = 0; i < (selection.children || 0); i += 1) types.push('Niño');
+    for (let i = 0; i < (selection.infants || 0); i += 1) types.push('Bebé');
+    const rows = [];
+    for (let i = 0; i < count; i += 1) {
+      const t = list[i] || {};
+      rows.push({
+        type: asText(t.type) || types[i] || 'Adulto',
+        first: asText(t.first) || asText(draft?.firstName),
+        last: asText(t.last) || asText(draft?.lastName),
+        dob: asText(t.dob),
+        gender: asText(t.gender),
+        doc: asText(t.doc),
+        docnum: asText(t.docnum),
+        email: i === 0 ? (asText(t.email) || asText(draft?.email)) : asText(t.email),
+        phone: i === 0 ? asText(t.phone) : asText(t.phone),
+        dial: i === 0 ? asText(t.dial) : asText(t.dial),
+        iso: i === 0 ? asText(t.iso) : asText(t.iso),
+        cabin: asText(t.cabin) || asText(draft?.cabin),
+      });
+    }
+    return rows;
+  }
+
+  function cabinLabel(selection, row) {
+    const name = asText(row?.cabin) || asText(selection?.outbound?.fareName);
+    if (/business/i.test(name)) return 'Business';
+    return 'Económica';
+  }
+
+  function dobCompact(value) {
+    const raw = asText(value).trim();
+    const slash = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (slash) return `${slash[3]}${slash[2].padStart(2, '0')}${slash[1].padStart(2, '0')}`;
+    const digits = raw.replace(/\D/g, '');
+    return digits || '—';
+  }
+
+  function phoneIso(iso, dial) {
+    if (iso) return asText(iso).toUpperCase();
+    const map = {
+      '+591': 'BO', '+54': 'AR', '+56': 'CL', '+51': 'PE', '+57': 'CO',
+      '+593': 'EC', '+595': 'PY', '+598': 'UY', '+55': 'BR', '+58': 'VE',
+      '+52': 'MX', '+1': 'US', '+34': 'ES',
+    };
+    return map[asText(dial).trim()] || 'BO';
+  }
+
+  function fullPhone(dial, phone) {
+    const number = asText(phone).replace(/\s+/g, '');
+    if (!number) return '';
+    if (number.startsWith('+')) return number;
+    return `${asText(dial).trim()}${number}`;
+  }
+
+  function kv(label, value) {
+    return `<div><dt>${label}</dt><dd>${asText(value) || '—'}</dd></div>`;
+  }
+
+  function paxHtml(row, index, cabin) {
+    const name = [row.first, row.last].filter(Boolean).join(' ') || `Pasajero ${index + 1}`;
+    return `
+      <article class="boa-rev-card" data-rev-acc>
+        <button type="button" class="boa-rev-pax" data-rev-toggle>
+          <span class="boa-rev-pax__who">
+            Pasajero ${index + 1}: ${name}
+            <i class="boa-rev-pax__ok" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#fff" d="M9.2 16.2 5.4 12.4l1.4-1.4 2.4 2.4 7-7 1.4 1.4z"/></svg>
+            </i>
+          </span>
+          <span class="boa-rev-pax__more">
+            Ver detalle
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M7.4 10.6 6 12l6 6 6-6-1.4-1.4L12 15.2z"/></svg>
+          </span>
+        </button>
+        <div class="boa-rev-card__body" hidden data-rev-body>
+          <dl class="boa-rev-kv">
+            ${kv('Clase', cabin)}
+            ${kv('Tipo', row.type || 'Adulto')}
+            ${kv('Añadir un número de viajero frecuente', 'No')}
+            ${kv('Nombres', row.first)}
+            ${kv('Apellidos', row.last)}
+            ${kv('Fecha de Nacimiento', dobCompact(row.dob))}
+            ${kv('Género', GENDERS[row.gender] || asText(row.gender).toUpperCase())}
+            ${kv('Tipo de documento de identidad', row.doc)}
+            ${kv('Número de documento de identidad', row.docnum)}
+            ${kv('Correo electrónico', row.email)}
+            ${kv('Código de Teléfono', phoneIso(row.iso, row.dial))}
+            ${kv('Celular.', fullPhone(row.dial, row.phone))}
+          </dl>
+        </div>
+      </article>
+    `;
+  }
+
+  function legHtml(from, to, iso, leg, destCode) {
+    const price = moneyDot(leg?.price);
+    const fare = fareLabel(leg);
+    const when = bannerWhen(iso, leg?.flight?.depart);
+    return `
+      <article class="boa-rev-banner">
+        <img src="${bannerSrc(destCode)}" alt="" onerror="this.onerror=null;this.src='/images/boa/destinos.jpg'">
+        <div class="boa-rev-banner__copy">
+          <h3>${from} a ${to}</h3>
+          <p>${when}</p>
+          <span>USD ${price} por pasajero - ${fare}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function dateShort(iso) {
+    if (!iso) return '';
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${DAYS[d.getDay()]}. ${dd} ${MONTHS[d.getMonth()]}. ${d.getFullYear()}`;
+  }
+
+  function durationWords(mins, label) {
+    const n = Number(mins);
+    if (Number.isFinite(n) && n > 0) {
+      if (n < 60) return `${n} minutos`;
+      const h = Math.floor(n / 60);
+      const m = n % 60;
+      if (!m) return `${h} ${h === 1 ? 'hora' : 'horas'}`;
+      return `${h} ${h === 1 ? 'hora' : 'horas'} y ${m} minutos`;
+    }
+    return String(label || '');
+  }
+
+  function flightCode(value) {
+    return String(value || 'OB').replace(/\s+/g, '');
+  }
+
+  function planeName(value) {
+    const raw = String(value || '').toUpperCase().trim();
+    const digits = raw.match(/(\d{3,4})/);
+    if (digits) return digits[1];
+    return raw.replace(/^B/, '') || '737';
+  }
+
+  function operatorShort(seg, flight) {
+    const code = String(seg?.operatorCode || flight?.operators?.[0]?.code || 'OB').toUpperCase();
+    if (code === 'OB') return 'BOA';
+    return code || 'BOA';
+  }
+
+  function money2(value) {
+    return Math.round((Number(value) || 0) * 100) / 100;
+  }
+
+  function splitPublished(leg) {
+    const total = money2(leg?.price);
+    const tax = money2(leg?.flight?.tax);
+    if (tax > 0 && tax < total) return { fare: money2(total - tax), tax, total };
+    if (tax > 0) return { fare: total, tax, total: money2(total + tax) };
+    const guessed = money2(total * (11.9 / 82.9));
+    return { fare: money2(total - guessed), tax: guessed, total };
+  }
+
+  function segsOf(leg, fromCity, toCity, fromCode, toCode) {
+    const flight = leg?.flight || {};
+    if (Array.isArray(flight.itinerary) && flight.itinerary.length) {
+      return flight.itinerary.map((seg, index, all) => ({
+        depart: seg.depart || (index === 0 ? flight.depart : ''),
+        arrive: seg.arrive || (index === all.length - 1 ? flight.arrive : ''),
+        duration: seg.duration || flight.duration,
+        durationMinutes: seg.durationMinutes || flight.durationMinutes,
+        flightNumber: seg.flightNumber || flight.flightNumber,
+        originCity: seg.originCity || (index === 0 ? fromCity : seg.originCity),
+        destCity: seg.destCity || (index === all.length - 1 ? toCity : seg.destCity),
+        originCode: seg.originCode || (index === 0 ? fromCode : seg.originCode),
+        destCode: seg.destCode || (index === all.length - 1 ? toCode : seg.destCode),
+        aircraft: planeName(seg.aircraft),
+        operatorCode: seg.operatorCode,
+        layover: seg.layover,
+      }));
+    }
+    return [{
+      depart: flight.depart,
+      arrive: flight.arrive,
+      duration: flight.duration,
+      durationMinutes: flight.durationMinutes,
+      flightNumber: flight.flightNumber,
+      originCity: fromCity,
+      destCity: toCity,
+      originCode: fromCode,
+      destCode: toCode,
+      aircraft: '737',
+      operatorCode: flight.operators?.[0]?.code || 'OB',
+    }];
+  }
+
+  function planeIcon(inbound = false) {
+    const flip = inbound ? ' transform="translate(576 0) scale(-1 1)"' : '';
+    return `<svg class="boa-rev-plane${inbound ? ' is-back' : ''}" viewBox="0 0 576 512" aria-hidden="true"><g${flip}><path fill="currentColor" d="M482.3 192c34.2 0 93.7 29 93.7 64c0 36-59.5 64-93.7 64H365.7L265.2 495.9c-5.7 10-16.3 16.1-27.8 16.1h-56.2c-10.6 0-18.3-10.2-15.4-20.4l49-171.6H112l-43.2 57.6c-3 4-7.8 6.4-12.8 6.4H14c-7.8 0-14-6.3-14-14c0-1.3.2-2.6.5-3.9L32 256 .5 146.3c-.4-1.3-.5-2.6-.5-3.9c0-7.8 6.3-14 14-14H56c5 0 9.8 2.4 12.8 6.4L112 192h102.9l-49-171.6C162.9 10.2 170.6 0 181.2 0h56.2c11.5 0 22.1 6.2 27.8 16.1L365.7 192h116.6z"/></g></svg>`;
+  }
+  const COIN_ICON = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#f5c400"/><circle cx="12" cy="12" r="7.2" fill="none" stroke="#c9a000" stroke-width="1.2"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="700" fill="#7a5a00">$</text></svg>`;
+
+  function stopHtml(time, city, code) {
+    return `
+      <div class="boa-rev-tl__stop">
+        <i class="boa-rev-tl__dot" aria-hidden="true"></i>
+        <p><strong>${clock(time)}</strong> ${city || ''} <b>${String(code || '').toUpperCase()}</b></p>
+      </div>
+    `;
+  }
+
+  function timelineHtml(segs, flight, inbound = false) {
+    return segs.map((seg, index) => {
+      const wait = seg.layover && index < segs.length - 1
+        ? `<div class="boa-rev-tl__wait">Escala de ${seg.layover} en ${seg.destCity || seg.destCode}</div>`
+        : '';
+      return `
+        <div class="boa-rev-tl">
+          ${stopHtml(seg.depart, seg.originCity, seg.originCode)}
+          <div class="boa-rev-tl__mid">
+            <i class="boa-rev-tl__line" aria-hidden="true"></i>
+            <p>${durationWords(seg.durationMinutes, seg.duration)} ${flightCode(seg.flightNumber)}&nbsp;&nbsp;${operatorShort(seg, flight)}&nbsp;&nbsp;${planeIcon(inbound)} Avión: ${planeName(seg.aircraft)}</p>
+          </div>
+          ${stopHtml(seg.arrive, seg.destCity, seg.destCode)}
+        </div>
+        ${wait}
+      `;
+    }).join('');
+  }
+
+  function itineraryBlock(title, iso, segs, flight, inbound = false) {
+    return `
+      <div class="boa-rev-itin">
+        <h3>${title}</h3>
+        <p class="boa-rev-itin__date">${planeIcon(inbound)}<span>${dateShort(iso)}</span></p>
+        ${timelineHtml(segs, flight, inbound)}
+      </div>
+    `;
+  }
+
+  function ticketRows(selection) {
+    const adults = Math.max(1, Number(selection.adults || 1));
+    const children = Math.max(0, Number(selection.children || 0));
+    const infants = Math.max(0, Number(selection.infants || 0));
+    const out = splitPublished(selection.outbound);
+    const back = selection.inbound?.price ? splitPublished(selection.inbound) : { fare: 0, tax: 0, total: 0 };
+    const fareUnit = money2(out.fare + back.fare);
+    const taxUnit = money2(out.tax + back.tax);
+    const rows = [];
+    if (adults) rows.push({ label: `${adults} Boletos ADT`, amount: money2(fareUnit * adults) });
+    if (children) rows.push({ label: `${children} Boletos CHD`, amount: money2(fareUnit * children) });
+    if (infants) rows.push({ label: `${infants} Boletos INF`, amount: money2(fareUnit * infants) });
+    const paying = adults + children;
+    const taxTotal = money2(taxUnit * Math.max(1, paying));
+    return { rows, taxTotal };
+  }
+
+  function fareBody(selection) {
+    const from = cityName(selection.from);
+    const to = cityName(selection.to);
+    const fromCode = cityCode(selection.from);
+    const toCode = cityCode(selection.to);
+    const blocks = [];
+    if (selection.outbound) {
+      blocks.push(itineraryBlock(
+        'Ida',
+        selection.depart,
+        segsOf(selection.outbound, from, to, fromCode, toCode),
+        selection.outbound.flight,
+      ));
+    }
+    if (selection.inbound?.flight) {
+      blocks.push(itineraryBlock(
+        'Vuelta',
+        selection.returnDate,
+        segsOf(selection.inbound, to, from, toCode, fromCode),
+        selection.inbound.flight,
+        true,
+      ));
+    }
+    const tickets = ticketRows(selection);
+    const lines = tickets.rows.map((row) => `
+      <div class="boa-rev-line">
+        <span>${row.label}</span>
+        <strong>USD ${moneyDot(row.amount)}</strong>
+      </div>
+    `).join('');
+    return `
+      ${blocks.join('')}
+      <div class="boa-rev-prices">
+        ${lines}
+        <div class="boa-rev-line is-tax">
+          <span>Tasas/Impuestos</span>
+          <strong>USD ${moneyDot(tickets.taxTotal)}</strong>
+        </div>
+        <button type="button" class="boa-rev-tax" id="boa-rev-tax" aria-expanded="false">
+          ${COIN_ICON}
+          Detalle de tasas e impuestos
+        </button>
+        <p class="boa-rev-tax__note" hidden>Incluye tasas aeroportuarias e impuestos aplicables al itinerario seleccionado.</p>
+      </div>
+    `;
+  }
+
+  const selection = readJson(STORAGE_KEY, null);
+  const draft = readJson(PAX_KEY, {});
+  const legs = document.getElementById('boa-rev-legs');
+  const paxBox = document.getElementById('boa-rev-pax');
+  const totalEl = document.getElementById('boa-rev-total');
+  const paxn = document.getElementById('boa-rev-paxn');
+  const fareBodyEl = document.querySelector('#boa-rev-fare [data-rev-body]');
+
+  if (!selection?.outbound) {
+    if (legs) legs.innerHTML = '<p class="boa-rev__empty">No encontramos tu selección de vuelos. Vuelve a elegir tus tarifas.</p>';
+  } else {
+    const from = cityName(selection.from);
+    const to = cityName(selection.to);
+    const fromCode = cityCode(selection.from);
+    const toCode = cityCode(selection.to);
+    const pax = Math.max(1, Number(selection.adults || 1) + Number(selection.children || 0));
+    const total = publishedTotal(selection);
+    if (legs) {
+      legs.innerHTML = [
+        legHtml(from, to, selection.depart, selection.outbound, toCode),
+        selection.inbound?.flight ? legHtml(to, from, selection.returnDate, selection.inbound, fromCode) : '',
+      ].join('');
+    }
+    if (paxBox) paxBox.innerHTML = travelers(selection, draft).map((row, i) => paxHtml(row, i, cabinLabel(selection, row))).join('');
+    if (totalEl) totalEl.textContent = `USD. ${moneyDot(total)}`;
+    if (paxn) paxn.textContent = String(pax);
+    if (fareBodyEl) fareBodyEl.innerHTML = fareBody(selection);
+    const sumBtn = document.getElementById('boa-res-sum-btn');
+    if (sumBtn) {
+      sumBtn.innerHTML = `Resumen de compra USD. ${total.toFixed(2)} <svg viewBox="0 0 12 8" width="10" height="8" aria-hidden="true"><path d="M1 1.4 6 6.4 11 1.4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const toggle = e.target.closest('[data-rev-toggle]');
+    if (!toggle) return;
+    const card = toggle.closest('[data-rev-acc]');
+    if (!card) return;
+    const open = !card.classList.contains('is-open');
+    card.classList.toggle('is-open', open);
+    const body = card.querySelector('[data-rev-body]');
+    if (body) {
+      if (open) body.removeAttribute('hidden');
+      else body.setAttribute('hidden', '');
+    }
+  });
+
+  document.getElementById('boa-rev-back')?.addEventListener('click', () => {
+    window.history.back();
+  });
+
+  const payBtn = document.getElementById('boa-rev-pay');
+  const accept = document.getElementById('boa-rev-accept');
+  function syncPay() {
+    if (payBtn) payBtn.disabled = !accept?.checked;
+  }
+  accept?.addEventListener('change', syncPay);
+  syncPay();
+
+  document.addEventListener('click', (e) => {
+    const taxBtn = e.target.closest('#boa-rev-tax');
+    if (!taxBtn) return;
+    const note = taxBtn.parentElement?.querySelector('.boa-rev-tax__note');
+    if (!note) return;
+    const open = note.hasAttribute('hidden');
+    if (open) note.removeAttribute('hidden');
+    else note.setAttribute('hidden', '');
+    taxBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  payBtn?.addEventListener('click', () => {
+    if (!accept?.checked) return;
+    const overlay = document.getElementById('boa-pay-overlay');
+    overlay?.removeAttribute('hidden');
+    overlay?.classList.add('is-on');
+    overlay?.setAttribute('aria-hidden', 'false');
+    const search = selection?.search || location.search || '';
+    const qs = search.startsWith('?') ? search : search ? `?${search}` : '';
+    window.setTimeout(() => {
+      window.location.href = `/pagos${qs}`;
+    }, 2000);
+  });
+</script>

@@ -1,0 +1,76 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import BoaSearchBar from '../components/boa/BoaSearchBar.astro';
+import BoaBookingChrome from '../components/boa/BoaBookingChrome.astro';
+import OffersBoard from '../components/offers/OffersBoard.astro';
+import { BOA_STATIONS } from '../data/boaStations';
+import { parseOffersQuery } from '../services/searchQuery';
+
+const query = parseOffersQuery(Astro.url.searchParams);
+const origin = query.origin;
+const destination = query.destination;
+const from = BOA_STATIONS.find((c) => c.code === origin) ?? { city: origin || 'Origen', code: origin || '—', airport: '' };
+const to = BOA_STATIONS.find((c) => c.code === destination) ?? { city: destination || 'Destino', code: destination || '—', airport: '' };
+const waiting = Boolean(origin && destination);
+const depart = query.depart;
+const returnDate = query.returnDate;
+---
+
+<Layout title="Selección de vuelos | BoA" bodyClass={`${waiting ? 'is-offers-waiting' : ''} boa-page boa-reserva is-offers-page`.trim()}>
+  {waiting && (
+    <div class="offers-wait-screen" id="offers-wait-screen" role="status" aria-live="polite" aria-label="Cargando">
+      <div class="boa-loader" aria-hidden="true">
+        <span class="boa-loader__ring"></span>
+        <span class="boa-loader__mid"></span>
+        <span class="boa-loader__dot"></span>
+      </div>
+    </div>
+  )}
+
+  <BoaBookingChrome
+    origin={from.code}
+    destination={to.code}
+    originCity={from.city}
+    destinationCity={to.city}
+    depart={depart}
+    returnDate={returnDate}
+    trip={query.trip}
+    adults={Number(query.adults)}
+    children={Number(query.children)}
+    infants={Number(query.infants)}
+    startOpen={!waiting}
+  >
+    <BoaSearchBar
+      embedded
+      prefill={waiting ? {
+        origin,
+        destination,
+        depart,
+        returnDate,
+        trip: query.trip,
+        adults: query.adults,
+        children: query.children,
+        infants: query.infants,
+      } : undefined}
+    />
+  </BoaBookingChrome>
+
+  <div class="offers-scroll boa-res-scroll">
+    <main class="offers-main av-book-main boa-res-main">
+      <OffersBoard
+        trip={query.trip}
+        search={waiting ? Astro.url.search : ''}
+        fromCity={from.city}
+        toCity={to.city}
+        origin={from.code}
+        destination={to.code}
+        depart={depart}
+        returnDate={returnDate}
+        fromAirport={from.airport}
+        toAirport={to.airport}
+      />
+    </main>
+  </div>
+</Layout>

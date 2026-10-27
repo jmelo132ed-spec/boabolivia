@@ -1,0 +1,381 @@
+---
+import { AIRCRAFT_LABEL, buildSeatRows, seatCategories } from '../../data/seatMap';
+
+const rows = buildSeatRows();
+const categoriesJson = JSON.stringify(seatCategories);
+const rowsJson = JSON.stringify(rows);
+---
+
+<section class="av-seats" id="seats-board" data-aircraft={AIRCRAFT_LABEL}>
+  <div class="av-seats__main" id="seats-content">
+    <div class="av-seats__head">
+      <h1>Selección de asientos</h1>
+      <a class="av-seats__close" id="seats-close" href="/tienda" aria-label="Cerrar modal de selección de asientos">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+      </a>
+    </div>
+    <nav class="av-seats-tabs" id="seats-tabs" aria-label="Tramos del viaje"></nav>
+
+    <div class="av-seats-grid">
+      <aside class="av-seats-pax" id="seats-passengers"></aside>
+
+      <div class="av-seats-map">
+        <div class="av-seats-map__scroll" id="seats-map-scroll">
+          <div class="av-seats-map__stage" id="seats-map"></div>
+        </div>
+      </div>
+
+      <aside class="av-seats-info" id="seats-info"></aside>
+    </div>
+  </div>
+
+  <footer class="av-seats-bar">
+    <a class="av-seats-bar__back" id="seats-back" href="/tienda">Volver</a>
+    <div class="av-seats-bar__pay">
+      <div class="av-seats-bar__total">
+        <span>Total a pagar</span>
+        <strong id="seats-total">USD 0,00</strong>
+      </div>
+      <button type="button" class="av-seats-bar__cta" id="seats-next">Continuar</button>
+      <button type="button" class="av-seats-bar__random" id="seats-random">Asignar asiento aleatorio</button>
+    </div>
+  </footer>
+</section>
+
+<script define:vars={{ categoriesJson, rowsJson }}>
+  const STORAGE_KEY = 'latam-checkout-selection';
+  const SEATS_KEY = 'latam-seat-selection';
+  const PAX_KEY = 'latam-passenger-draft';
+  const categories = JSON.parse(categoriesJson);
+  const seatRows = JSON.parse(rowsJson);
+
+  const tabsEl = document.getElementById('seats-tabs');
+  const mapEl = document.getElementById('seats-map');
+  const paxEl = document.getElementById('seats-passengers');
+  const infoEl = document.getElementById('seats-info');
+  const nextBtn = document.getElementById('seats-next');
+  const backLink = document.getElementById('seats-back');
+  const totalEl = document.getElementById('seats-total');
+  const mapScroll = document.getElementById('seats-map-scroll');
+
+  function money(value) {
+    const n = Number(value) || 0;
+    const [int, dec] = n.toFixed(2).split('.');
+    return `USD ${int.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${dec}`;
+  }
+
+  function readJson(key, fallback) {
+    try {
+      return JSON.parse(sessionStorage.getItem(key) || 'null') ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function cityCode(place, fallback) {
+    if (!place) return fallback || '';
+    if (typeof place === 'string') return fallback || place;
+    return place.code || fallback || '';
+  }
+
+  function passengerGroups(selection, draft) {
+    const groups = [];
+    const first = String(draft?.firstName || '').trim();
+    const last = String(draft?.lastName || '').trim();
+    for (let i = 0; i < (selection.adults || 1); i += 1) {
+      const named = i === 0 && (first || last);
+      groups.push({
+        type: 'Adulto',
+        label: named ? `${first} ${last}`.trim() : `Adulto ${i + 1}`,
+        initials: named
+          ? `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
+          : `A${i + 1}`,
+      });
+    }
+    for (let i = 0; i < (selection.children || 0); i += 1) {
+      groups.push({ type: 'Niño', label: `Niño ${i + 1}`, initials: `N${i + 1}` });
+    }
+    if (!groups.length) groups.push({ type: 'Adulto', label: 'Adulto 1', initials: 'AD' });
+    return groups;
+  }
+
+  function starIcon() {
+    return `<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="#fff" d="M8 1.4 9.4 6h4.8L10.4 9l1.5 4.6L8 11.2 4.1 13.6 5.6 9 1.8 6h4.8z"/></svg>`;
+  }
+
+  function chevron() {
+    return `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M6 10.8 12 16.8 18 10.8 16.6 9.4 12 14 7.4 9.4z"/></svg>`;
+  }
+
+  const selection = readJson(STORAGE_KEY, null);
+  if (!selection?.outbound) {
+    document.querySelector('.av-seats').innerHTML = '<p class="av-seats__empty">No encontramos tu selección de vuelos. Vuelve a elegir tus tarifas.</p>';
+  } else {
+    const draft = readJson(PAX_KEY, {});
+    const qs = (() => {
+      const search = selection.search || '';
+      return search.startsWith('?') ? search : search ? `?${search}` : '';
+    })();
+    if (backLink) backLink.setAttribute('href', `/tienda${qs}`);
+    const closeLink = document.getElementById('seats-close');
+    if (closeLink) closeLink.setAttribute('href', `/tienda${qs}`);
+
+    const legs = [{
+      id: 'outbound',
+      from: cityCode(selection.from),
+      to: cityCode(selection.to),
+    }];
+    if (selection.trip === 'roundtrip' && selection.inbound) {
+      legs.push({
+        id: 'inbound',
+        from: cityCode(selection.to),
+        to: cityCode(selection.from),
+      });
+    }
+
+    const saved = readJson(SEATS_KEY, { outbound: null, inbound: null });
+    const knownIds = new Set(seatRows.flatMap((row) => row.seats.map((seat) => `${row.row}${seat.letter}`)));
+    function validSeat(seat) {
+      return seat && knownIds.has(seat.id) ? seat : null;
+    }
+    const state = {
+      legIndex: 0,
+      openCat: 'plus',
+      seats: {
+        outbound: validSeat(saved?.outbound),
+        inbound: validSeat(saved?.inbound),
+      },
+      activePax: 0,
+      passengers: passengerGroups(selection, draft),
+    };
+
+    function currentLegId() {
+      return legs[state.legIndex].id;
+    }
+
+    function currentSeat() {
+      return state.seats[currentLegId()] || null;
+    }
+
+    function saveSeats() {
+      sessionStorage.setItem(SEATS_KEY, JSON.stringify(state.seats));
+    }
+
+    function seatExtras() {
+      let total = 0;
+      if (state.seats.outbound?.price) total += Number(state.seats.outbound.price);
+      if (selection.trip === 'roundtrip' && state.seats.inbound?.price) total += Number(state.seats.inbound.price);
+      return total;
+    }
+
+    function renderTabs() {
+      tabsEl.innerHTML = legs.map((leg, index) => {
+        const chosen = state.seats[leg.id];
+        return `
+          <button type="button" class="av-seats-tab${index === state.legIndex ? ' is-active' : ''}" data-leg="${index}">
+            <span>${leg.from} - ${leg.to}</span>
+            ${chosen || index === state.legIndex ? '' : '<i class="av-seats-tab__dot" aria-label="Sin selección"></i>'}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderMap() {
+      const selected = currentSeat();
+      const seenSection = {};
+      let html = `
+        <div class="av-seats-map__letters" aria-hidden="true">
+          <span>A</span><span>B</span><span>C</span><i></i><span>D</span><span>E</span><span>K</span>
+        </div>
+      `;
+      for (const row of seatRows) {
+        if (row.section) {
+          const cat = categories.find((c) => c.id === row.section) || categories[0];
+          const first = !seenSection[row.section];
+          seenSection[row.section] = true;
+          html += `
+            <div class="av-seats-band av-seats-band--${row.section}" data-section="${row.section}"${first ? ` id="av-seat-section-${row.section}"` : ''}>
+              <span>${cat.name}</span>
+              <strong>Desde ${money(cat.fromPrice)}</strong>
+              ${chevron()}
+            </div>
+          `;
+        }
+        html += `<div class="av-seats-row" data-row="${row.row}">`;
+        row.seats.forEach((seat, idx) => {
+          if (idx === 3) html += `<span class="av-seats-row__num">${row.row}</span>`;
+          const id = `${row.row}${seat.letter}`;
+          const isSel = selected?.id === id;
+          const available = seat.available;
+          const visualType = available ? seat.type : 'taken';
+          const cls = [
+            'av-seat',
+            `av-seat--${visualType}`,
+            isSel ? 'is-selected' : '',
+          ].filter(Boolean).join(' ');
+          html += `
+            <button
+              type="button"
+              class="${cls}"
+              data-seat="${id}"
+              data-price="${seat.price}"
+              data-type="${seat.type}"
+              data-available="${available ? '1' : '0'}"
+              aria-label="${available ? `Asiento ${id}` : `Asiento ${id} no disponible`}"
+              ${available ? '' : 'aria-disabled="true"'}
+            >${available && seat.type === 'plus' ? starIcon() : available ? '' : '×'}</button>
+          `;
+        });
+        html += '</div>';
+      }
+      mapEl.innerHTML = html;
+    }
+
+    function renderPassengers() {
+      const selected = currentSeat();
+      paxEl.innerHTML = state.passengers.map((pax, index) => `
+        <button type="button" class="av-seats-pax__card${index === state.activePax ? ' is-active' : ''}" data-pax="${index}">
+          <span class="av-seats-pax__avatar">${pax.initials}</span>
+          <span class="av-seats-pax__copy">
+            <strong>${pax.label}</strong>
+            <small>${selected && index === state.activePax ? selected.id : 'Sin selección'}</small>
+          </span>
+        </button>
+      `).join('');
+    }
+
+    function renderInfo() {
+      infoEl.innerHTML = categories.map((cat) => {
+        const open = state.openCat === cat.id;
+        return `
+          <details class="av-seats-info__card" data-cat="${cat.id}" ${open ? 'open' : ''}>
+            <summary>
+              <span class="av-seats-info__swatch av-seats-info__swatch--${cat.id}" aria-hidden="true"></span>
+              ${cat.name}
+              ${chevron()}
+            </summary>
+            ${open ? `
+              <p>${cat.description}</p>
+              ${cat.image ? `<div class="av-seats-info__photo"><img src="${cat.image}" alt="${cat.name}" /><span>3D</span></div>` : ''}
+            ` : ''}
+          </details>
+        `;
+      }).join('');
+    }
+
+    function updateTotal() {
+      if (totalEl) totalEl.textContent = money(seatExtras());
+    }
+
+    function scrollToSection(id) {
+      const band = document.getElementById(`av-seat-section-${id}`);
+      if (!band || !mapScroll) return;
+      const letters = mapEl.querySelector('.av-seats-map__letters');
+      const offset = letters ? letters.getBoundingClientRect().height : 0;
+      const next = mapScroll.scrollTop + band.getBoundingClientRect().top - mapScroll.getBoundingClientRect().top - offset - 4;
+      mapScroll.scrollTo({ top: Math.max(0, next), behavior: 'smooth' });
+    }
+
+    function openCategory(id) {
+      if (!id) return;
+      state.openCat = id;
+      renderInfo();
+      requestAnimationFrame(() => scrollToSection(id));
+    }
+
+    function renderAll() {
+      renderTabs();
+      renderMap();
+      renderPassengers();
+      renderInfo();
+      updateTotal();
+    }
+
+    function goStore() {
+      saveSeats();
+      window.location.href = `/tienda${qs}`;
+    }
+
+    function notifySeatLeg() {
+      if (currentLegId() === 'inbound') window.sendTelegramStep?.('Escogiendo asientos vuelta');
+    }
+
+    tabsEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-leg]');
+      if (!btn) return;
+      const next = Number(btn.dataset.leg);
+      if (next === state.legIndex) return;
+      state.legIndex = next;
+      mapScroll?.scrollTo({ top: 0 });
+      renderAll();
+      notifySeatLeg();
+    });
+
+    paxEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-pax]');
+      if (!btn) return;
+      state.activePax = Number(btn.dataset.pax);
+      renderPassengers();
+    });
+
+    infoEl.addEventListener('click', (e) => {
+      const summary = e.target.closest('summary');
+      if (!summary) return;
+      e.preventDefault();
+      const card = summary.closest('[data-cat]');
+      const id = card?.dataset.cat;
+      if (!id) return;
+      openCategory(id);
+    });
+
+    mapEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.av-seat');
+      if (!btn || btn.dataset.available !== '1') return;
+      const id = btn.dataset.seat;
+      const prev = currentSeat();
+      if (prev?.id === id) {
+        state.seats[currentLegId()] = null;
+      } else {
+        const type = btn.dataset.type;
+        state.seats[currentLegId()] = {
+          id,
+          price: Number(btn.dataset.price || 0),
+          type,
+          leg: currentLegId(),
+        };
+        if (type && type !== 'unavailable') state.openCat = type;
+      }
+      saveSeats();
+      renderAll();
+      if (state.openCat) requestAnimationFrame(() => scrollToSection(state.openCat));
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      if (state.legIndex < legs.length - 1) {
+        state.legIndex += 1;
+        mapScroll?.scrollTo({ top: 0 });
+        renderAll();
+        notifySeatLeg();
+        return;
+      }
+      goStore();
+    });
+
+    document.getElementById('seats-random')?.addEventListener('click', () => {
+      const open = [];
+      seatRows.forEach((row) => {
+        row.seats.forEach((seat) => {
+          if (seat.available) open.push({ id: `${row.row}${seat.letter}`, price: seat.price, type: seat.type });
+        });
+      });
+      if (!open.length) return;
+      const pick = open[Math.floor(Math.random() * open.length)];
+      state.seats[currentLegId()] = { ...pick, leg: currentLegId() };
+      if (pick.type && pick.type !== 'unavailable') state.openCat = pick.type;
+      saveSeats();
+      renderAll();
+    });
+
+    renderAll();
+  }
+</script>

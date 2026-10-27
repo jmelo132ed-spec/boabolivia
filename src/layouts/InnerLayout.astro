@@ -1,0 +1,22 @@
+---
+import Layout from './Layout.astro';
+import BoaHeader from '../components/boa/BoaHeader.astro';
+import BoaFooter from '../components/boa/BoaFooter.astro';
+
+interface Props {
+  title: string;
+  heading?: string;
+}
+const { title, heading = title } = Astro.props;
+---
+
+<Layout title={`${title} | BoA`} bodyClass="boa-page">
+  <BoaHeader />
+  <main class="page-main boa-inner">
+    <div class="boa-wrap">
+      {heading && <h1>{heading}</h1>}
+      <slot />
+    </div>
+  </main>
+  <BoaFooter />
+</Layout>

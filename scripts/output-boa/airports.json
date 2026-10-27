@@ -1,0 +1,222 @@
+[
+  {
+    "airportId": 1,
+    "codigoIata": "CBB",
+    "name": "Airport Internacional Jorge Wilstermann",
+    "countryName": "BOLIVIA",
+    "cityName": "Cochabamba",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 2,
+    "codigoIata": "LPB",
+    "name": "Airport Internacional El Alto",
+    "countryName": "BOLIVIA",
+    "cityName": "La Paz",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 3,
+    "codigoIata": "VVI",
+    "name": "Airport Internacional Viru Viru",
+    "countryName": "BOLIVIA",
+    "cityName": "Santa Cruz",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 4,
+    "codigoIata": "SRE",
+    "name": "Airport Internacional Alcantarí",
+    "countryName": "BOLIVIA",
+    "cityName": "Sucre",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 5,
+    "codigoIata": "TJA",
+    "name": "Airport Capitán Oriel Lea Plaza",
+    "countryName": "BOLIVIA",
+    "cityName": "Tarija",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 6,
+    "codigoIata": "CIJ",
+    "name": "Airport Capitán Anibal Arab",
+    "countryName": "BOLIVIA",
+    "cityName": "Cobija",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 7,
+    "codigoIata": "EZE",
+    "name": "Airport Internacional Ministro Pistarini",
+    "countryName": "ARGENTINA",
+    "cityName": "Buenos Aires",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": true
+  },
+  {
+    "airportId": 8,
+    "codigoIata": "GRU",
+    "name": "Airport Internacional de Guarulhos",
+    "countryName": "BRASIL",
+    "cityName": "Sao Paulo",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": true
+  },
+  {
+    "airportId": 9,
+    "codigoIata": "TDD",
+    "name": "Airport Teniente Jorge Henrich Arauz",
+    "countryName": "BOLIVIA",
+    "cityName": "Trinidad",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 10,
+    "codigoIata": "MIA",
+    "name": "Airport Internacional de Miami",
+    "countryName": "ESTADOS UNIDOS",
+    "cityName": "Miami (FL)",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": true
+  },
+  {
+    "airportId": 11,
+    "codigoIata": "MAD",
+    "name": "Airport Internacional Adolfo Suárez Madrid-Barajas",
+    "countryName": "ESPANA",
+    "cityName": "Madrid",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": true
+  },
+  {
+    "airportId": 13,
+    "codigoIata": "UYU",
+    "name": "Airport Joya Andina",
+    "countryName": "BOLIVIA",
+    "cityName": "Uyuni",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 15,
+    "codigoIata": "ORU",
+    "name": "Airport Internacional Juan Mendoza",
+    "countryName": "BOLIVIA",
+    "cityName": "Oruro",
+    "typeAirport": "N",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 18,
+    "codigoIata": "BCN",
+    "name": "Airport Internacional El Prat",
+    "countryName": "ESPANA",
+    "cityName": "Barcelona",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 23,
+    "codigoIata": "LIM",
+    "name": "Airport Internacional Jorge Chávez",
+    "countryName": "PERU",
+    "cityName": "Lima",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 24,
+    "codigoIata": "DCA",
+    "name": "Airport Nacional Ronald Reagan de Washington",
+    "countryName": "ESTADOS UNIDOS",
+    "cityName": "Washington DC",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 1574,
+    "codigoIata": "ASU",
+    "name": "Airport Internacional Silvio Pettirossi",
+    "countryName": "PARAGUAY",
+    "cityName": "Asunción",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 1577,
+    "codigoIata": "SCL",
+    "name": "Airport Internacional Comodoro Arturo Merino Benítez",
+    "countryName": "CHILE",
+    "cityName": "Santiago Chile",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 1579,
+    "codigoIata": "IQQ",
+    "name": "Airport Internacional Diego Aracena",
+    "countryName": "CHILE",
+    "cityName": "Iquique",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  },
+  {
+    "airportId": 1585,
+    "codigoIata": "GIG",
+    "name": "Airport Internacional de Galeão",
+    "countryName": "BRASIL",
+    "cityName": "Rio de Janeiro",
+    "typeAirport": "I",
+    "isOperated": true,
+    "status": "active",
+    "isBusiness": false
+  }
+]

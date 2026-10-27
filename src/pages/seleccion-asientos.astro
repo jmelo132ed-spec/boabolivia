@@ -1,0 +1,32 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import AviancaBookingChrome from '../components/offers/AviancaBookingChrome.astro';
+import SeatSelectionBoard from '../components/seats/SeatSelectionBoard.astro';
+import { getHomePageData } from '../services/api';
+import { parseOffersQuery } from '../services/searchQuery';
+
+const home = await getHomePageData();
+const query = parseOffersQuery(Astro.url.searchParams);
+const origin = query.origin;
+const destination = query.destination;
+const from = home.cities.find((c) => c.code === origin) ?? { city: origin || 'Origen', code: origin || '—' };
+const to = home.cities.find((c) => c.code === destination) ?? { city: destination || 'Destino', code: destination || '—' };
+---
+
+<Layout title="Selección de asientos | BoA" bodyClass="is-seats-page av-booking-page">
+  <AviancaBookingChrome
+    origin={from.code}
+    destination={to.code}
+    depart={query.depart}
+    returnDate={query.returnDate}
+    trip={query.trip}
+    adults={Number(query.adults)}
+    children={Number(query.children)}
+    infants={Number(query.infants)}
+    currentStep={3}
+    compact
+  />
+  <SeatSelectionBoard />
+</Layout>

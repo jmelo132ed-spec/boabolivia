@@ -1,0 +1,36 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import BoaHeader from '../components/boa/BoaHeader.astro';
+import BoaHomeExtras from '../components/boa/BoaHomeExtras.astro';
+import BoaFooter from '../components/boa/BoaFooter.astro';
+import BoaSearchBar from '../components/boa/BoaSearchBar.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { getHomePageData } from '../services/api';
+
+const data = await getHomePageData();
+---
+
+<Layout
+  title="Reserva vuelos nacionales e internacionales | BoA - Boliviana de Aviación"
+  description="Reserva vuelos nacionales e internacionales con Boliviana de Aviación."
+  bodyClass="boa-page"
+>
+  <BoaHeader />
+  <main>
+    <section class="boa-hero" id="buscar">
+      <img class="boa-hero__bg" src="/images/boa/hero-madrid.jpg" alt="" />
+      <div class="boa-hero__inner">
+        <div class="boa-hero__card">
+          <h1>Siente Madrid</h1>
+          <p>Historia, arte y gastronomía inolvidable</p>
+        </div>
+        <BoaSearchBar />
+      </div>
+    </section>
+    <BoaHomeExtras />
+  </main>
+  <BoaFooter />
+  <CookieBanner {...data.cookieBanner} />
+</Layout>

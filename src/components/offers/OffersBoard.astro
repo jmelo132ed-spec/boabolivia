@@ -1,0 +1,1353 @@
+---
+import { PORCENTAJE_DESCUENTO } from 'astro:env/client';
+
+interface Props {
+  trip: string;
+  search?: string;
+  fromCity?: string;
+  toCity?: string;
+  origin?: string;
+  destination?: string;
+  depart?: string;
+  returnDate?: string;
+  fromAirport?: string;
+  toAirport?: string;
+}
+
+const {
+  trip,
+  search = '',
+  fromCity = '',
+  toCity = '',
+  origin = '',
+  destination = '',
+  depart = '',
+  fromAirport = '',
+  toAirport = '',
+} = Astro.props;
+---
+
+<section class="offers-board av-book-board boa-offers">
+  <header class="boa-banner">
+    <div class="boa-banner__copy">
+      <h1 class="offers-title" id="offers-title">Selecciona tu vuelo de ida</h1>
+      <p class="boa-banner__sub" id="offers-title-date"></p>
+    </div>
+    <button class="av-book-heading__dates" type="button" id="av-dates-toggle" hidden></button>
+  </header>
+  <div class="boa-dates" id="av-book-dates"></div>
+  <div class="boa-sort av-book-filters">
+    <span>Ordenar por:</span>
+    <button type="button" data-sort="recommended" aria-selected="true">Más relevante</button>
+    <button type="button" data-sort="cheapest" aria-selected="false">Precio</button>
+    <button type="button" data-sort="depart-asc" aria-selected="false">Horario de salida</button>
+    <button type="button" data-sort="fastest" aria-selected="false">Duración</button>
+    <span id="sort-label" hidden>Más relevante</span>
+  </div>
+
+  <div class="offers-timeout hidden" id="offers-timeout" hidden>
+    <img src="/images/boa/logo.png" alt="" width="100" height="100" />
+    <h1>La búsqueda está tardando más de lo normal</h1>
+    <p>Tuvimos un problema con los resultados. Inténtalo nuevamente.</p>
+    <a class="offers-timeout__btn" href="/reservar">Realizar otra búsqueda</a>
+  </div>
+
+  <p class="offers-error hidden" id="offers-error" hidden></p>
+  <p class="offers-empty hidden" id="offers-empty" hidden>
+    {search ? 'No hay vuelos para esta búsqueda. Prueba otras fechas u otra ruta.' : 'Completa origen y destino en el buscador para ver vuelos disponibles.'}
+  </p>
+  <div class="offers-list" id="offers-list"></div>
+  <details class="av-book-terms">
+    <summary>
+      <svg class="av-book-terms__ico" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M2 3h12v1.4H2V3Zm0 4.3h12v1.4H2V7.3Zm0 4.3h12V13H2v-1.4Z"/></svg>
+      <span>Condiciones tarifarias</span>
+      <svg class="av-book-terms__chev" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+    </summary>
+    <ul>
+      <li>Los precios incluyen tasas e impuestos y están sujetos a confirmación al emitir.</li>
+      <li>Las tarifas Light, Classic y Flex tienen cupos limitados.</li>
+      <li>Puedes acumular millas BoA en trayectos operados por Boliviana de Aviación.</li>
+      <li>Revisa equipaje y requisitos de viaje según el destino.</li>
+    </ul>
+  </details>
+</section>
+
+<div class="itinerary-drawer" id="itinerary-drawer" hidden>
+  <div class="itinerary-drawer__backdrop" data-close-itinerary></div>
+  <aside class="itinerary-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="itinerary-title">
+    <header class="itinerary-drawer__head">
+      <h2 id="itinerary-title">Itinerario de vuelo</h2>
+      <button type="button" class="itinerary-drawer__close" data-close-itinerary aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" width="14" height="14" aria-hidden="true">
+          <path fill="currentColor" d="M25.657 8.343 17.999 16l7.658 7.657-2.343 2.343L15.656 18.343 8 25.999l-2.343-2.343L13.314 16 5.657 8.343 8 6l7.656 7.657L23.314 6l2.343 2.343Z"/>
+        </svg>
+      </button>
+    </header>
+    <div class="itinerary-drawer__body" id="itinerary-body"></div>
+  </aside>
+</div>
+
+<div class="itinerary-drawer" id="fare-drawer" hidden>
+  <div class="itinerary-drawer__backdrop" data-close-fare></div>
+  <aside class="itinerary-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="fare-title">
+    <header class="itinerary-drawer__head">
+      <h2 id="fare-title">Detalle tarifa</h2>
+      <button type="button" class="itinerary-drawer__close" data-close-fare aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" width="14" height="14" aria-hidden="true">
+          <path fill="currentColor" d="M25.657 8.343 17.999 16l7.658 7.657-2.343 2.343L15.656 18.343 8 25.999l-2.343-2.343L13.314 16 5.657 8.343 8 6l7.656 7.657L23.314 6l2.343 2.343Z"/>
+        </svg>
+      </button>
+    </header>
+    <div class="itinerary-drawer__body" id="fare-body"></div>
+  </aside>
+</div>
+
+<script define:vars={{ trip, search, PORCENTAJE_DESCUENTO, fromCity, toCity, origin, destination, depart, fromAirport, toAirport }}>
+  const payload = { results: [], calendar: [], trip, from: { code: origin, city: fromCity, airport: fromAirport, country: '' }, to: { code: destination, city: toCity, airport: toAirport, country: '' }, depart, returnDate: '' };
+  const list = document.getElementById('offers-list');
+  const title = document.getElementById('offers-title');
+  const sortLabel = document.getElementById('sort-label');
+  const waiting = document.getElementById('offers-wait-screen');
+  const timeoutBox = document.getElementById('offers-timeout');
+  const errorBox = document.getElementById('offers-error');
+  const emptyBox = document.getElementById('offers-empty');
+  const state = { sort: 'recommended', stops: 'all', hours: 'all', step: 'outbound', outboundLeg: '', fare: '', outboundSelection: null };
+  const discountPct = Number(PORCENTAJE_DESCUENTO) || 0;
+
+  function show(el, on) {
+    el?.classList.toggle('hidden', !on);
+    if (on) el?.removeAttribute('hidden');
+    else el?.setAttribute('hidden', '');
+  }
+
+  function money(value) {
+    const n = Number(value) || 0;
+    const [int, dec] = n.toFixed(2).split('.');
+    return `USD ${int.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${dec}`;
+  }
+
+  function ticketAfterDiscount(original, taxAmount) {
+    const raw = Math.round((Number(original) || 0) * 100) / 100;
+    const knownTax = taxAmount == null ? null : Math.round((Number(taxAmount) || 0) * 100) / 100;
+    const tax = knownTax == null ? Math.round(raw * (233.56 / 1162.56) * 100) / 100 : knownTax;
+    const fare = knownTax == null ? Math.max(0, Math.round((raw - tax) * 100) / 100) : raw;
+    if (!(discountPct > 0)) return Math.round((fare + (knownTax == null ? tax : 0)) * 100) / 100;
+    const fareAfter = Math.round(fare * (1 - Math.min(100, discountPct) / 100) * 100) / 100;
+    return Math.round((fareAfter + (knownTax == null ? tax : 0)) * 100) / 100;
+  }
+
+  function ticketMoney(original) {
+    const before = Number(original) || 0;
+    if (!(discountPct > 0)) return money(before);
+    const after = ticketAfterDiscount(before);
+    return `<span class="ticket-price"><span class="ticket-price__was">${money(before)}</span><span class="ticket-price__now">${money(after)}</span></span>`;
+  }
+
+  function operatorMark(op) {
+    const code = String(op.code || '').toUpperCase();
+    const name = String(op.name || '');
+    if (code === 'OB' || /boa|boliviana/i.test(name)) {
+      return '<img class="flight-card__mark" src="/images/boa/logo.png" alt="" width="16" height="15">';
+    }
+    if (code === 'AV' || /avianca/i.test(name)) {
+      return '<img class="flight-card__mark" src="/images/avianca/bird-mark.svg" alt="" width="16" height="15">';
+    }
+    if (/latam/i.test(name) || ['LA', 'XL', 'LP', '4C', 'LU', 'JJ', 'PZ'].includes(code)) {
+      return '<img class="flight-card__mark" src="/images/avianca/bird-mark.svg" alt="" width="16" height="15">';
+    }
+    if (code === 'DL' || /delta/i.test(name)) {
+      return '<img class="flight-card__mark flight-card__mark--delta" src="/images/airlines/delta.svg" alt="" width="13" height="13">';
+    }
+    if (code === 'AR' || code === 'AU' || /aerol[ií]neas argentinas|\baustral\b/i.test(name)) {
+      return '<img class="flight-card__mark flight-card__mark--delta" src="/images/airlines/aerolineas.svg" alt="" width="13" height="13">';
+    }
+    return '';
+  }
+
+  function operatorsHtml(flight) {
+    const raw = flight.operators || [];
+    const list = raw.length
+      ? raw.map((item) => (typeof item === 'string' ? { name: item, code: '' } : item)).map((op) => (
+        /latam|avianca/i.test(op.name || '') ? { name: 'Boliviana de Aviación', code: op.code || 'OB' } : op
+      ))
+      : [{ name: flight.airline || 'Boliviana de Aviación', code: 'OB' }];
+    const chips = list.map((op) => (
+      `<span class="flight-card__op-item">${operatorMark(op)}<span>${op.name}</span></span>`
+    )).join('<span class="flight-card__op-sep">|</span>');
+    return `<p class="flight-card__op"><span class="flight-card__op-k">Operado por</span>${chips}</p>`;
+  }
+
+  function parseClock(value) {
+    const match = String(value || '').match(/^(\d{1,2}):(\d{2})/);
+    if (!match) return null;
+    const hour24 = Number(match[1]);
+    return {
+      hour24,
+      hour: hour24 % 12 || 12,
+      mins: match[2],
+      suffix: hour24 >= 12 ? 'p.m.' : 'a.m.',
+    };
+  }
+
+  function clock24(value) {
+    const match = String(value || '').match(/^(\d{1,2}):(\d{2})/);
+    if (!match) return value || '';
+    return `${String(match[1]).padStart(2, '0')}:${match[2]}`;
+  }
+
+  function durationAv(mins, label) {
+    const n = Number(mins);
+    if (Number.isFinite(n) && n > 0) {
+      if (n >= 1440) {
+        const days = Math.floor(n / 1440);
+        const rem = n % 1440;
+        const h = Math.floor(rem / 60);
+        const m = rem % 60;
+        return `${days} días ${h} h ${m} minutos`;
+      }
+      if (n < 60) return `${n} minutos`;
+      const h = Math.floor(n / 60);
+      const m = n % 60;
+      if (!h) return `${m} minutos`;
+      if (!m) return `${h} ${h === 1 ? 'hora' : 'horas'}`;
+      return `${h} ${h === 1 ? 'hora' : 'horas'} y ${m} minutos`;
+    }
+    return String(label || '').replace(/\s*min\.?/g, ' minutos');
+  }
+
+  function stopsAv(flight) {
+    const n = Number(flight.stopCount) || 0;
+    if (n <= 0) return 'Vuelo Directo';
+    return n === 1 ? '1 Conexión' : `${n} Conexiones`;
+  }
+
+  function boaMoney(value) {
+    const n = Math.round((Number(value) || 0) * 10) / 10;
+    return `USD ${n.toFixed(1)}`;
+  }
+
+  function boaChipMoney(value) {
+    const n = Math.round((Number(value) || 0) * 10) / 10;
+    return `USD. ${n.toFixed(1)}`;
+  }
+
+  function shortAirport(name) {
+    const raw = String(name || '').trim();
+    if (/wilstermann/i.test(raw)) return 'Air Int Jorge Wilstermann';
+    if (/el alto/i.test(raw)) return 'Air Int El Alto';
+    return raw
+      .replace(/^Airport Internacional /i, 'Air Int ')
+      .replace(/^Aeropuerto Internacional (de )?/i, 'Air Int ')
+      .replace(/^Aeropuerto de /i, 'Air Int ')
+      .replace(/^Airport /i, 'Air ')
+      .replace(/\s*Intl\.?$/i, '')
+      .trim();
+  }
+
+  function boaCardDay(d) {
+    const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    return `${DAYS[d.getDay()]}. ${String(d.getDate()).padStart(2, '0')} ${MONTHS[d.getMonth()]}. ${d.getFullYear()}`;
+  }
+
+  function cardDay(iso, time) {
+    const base = iso ? new Date(`${String(iso).slice(0, 10)}T12:00:00`) : null;
+    let d = base && !Number.isNaN(base.getTime()) ? base : new Date();
+    const clock = parseClock(time);
+    if (clock && String(time || '').includes('+')) d.setDate(d.getDate() + 1);
+    return boaCardDay(d);
+  }
+
+  function arriveDay(iso, flight) {
+    const base = iso ? new Date(`${String(iso).slice(0, 10)}T12:00:00`) : new Date();
+    if (flight.arriveNextDay) base.setDate(base.getDate() + 1);
+    return boaCardDay(base);
+  }
+
+  function operatorsLine(flight) {
+    const raw = flight.operators || [];
+    const names = (raw.length
+      ? raw.map((item) => (typeof item === 'string' ? item : item.name))
+      : [flight.airline || 'Boliviana de Aviación']
+    ).map((name) => (/latam|avianca/i.test(name || '') ? 'Boliviana de Aviación' : name)).filter(Boolean);
+    const unique = [...new Set(names)];
+    if (unique.length === 1) return `Operado por ${unique[0]}`;
+    return `Operado por ${unique.slice(0, -1).join(', ')} y ${unique[unique.length - 1]}`;
+  }
+
+  function compareRecommended(a, b) {
+    const departAsc = String(a.depart || '').localeCompare(String(b.depart || ''));
+    if (departAsc) return departAsc;
+    const duration = (Number(a.durationMinutes) || 0) - (Number(b.durationMinutes) || 0);
+    if (duration) return duration;
+    return Number(a.price) - Number(b.price);
+  }
+
+  function outboundKey(flight) {
+    const segs = flight.itinerary || [];
+    if (segs.length) {
+      return segs.map((s) => `${s.flightNumber}|${s.depart}|${s.originCode}|${s.destCode}|${s.arrive}`).join('>');
+    }
+    return `${flight.flightNumber}|${flight.depart}|${flight.arrive}|${flight.stopCount}`;
+  }
+
+  function uniqueOutbound(rows) {
+    const map = new Map();
+    for (const flight of rows) {
+      const key = outboundKey(flight);
+      const prev = map.get(key);
+      if (!prev || flight.price < prev.price) map.set(key, flight);
+    }
+    return [...map.values()].sort(compareRecommended);
+  }
+
+  function viaLatamHub(flight) {
+    const segs = flight.itinerary || [];
+    if (segs.length < 2) return false;
+    const hubs = { GUA: 1, SAL: 1, SAP: 1, MIA: 1, BOG: 1, MEX: 1, LIM: 1, SCL: 1, LAX: 1, IAD: 1 };
+    return segs.slice(0, -1).some((seg) => hubs[String(seg.destCode || '').toUpperCase()]);
+  }
+
+  function fareIcon(kind, color) {
+    const fill = color || 'currentColor';
+    const paths = {
+      personal: '<path fill-rule="evenodd" clip-rule="evenodd" d="M12.4688 14.4479C13.013 14.4479 13.4583 14.0026 13.4583 13.4583V7.52084C13.4583 6.60052 12.825 5.8336 11.974 5.61094V4.55209H10.4896V5.54167H8.51042V4.55209H7.02604V5.61094C6.175 5.8336 5.54167 6.60052 5.54167 7.52084V13.4583C5.54167 14.0026 5.98698 14.4479 6.53125 14.4479H12.4688ZM6.53125 10.4896V9.5H12.4688V11.4792H11.4792V10.4896H6.53125Z" fill="currentColor"/>',
+      carry: '<path d="M11.34 2.375C11.7389 2.375 12.0659 2.71359 12.0659 3.12724V9.15751H13.5163C14.3142 9.15751 14.2484 9.8347 14.2484 10.662V15.1607C14.2485 15.9879 14.3141 16.6644 13.5163 16.6644C13.5163 17.078 13.19 17.4166 12.7911 17.4167C12.3922 17.4167 12.0659 17.0781 12.0659 16.6644H7.71333C7.71333 17.0781 7.38707 17.4166 6.98815 17.4167C6.5892 17.4167 6.26297 17.0781 6.26297 16.6644C5.66453 16.6644 5.55916 16.2838 5.54398 15.7444V10.0775C5.55918 9.53823 5.66461 9.15751 6.26297 9.15751H7.71333V3.12724C7.71333 2.7137 8.0397 2.37518 8.43851 2.375H11.34ZM7.91743 14.7626H8.7091V10.7316H7.91743V14.7626ZM11.0833 14.7626H11.875V10.7316H11.0833V14.7626ZM8.70678 3.16667V9.01603H11.0818V3.16667H8.70678Z" fill="currentColor"/>',
+      hold: '<path d="M11.0833 1.58333C11.5187 1.58333 11.875 1.93958 11.875 2.37499V4.74999H13.4583C14.3291 4.74999 15.0416 5.46249 15.0416 6.33333V15.0417C15.0416 15.9125 14.3291 16.625 13.4583 16.625C13.4583 17.0604 13.1021 17.4167 12.6666 17.4167C12.2312 17.4167 11.875 17.0604 11.875 16.625H7.12498C7.12498 17.0604 6.76873 17.4167 6.33331 17.4167C5.8979 17.4167 5.54165 17.0604 5.54165 16.625C4.67081 16.625 3.95831 15.9125 3.95831 15.0417V6.33333C3.95831 5.46249 4.67081 4.74999 5.54165 4.74999H7.12498V2.37499C7.12498 1.93958 7.48123 1.58333 7.91665 1.58333H11.0833ZM6.33331 14.25H7.52081V7.12499H6.33331V14.25ZM8.90546 14.25H10.093V7.12499H8.90546V14.25ZM11.4799 7.12499V14.25H12.6674V7.12499H11.4799ZM8.31171 4.74999H10.6867V2.77083H8.31171V4.74999Z" fill="currentColor"/>',
+      miles: '<path d="M11.7605 13.923H13.2547C13.8763 13.923 14.1504 13.9741 14.3242 14.0566C14.0578 13.2153 13.2199 12.5627 10.2702 12.3386C10.7412 12.8929 11.2354 13.4276 11.7605 13.9269V13.923Z" fill="currentColor"/><path d="M10.274 12.3386C7.40921 8.94957 5.47873 4.61308 4.70654 1C4.70654 1 3.13126 2.41535 3.00771 5.3876C2.86872 8.63898 4.58299 11.914 10.22 12.3307C10.2393 12.3307 10.2586 12.3307 10.274 12.3386Z" fill="currentColor"/><path d="M11.7605 13.923C9.5366 13.923 5.69881 13.923 5.69881 13.923C5.77989 14.1156 6.05788 14.2493 6.68722 14.2886C10.471 14.5166 11.0038 17.54 16.4207 17.54C16.8956 17.54 17.1929 17.5125 17.4902 17.4535C15.3512 16.7851 13.4285 15.5231 11.7567 13.923L11.7605 13.923Z" fill="currentColor"/>',
+      seat: '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.4337 11.0713C16.4337 11.0713 16.0909 10.0649 15.0575 9.23604L11.375 10.0745L9.08966 10.5915L7.98981 8.4602L6.91006 6.53404L5.61 4.19346C5.61 4.19346 4.97701 3.03832 3.43739 3.44241C3.43739 3.44241 3.39193 3.45549 3.32374 3.48165L2.96353 1.92172C2.91107 1.69868 2.63829 1.5493 2.35503 1.58991L2.01318 1.63879C1.72991 1.67941 1.54019 1.89488 1.59177 2.11792L2.20989 4.79238C2.22301 4.8502 2.25273 4.90252 2.29295 4.94865C2.30781 5.15104 2.35677 5.37477 2.46519 5.63017L6.15031 12.2513L7.00798 13.7685C7.00798 13.7685 7.34458 14.4149 7.73626 14.5863L7.73976 15.4276L7.73626 16.3356L7.72053 16.8794C7.72053 16.8794 7.79484 17.3627 8.2757 17.3861C8.75656 17.4095 10.534 17.3923 10.534 17.3923H12.8622L14.6842 17.3888C14.6842 17.3888 15.1126 17.3744 15.2385 17.0136L15.2717 16.5187L15.2639 15.6079L15.2682 14.4989L15.2752 13.1634C15.2752 13.1634 15.9817 13.0794 16.4372 12.601C16.4372 12.601 16.8621 12.2705 16.4337 11.0713Z" fill="currentColor"/>',
+      plus: '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.4337 11.0713C16.4337 11.0713 16.091 10.0649 15.0576 9.23604L11.3751 10.0745L9.08969 10.5915L7.98984 8.4602L6.91009 6.53404L5.61003 4.19346C5.61003 4.19346 4.97704 3.03832 3.43742 3.44241C3.43742 3.44241 3.39196 3.45549 3.32377 3.48165L2.96356 1.92172C2.9111 1.69868 2.63833 1.5493 2.35506 1.58991L2.01321 1.63879C1.72994 1.67941 1.54022 1.89488 1.5918 2.11792L2.20992 4.79238C2.22304 4.8502 2.25276 4.90252 2.29298 4.94865C2.30784 5.15104 2.3568 5.37477 2.46522 5.63017L6.15034 12.2513L7.00801 13.7685C7.00801 13.7685 7.34461 14.4149 7.73629 14.5863L7.73979 15.4276L7.73629 16.3356L7.72056 16.8794C7.72056 16.8794 7.79487 17.3627 8.27573 17.3861C8.75659 17.4095 10.534 17.3923 10.534 17.3923H12.8622L14.6843 17.3888C14.6843 17.3888 15.1127 17.3744 15.2385 17.0136L15.2718 16.5187L15.2639 15.6079L15.2683 14.4989L15.2753 13.1634C15.2753 13.1634 15.9817 13.0794 16.4372 12.601C16.4372 12.601 16.8621 12.2705 16.4337 11.0713Z" fill="currentColor"/>',
+      checkin: '<path d="M15.9841 3.16667C16.7756 3.16688 17.4166 3.8793 17.4166 4.75001V14.25C17.4166 15.1208 16.7041 15.8333 15.8333 15.8333H3.16665C2.29581 15.8333 1.58331 15.1208 1.58331 14.25V11.0833C2.46206 11.0833 3.16665 10.3708 3.16665 9.50001C3.16665 8.62917 2.46188 7.91667 1.59104 7.91667V4.75001C1.59104 3.87917 2.29581 3.16667 3.16665 3.16667H15.9841ZM7.435 6.9039L9.33531 10.1966L7.44273 10.7037L6.44541 9.91981L5.70941 10.1177L7.02293 12.3976L14.0374 10.529C14.449 10.4103 14.6868 9.99105 14.584 9.58737C14.4731 9.18362 14.053 8.93845 13.6493 9.04928L11.718 9.5634L8.54364 6.60238L7.435 6.9039Z" fill="currentColor"/>',
+      change: '<path d="M9.5 2.375C10.4895 2.375 11.4162 2.56288 12.2801 2.9386C13.1446 3.3149 13.8972 3.82274 14.5368 4.4624C15.177 5.10259 15.6851 5.85515 16.0614 6.71912C16.4371 7.58355 16.625 8.5105 16.625 9.5C16.625 10.4895 16.4371 11.4162 16.0614 12.2801C15.6851 13.1446 15.177 13.8972 14.5368 14.5368C13.8972 15.177 13.1446 15.6851 12.2801 16.0614C11.4162 16.4371 10.4895 16.625 9.5 16.625C7.67921 16.625 6.09262 16.0211 4.73995 14.8136C3.38778 13.6066 2.61235 12.0993 2.41443 10.2917H4.03719C4.22191 11.6639 4.83269 12.7985 5.86869 13.6957C6.90419 14.5929 8.11458 15.0417 9.5 15.0417C11.0438 15.0417 12.3531 14.5038 13.4282 13.4282C14.5038 12.3531 15.0417 11.0438 15.0417 9.5C15.0417 7.95625 14.5038 6.64665 13.4282 5.57105C12.3531 4.49596 11.0438 3.95833 9.5 3.95833C8.5897 3.95833 7.73876 4.1694 6.94718 4.59151C6.15552 5.01373 5.48889 5.59444 4.94792 6.33333H7.125V7.91667H2.375V3.16667H3.95833V5.02677C4.63122 4.18242 5.45279 3.52948 6.42224 3.06771C7.39224 2.60597 8.41813 2.375 9.5 2.375ZM10.2917 6.33333V9.97469L12.8252 12.5082L11.7165 13.6168L8.70833 10.6086V6.33333H10.2917Z" fill="currentColor"/>',
+      refund: '<path fill-rule="evenodd" clip-rule="evenodd" d="M10.6875 2.375C6.75292 2.375 3.5625 5.56542 3.5625 9.5H1.1875L4.26708 12.5796L4.3225 12.6904L7.52083 9.5H5.14583C5.14583 6.43625 7.62375 3.95833 10.6875 3.95833C13.7513 3.95833 16.2292 6.43625 16.2292 9.5C16.2292 12.5638 13.7513 15.0417 10.6875 15.0417C9.15958 15.0417 7.77417 14.4162 6.77667 13.4108L5.6525 14.535C6.94292 15.8254 8.71625 16.625 10.6875 16.625C14.6221 16.625 17.8125 13.4346 17.8125 9.5C17.8125 5.56542 14.6221 2.375 10.6875 2.375Z" fill="currentColor"/>',
+      norefund: '<path fill-rule="evenodd" clip-rule="evenodd" d="M10.6875 2.375C6.75292 2.375 3.5625 5.56542 3.5625 9.5H1.1875L4.26708 12.5796L4.3225 12.6904L7.52083 9.5H5.14583C5.14583 6.43625 7.62375 3.95833 10.6875 3.95833C13.7513 3.95833 16.2292 6.43625 16.2292 9.5C16.2292 12.5638 13.7513 15.0417 10.6875 15.0417C9.15958 15.0417 7.77417 14.4162 6.77667 13.4108L5.6525 14.535C6.94292 15.8254 8.71625 16.625 10.6875 16.625C14.6221 16.625 17.8125 13.4346 17.8125 9.5C17.8125 5.56542 14.6221 2.375 10.6875 2.375Z" fill="currentColor"/>',
+      food: '<path d="M7.2 3.2c.5 0 .9.4.9.9v5.2c0 .7-.4 1.2-.9 1.4V20H5.4v-9.3c-.5-.2-.9-.7-.9-1.4V4.1c0-.5.4-.9.9-.9h1.8Zm9.7 0c1.8 0 3.2 1.6 3.2 3.7 0 1.6-1 2.9-2.3 3.4V20h-1.8v-9.7c-1.3-.5-2.3-1.8-2.3-3.4 0-2.1 1.4-3.7 3.2-3.7Z" fill="currentColor"/>',
+    };
+    const d = paths[kind] || paths.personal;
+    return `<span class="av-fare__ico" style="color:${fill}" aria-hidden="true"><svg viewBox="0 0 19 19" width="19" height="19" fill="none">${d}</svg></span>`;
+  }
+
+  function headerBagImgs(fare) {
+    const tone = fare.tone || fare.id || 'light';
+    const files = {
+      light: ['Hand-luggage-LIGHT.svg', 'Baggage-LIGHT.svg'],
+      classic: ['Hand-luggage-CLASSIC.svg', 'Baggage-CLASSIC.svg', 'Baggage-CLASSIC.svg'],
+      flex: ['Hand-luggage-FLEX.svg', 'Baggage-FLEX.svg', 'Baggage-FLEX.svg'],
+      business: ['Hand-luggage-CLASSIC.svg', 'Baggage-CLASSIC.svg', 'Baggage-CLASSIC.svg'],
+    }[tone] || ['Hand-luggage-LIGHT.svg', 'Baggage-LIGHT.svg'];
+    const unique = tone === 'classic' || tone === 'flex' || tone === 'business'
+      ? files
+      : files;
+    return unique.map((file, i) => {
+      const hand = file.startsWith('Hand');
+      return `<img class="av-fare__bag-img${hand ? ' av-fare__bag-img--hand' : ''}" src="/images/fares/${file}" alt="" width="${hand ? 20 : 30}" height="${hand ? 20 : 30}">`;
+    }).join('');
+  }
+
+  function cardPerks(fare) {
+    const hide = {
+      classic: ['food', 'change', 'refund', 'norefund'],
+      flex: ['food'],
+      light: [],
+      business: ['food'],
+    }[fare.tone] || [];
+    return (fare.perks || []).filter((perk) => !hide.includes(perk.icon));
+  }
+
+  const boaFarePerks = {
+    standard: [
+      ['personal', '1 Artículo personal'],
+      ['carry', '1 Equipaje de mano (7 kg)'],
+      ['bodega', '1 PC Equipaje en bodega (hasta 23kg)'],
+      ['seat', 'Selección de asientos incluida'],
+      ['checkin', 'Web check in disponible'],
+      ['change', 'Cambios antes del vuelo 5.- USD (valor neto), según condiciones. Puede aplicar diferencia tarifaria'],
+      ['change', 'Cambios después del vuelo 10.- USD (valor neto), puede aplicar diferencia tarifaria'],
+      ['refund', 'Reembolsable según condiciones (40%–70% sobre el valor neto)'],
+      ['norefund', 'No reembolsable una vez iniciado el viaje'],
+    ],
+    flex: [
+      ['seat', 'Selección de asientos incluida'],
+      ['carry', '1 Equipaje de mano (7 kg)'],
+      ['bodega', '2 PC Equipaje en bodega (hasta 23kg c/u)'],
+      ['seat', 'Selección de asientos incluida'],
+      ['checkin', 'Web check in disponible'],
+      ['change', 'Cambios antes del vuelo SIN penalidad. Puede aplicar diferencia tarifaria'],
+      ['change', 'Cambios después del vuelo 5.- USD (valor neto), puede aplicar diferencia tarifaria'],
+      ['refund', 'Reembolsable según condiciones (80%–95% sobre el valor neto)'],
+      ['norefund', 'No reembolsable una vez iniciado el viaje'],
+    ],
+  };
+
+  function boaFareMoney(value) {
+    const n = Math.round((Number(value) || 0) * 100) / 100;
+    return `USD. ${n.toFixed(2)}`;
+  }
+
+  function boaFarePair(flight) {
+    const opts = (flight.fareOptions || [])
+      .filter((fare) => Number(fare.price) > 0)
+      .sort((a, b) => Number(a.price) - Number(b.price));
+    const fare = opts[0] || {
+      id: 'pe',
+      name: 'Flex',
+      price: Number(flight.price) || 0,
+      extra: 0,
+      seats: 9,
+    };
+    const isStandard = String(fare.name || '').toLowerCase() === 'standard' || fare.id === 'light';
+    return [{
+      ...fare,
+      extra: 0,
+      id: isStandard ? 'light' : 'pe',
+      name: isStandard ? 'Standard' : 'Flex',
+      price: Number(fare.price || flight.price) || 0,
+    }];
+  }
+
+  function fareCards(flight) {
+    return boaFarePair(flight).map((fare) => {
+      const isFlex = fare.name === 'Flex' || fare.id === 'pe';
+      const perks = isFlex ? boaFarePerks.flex : boaFarePerks.standard;
+      const seats = Number(fare.seats) || 9;
+      const total = Number(fare.price) || 0;
+      const tag = isFlex ? '<p class="boa-fare__more">¡Más flexible!</p>' : '';
+      return `
+        <article class="fare-col boa-fare${isFlex ? ' boa-fare--flex' : ''}">
+          <div class="boa-fare__top">
+            <h3>${fare.name}</h3>
+            <span class="boa-fare__badge">Económica</span>
+          </div>
+          ${tag}
+          <p class="boa-fare__price">${boaFareMoney(total)}</p>
+          <p class="boa-fare__seats">${seats} Asientos disponibles</p>
+          <hr class="boa-fare__line">
+          <ul class="boa-fare__list">${perks.map(([icon, label]) => `<li><img src="/images/boa/fare-${icon}.svg" alt="" width="24" height="24"><span>${label}</span></li>`).join('')}</ul>
+          <div class="boa-fare__pay">
+            <button class="fare-col__cta boa-fare__cta" type="button" data-fare="${fare.id}" data-leg="${flight.outboundLegId}" data-price="${total.toFixed(2)}">Seleccionar</button>
+            <small>Precio por pasajero</small>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  function boundChipDate(leg) {
+    const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+    const iso = leg === 'inbound'
+      ? (payload.returnDate || params.get('return') || params.get('inbound') || '')
+      : (payload.depart || params.get('depart') || params.get('outbound') || '');
+    return chipDate(String(iso).slice(0, 10));
+  }
+
+  function fareGrid(flight, meta) {
+    return `
+      <div class="av-fares__mobile-head">
+        <div class="av-fares__mobile-head-inner">
+          <div class="av-fares__first">
+            <button type="button" class="av-fares__back" data-close-fares aria-label="Volver">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+            <span class="av-fares__sheet-title">Selecciona tu tarifa</span>
+          </div>
+          <div class="av-fares__second">
+            <div class="av-fares__trip">
+              <strong>${meta.origin}</strong>
+              <span>${meta.depart}</span>
+              <svg class="av-fares__swap" viewBox="0 0 12 10" width="11" height="9" aria-hidden="true"><path fill="currentColor" d="M0 4.5h7.15L5.55 2.9l.9-.9L10 5 6.45 8.55l-.9-.9L7.15 6.05H0z"/></svg>
+              <span>${meta.arrive}</span>
+              <strong>${meta.dest}</strong>
+            </div>
+            <div class="av-fares__when">${meta.when}</div>
+          </div>
+        </div>
+      </div>
+      <div class="fare-grid boa-fares" data-cabin-grid="economy">${fareCards(flight)}</div>
+    `;
+  }
+
+  function flightSnapshot(flight) {
+    if (!flight) return null;
+    return {
+      id: flight.id,
+      outboundLegId: flight.outboundLegId || flight.id,
+      depart: flight.depart,
+      arrive: flight.arrive,
+      duration: flight.duration,
+      durationMinutes: flight.durationMinutes || 0,
+      stops: flight.stops,
+      stopCount: flight.stopCount,
+      price: flight.price,
+      tax: flight.tax,
+      arriveNextDay: Boolean(flight.arriveNextDay),
+      airline: flight.airline,
+      flightNumber: flight.flightNumber,
+      operators: flight.operators || [],
+      itinerary: (flight.itinerary || []).map((seg) => ({
+        flightNumber: seg.flightNumber,
+        operator: seg.operator,
+        operatorCode: seg.operatorCode,
+        depart: seg.depart,
+        arrive: seg.arrive,
+        duration: seg.duration,
+        durationMinutes: seg.durationMinutes,
+        originCode: seg.originCode,
+        originCity: seg.originCity,
+        destCode: seg.destCode,
+        destCity: seg.destCity,
+        layover: seg.layover,
+        aircraft: seg.aircraft || '',
+      })),
+      fareOptions: (flight.fareOptions || []).map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        extra: item.extra,
+        cabin: item.cabin,
+        tone: item.tone,
+      })),
+    };
+  }
+
+  function legSelection(legId, fareId) {
+    const flight = payload.results.find((row) => row.outboundLegId === legId || row.id === legId);
+    const fare = (flight?.fareOptions || []).find((item) => item.id === fareId);
+    return {
+      legId,
+      fareId,
+      fareName: fare?.name || '',
+      price: Number(fare?.price || flight?.price || 0) + Number(fare?.extra || 0),
+      flight: flightSnapshot(flight),
+    };
+  }
+
+  function persistCheckout(outbound, inbound) {
+    const qs = search.startsWith('?') ? search.slice(1) : search;
+    const params = new URLSearchParams(qs);
+    const data = {
+      search,
+      trip: payload.trip || trip,
+      from: payload.from,
+      to: payload.to,
+      depart: payload.depart || (params.get('depart') || params.get('outbound') || '').slice(0, 10),
+      returnDate: payload.returnDate || (params.get('return') || params.get('inbound') || '').slice(0, 10),
+      adults: Number(params.get('adults') || params.get('adt') || '1'),
+      children: Number(params.get('children') || params.get('chd') || '0'),
+      infants: Number(params.get('infants') || params.get('inf') || '0'),
+      cabin: params.get('cabin') || 'Economy',
+      outbound,
+      inbound: inbound || null,
+    };
+    sessionStorage.setItem('latam-checkout-selection', JSON.stringify(data));
+  }
+
+  function goCheckout(outbound, inbound) {
+    persistCheckout(outbound, inbound);
+    window.location.href = `/pasajeros${search.startsWith('?') ? search : `?${search}`}`;
+  }
+
+  function latamClockText(value) {
+    return clock24(value);
+  }
+
+  function seatsLeft(flight) {
+    const key = String(flight.id || flight.flightNumber || flight.depart || '');
+    let hash = 0;
+    for (let i = 0; i < key.length; i += 1) hash = (hash + key.charCodeAt(i) * (i + 3)) % 17;
+    if ((Number(flight.stopCount) || 0) < 2 && hash > 8) return 0;
+    return (hash % 5) + 2;
+  }
+
+  function cardBadges(flight, rows) {
+    const cheapest = Math.min(...rows.map((row) => Number(row.price) || Infinity));
+    const badges = [];
+    if (Number(flight.price) === cheapest) badges.push(['Mejor precio', 'best']);
+    else {
+      const left = seatsLeft(flight);
+      if (left) badges.push([`Quedan ${left} asientos`, 'seats']);
+    }
+    return badges;
+  }
+
+  function promoHtml() {
+    return '';
+  }
+
+  function cardHtml(flight, leg, rows) {
+    const selectId = leg === 'inbound' ? flight.id : flight.outboundLegId;
+    const originCode = leg === 'inbound' ? payload.to.code : payload.from.code;
+    const destCode = leg === 'inbound' ? payload.from.code : payload.to.code;
+    const originAir = shortAirport(leg === 'inbound' ? payload.to.airport : payload.from.airport);
+    const destAir = shortAirport(leg === 'inbound' ? payload.from.airport : payload.to.airport);
+    const iso = leg === 'inbound' ? (payload.returnDate || '') : (payload.depart || depart);
+    const nextDay = flight.arriveNextDay ? '<sup class="boa-flight__plus">+1</sup>' : '';
+    const stops = stopsAv(flight);
+    const connecting = (Number(flight.stopCount) || 0) > 0;
+    const routeImg = connecting ? '/images/boa/route-connect.png' : '/images/boa/route-direct.png';
+    const fareName = 'Económica';
+    return `
+      <article class="flight-card av-flight boa-flight" data-id="${flight.id}" data-select="${selectId}" data-leg="${flight.outboundLegId}" data-price="${flight.price}" data-depart="${flight.depart}" data-arrive="${flight.arrive}" data-duration="${flight.durationMinutes || 0}" data-stops="${flight.stopCount ?? 0}" data-nextday="${flight.arriveNextDay ? 1 : 0}" data-via-hub="${viaLatamHub(flight) ? 1 : 0}" data-period="${flight.period || ''}">
+        <div class="av-flight__main boa-flight__main">
+          <div class="boa-flight__end">
+            <span class="boa-flight__day">${cardDay(iso, flight.depart)}</span>
+            <strong>${clock24(flight.depart)}</strong>
+            <span class="boa-flight__iata">${originCode || ''}</span>
+          </div>
+          <div class="boa-flight__path">
+            <button type="button" class="flight-card__direct boa-flight__direct">${stops} <svg class="boa-flight__info" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></button>
+            <div class="boa-flight__codes">
+              <div class="boa-flight__air boa-flight__air--from">
+                <strong>${originCode || ''}</strong>
+                <small>${originAir}</small>
+              </div>
+              <img class="boa-flight__route" src="${routeImg}" alt="" width="160" height="33">
+              <div class="boa-flight__air boa-flight__air--to">
+                <strong>${destCode || ''}</strong>
+                <small>${destAir}</small>
+              </div>
+            </div>
+            <p class="boa-flight__dur">${durationAv(flight.durationMinutes, flight.duration)}</p>
+          </div>
+          <div class="boa-flight__end boa-flight__end--in">
+            <span class="boa-flight__day">${arriveDay(iso, flight)}</span>
+            <strong>${clock24(flight.arrive)}${nextDay}</strong>
+            <span class="boa-flight__iata">${destCode || ''}</span>
+          </div>
+          <div class="av-flight__price boa-farebox">
+            <div class="boa-farebox__top">
+              <img src="/images/boa/fare-logo.png" alt="" width="60" height="33">
+              <span class="boa-farebox__tag">${fareName}</span>
+            </div>
+            <span class="boa-farebox__k">Desde</span>
+            <div class="boa-farebox__price">
+              <strong>${boaMoney(flight.price)}</strong>
+              <svg class="boa-farebox__chev" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="m7 10 5 5 5-5z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="fare-panel av-fares hidden" data-fares="${selectId}" hidden>
+          ${fareGrid(flight, {
+            origin: originCode || '',
+            dest: destCode || '',
+            depart: clock24(flight.depart),
+            arrive: clock24(flight.arrive),
+            when: boundChipDate(leg),
+          })}
+        </div>
+      </article>
+    `;
+  }
+
+  function placePromo() {}
+
+  function longDate(iso) {
+    if (!iso) return '';
+    const DAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'Sept', 'oct', 'nov', 'dic'];
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    return `${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}, ${d.getFullYear()}`;
+  }
+
+  function chipDate(iso) {
+    const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'Sept', 'oct', 'nov', 'dic'];
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    return `${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  }
+
+  function shiftIso(iso, days) {
+    const d = new Date(`${iso}T12:00:00`);
+    d.setDate(d.getDate() + days);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function todayIso() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function renderDates() {
+    const box = document.getElementById('av-book-dates');
+    const selected = payload.depart || depart;
+    if (!box || !selected) return;
+    const min = todayIso();
+    const cal = Array.isArray(payload.calendar) ? payload.calendar : [];
+    const byDate = new Map(cal.map((day) => [day.date, Number(day.price)]));
+    let days = cal.map((day) => day.date).filter(Boolean);
+    if (!days.includes(selected)) days = [...days, selected];
+    days.sort();
+    if (days.length < 3) days = [-3, -2, -1, 0, 1, 2, 3].map((offset) => shiftIso(selected, offset));
+    const selectedIndex = Math.max(0, days.indexOf(selected));
+    const windowDays = days.length > 7
+      ? days.slice(Math.max(0, selectedIndex - 3), Math.max(0, selectedIndex - 3) + 7)
+      : days;
+    const cheapestToday = Math.min(...(payload.results || []).map((row) => Number(row.price) || Infinity));
+    const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const chip = (iso) => {
+      const d = new Date(`${iso}T12:00:00`);
+      if (Number.isNaN(d.getTime())) return iso;
+      const label = `${DAYS[d.getDay()]}. ${d.getDate()} ${MONTHS[d.getMonth()]}.`;
+      return `${label.slice(0, 1).toUpperCase()}${label.slice(1)}`;
+    };
+    const prevIso = shiftIso(windowDays[0] || selected, -1);
+    const nextIso = shiftIso(windowDays[windowDays.length - 1] || selected, 1);
+    box.innerHTML = `
+      <button type="button" class="av-book-dates__nav boa-date-prev" data-date="${prevIso}" aria-label="Día anterior"${prevIso < min ? ' disabled' : ''}>‹</button>
+      ${windowDays.map((iso) => {
+        const raw = byDate.has(iso) ? byDate.get(iso) : (iso === selected && Number.isFinite(cheapestToday) ? cheapestToday : null);
+        const priceLabel = raw != null && Number.isFinite(raw) ? boaChipMoney(raw) : '';
+        const past = iso < min;
+        const cls = `av-book-date boa-date${iso === selected ? ' is-selected' : ''}${past ? ' is-disabled' : ''}`;
+        if (past) {
+          return `
+        <span class="${cls}">
+          <span>${chip(iso)}</span>
+        </span>`;
+        }
+        return `
+        <a class="${cls}" href="${dateHref(iso)}">
+          <span>${chip(iso)}</span>
+          ${priceLabel ? `<small>${priceLabel}</small>` : ''}
+        </a>`;
+      }).join('')}
+      <button type="button" class="av-book-dates__nav boa-date-next" data-date="${nextIso}" aria-label="Día siguiente">›</button>
+    `;
+  }
+
+  function dateHref(iso) {
+    const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+    const min = todayIso();
+    params.set('depart', iso < min ? min : iso);
+    return `/ofertas-vuelos?${params.toString()}`;
+  }
+
+  function bannerDate(iso, city) {
+    if (!iso) return city ? `Hacia ${city}` : '';
+    const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    return `${DAYS[d.getDay()]}., ${d.getDate()} ${MONTHS[d.getMonth()]}. ${d.getFullYear()}. - Hacia ${city}`;
+  }
+
+  function setHeading(kind) {
+    const from = payload.from.city || fromCity || payload.from.code;
+    const to = payload.to.city || toCity || payload.to.code;
+    const dateEl = document.getElementById('offers-title-date');
+    const step = document.getElementById('boa-step-1-label');
+    const route = document.getElementById('boa-res-route');
+    if (kind === 'inbound') {
+      if (title) title.textContent = 'Selecciona tu vuelo de vuelta';
+      if (dateEl) dateEl.textContent = bannerDate(payload.returnDate, from);
+      if (step) step.textContent = 'Vuelo de vuelta';
+      if (route) route.textContent = `${to} a ${from}`;
+    } else {
+      if (title) title.textContent = 'Selecciona tu vuelo de ida';
+      if (dateEl) dateEl.textContent = bannerDate(payload.depart || depart, to);
+      if (step) step.textContent = 'Vuelo de ida';
+      if (route) route.textContent = `${from} a ${to}`;
+    }
+  }
+
+  function groupHeading(text) {
+    const h = document.createElement('h2');
+    h.className = 'boa-offers__group';
+    h.textContent = text;
+    return h;
+  }
+
+  function renderOutbound() {
+    const outbound = uniqueOutbound(payload.results);
+    setHeading('outbound');
+    renderDates();
+    list.innerHTML = outbound.map((flight) => cardHtml(flight, 'outbound', outbound)).join('');
+    show(emptyBox, outbound.length === 0);
+    applyFilters();
+  }
+
+  function prettyDay(iso) {
+    if (!iso) return '';
+    const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    return `${DAYS[d.getDay()]}. ${d.getDate()} ${MONTHS[d.getMonth()]}.`;
+  }
+
+  function citiesForLeg() {
+    if (state.step === 'inbound') return { from: payload.to, to: payload.from };
+    return { from: payload.from, to: payload.to };
+  }
+
+  function itineraryOf(flight) {
+    const cities = citiesForLeg();
+    if (flight.itinerary?.length) {
+      return flight.itinerary.map((seg, index, all) => {
+        const originCity = seg.originCity || (index === 0 ? cities.from.city : seg.originCity);
+        const destCity = seg.destCity || (index === all.length - 1 ? cities.to.city : seg.destCity);
+        const originCode = seg.originCode || (index === 0 ? cities.from.code : seg.originCode);
+        const destCode = seg.destCode || (index === all.length - 1 ? cities.to.code : seg.destCode);
+        const originAirport = distinctAirport(seg.originAirport, originCity, index === 0 ? cities.from.airport : '');
+        const destAirport = distinctAirport(seg.destAirport, destCity, index === all.length - 1 ? cities.to.airport : '');
+        return { ...seg, originCity, destCity, originCode, destCode, originAirport, destAirport, operator: seg.operator || flight.airline };
+      });
+    }
+    return [{
+      flightNumber: flight.flightNumber,
+      operator: flight.airline,
+      depart: flight.depart,
+      arrive: flight.arrive,
+      duration: flight.duration,
+      durationMinutes: flight.durationMinutes,
+      originCode: cities.from.code,
+      originCity: cities.from.city,
+      originAirport: cities.from.airport,
+      destCode: cities.to.code,
+      destCity: cities.to.city,
+      destAirport: cities.to.airport,
+    }];
+  }
+
+  function distinctAirport(airport, city, fallback) {
+    const name = String(airport || '').trim();
+    const cityName = String(city || '').trim();
+    if (name && name.toLowerCase() !== cityName.toLowerCase() && !/^todos los aeropuertos$/i.test(name)) return name;
+    const next = String(fallback || '').trim();
+    if (next && next.toLowerCase() !== cityName.toLowerCase() && !/^todos los aeropuertos$/i.test(next)) return next;
+    return name;
+  }
+
+  function durationShort(mins, label) {
+    const n = Number(mins);
+    if (Number.isFinite(n) && n > 0) {
+      if (n < 60) return `${n} min`;
+      const h = Math.floor(n / 60);
+      const m = n % 60;
+      return m ? `${h} h ${m} min` : `${h} h`;
+    }
+    return String(label || '').replace(/^0 h /, '');
+  }
+
+  function flightCode(value) {
+    return String(value || '').replace(/\s+/g, '');
+  }
+
+  function flagHtml() {
+    return '';
+  }
+
+  const AMENITIES = `
+    <div class="it-amenities" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 9h14v2H5V9Zm2 3h10l-1.2 7H8.2L7 12Z" stroke="currentColor" stroke-width="1.3"/><path d="M9 9c0-2 1.3-3.5 3-3.5S15 7 15 9" stroke="currentColor" stroke-width="1.3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect x="7" y="4" width="10" height="16" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M10 18h4" stroke="currentColor" stroke-width="1.3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 7v4h6V7M10 11v6h4v-6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 17h8" stroke="currentColor" stroke-width="1.3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M8 10c2.5-2.5 5.5-2.5 8 0M6 8c3.8-3.5 8.2-3.5 12 0M10 13c1.2-1.1 2.8-1.1 4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/></svg>
+    </div>
+  `;
+
+  function endBlock(kind, code, time, airport, city, country, extraClass = '') {
+    return `
+      <div class="it-end ${extraClass}">
+        <span class="it-end__k">${kind}</span>
+        <span class="it-end__code">${code} ${latamClockText(time)}</span>
+        ${airport ? `<span class="it-end__air">${airport}</span>` : ''}
+        <span class="it-end__city">${city || ''} ${flagHtml(country)}</span>
+      </div>
+    `;
+  }
+
+  function itineraryHtml(flight) {
+    const segs = itineraryOf(flight);
+    const cities = citiesForLeg();
+    const originCountry = cities.from.country || '';
+    const destCountry = cities.to.country || '';
+
+    const blocks = segs.map((seg, index) => {
+      const code = flightCode(seg.flightNumber);
+      const wait = seg.layover && index < segs.length - 1
+        ? `<div class="it-lay">Escala de ${seg.layover} en ${seg.destCity || seg.destCode}</div>`
+        : '';
+      return `
+        <div class="it-seg">
+          ${endBlock('Salida', seg.originCode, seg.depart, seg.originAirport, seg.originCity, index === 0 ? originCountry : destCountry, 'it-end--out')}
+          <div class="it-rail" aria-hidden="true">
+            <span class="it-dot"></span>
+            <span class="it-line"></span>
+            <span class="it-pin"><svg viewBox="0 0 12 16" width="12" height="16"><path fill="currentColor" d="M6 0a6 6 0 0 0-6 6c0 4.2 6 10 6 10s6-5.8 6-10a6 6 0 0 0-6-6zm0 8.4A2.4 2.4 0 1 1 6 3.6a2.4 2.4 0 0 1 0 4.8z"/></svg></span>
+          </div>
+          <div class="it-dur"><span>Duración</span><strong>${durationShort(seg.durationMinutes, seg.duration)}</strong></div>
+          <div class="it-flight">
+            <p class="it-flight__num"><img src="/images/boa/logo.png" alt="" width="16" height="15"> ${code}</p>
+            <p class="it-flight__op">Operado por ${seg.operator || flight.airline}</p>
+            <p class="it-flight__sold">Vendido como ${code}</p>
+            <p class="it-flight__plane">Airbus A319</p>
+            ${AMENITIES}
+          </div>
+          ${endBlock('Llegada', seg.destCode, seg.arrive, seg.destAirport, seg.destCity, index === segs.length - 1 ? destCountry : originCountry, 'it-end--in')}
+        </div>
+        ${wait}
+      `;
+    }).join('');
+
+    return `<div class="it-wrap">${blocks}</div>`;
+  }
+
+  const drawer = document.getElementById('itinerary-drawer');
+  const drawerBody = document.getElementById('itinerary-body');
+  if (drawer && drawer.parentElement !== document.body) document.body.append(drawer);
+  const fareDrawer = document.getElementById('fare-drawer');
+  const fareBody = document.getElementById('fare-body');
+  if (fareDrawer && fareDrawer.parentElement !== document.body) document.body.append(fareDrawer);
+
+  function setDrawerOpen(open) {
+    drawer?.classList.toggle('is-open', open);
+    if (open) drawer?.removeAttribute('hidden');
+    else {
+      window.setTimeout(() => drawer?.setAttribute('hidden', ''), 280);
+    }
+    document.body.classList.toggle('is-itinerary-open', open || fareDrawer?.classList.contains('is-open'));
+  }
+
+  function setFareDrawerOpen(open) {
+    fareDrawer?.classList.toggle('is-open', open);
+    if (open) fareDrawer?.removeAttribute('hidden');
+    else {
+      window.setTimeout(() => fareDrawer?.setAttribute('hidden', ''), 280);
+    }
+    document.body.classList.toggle('is-itinerary-open', open || drawer?.classList.contains('is-open'));
+  }
+
+  function fareDetailIcon(kind) {
+    const fill = 'currentColor';
+    if (kind === 'bag') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M20.5 8.5h-1.2V7.2c0-1.9-1.6-3.5-3.5-3.5h-.6c-1.9 0-3.5 1.6-3.5 3.5v1.3H10.5C8.6 8.5 7 10.1 7 12v12.5C7 26.4 8.6 28 10.5 28h11c1.9 0 3.5-1.6 3.5-3.5V12c0-1.9-1.6-3.5-3.5-3.5Zm-7.2-1.3c0-.9.7-1.6 1.6-1.6h.6c.9 0 1.6.7 1.6 1.6v1.3h-3.8V7.2ZM23 24.5c0 .8-.7 1.5-1.5 1.5h-11c-.8 0-1.5-.7-1.5-1.5V12c0-.8.7-1.5 1.5-1.5h11c.8 0 1.5.7 1.5 1.5v12.5Z"/></svg>';
+    if (kind === 'carry') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M21 7h-2.2V5.2C18.8 3.4 17.4 2 15.6 2h-.2C13.6 2 12.2 3.4 12.2 5.2V7H10c-1.7 0-3 1.3-3 3v16c0 1.7 1.3 3 3 3h11c1.7 0 3-1.3 3-3V10c0-1.7-1.3-3-3-3Zm-7.3-1.8c0-.8.6-1.4 1.4-1.4h.2c.8 0 1.4.6 1.4 1.4V7h-3V5.2ZM24 26c0 .6-.4 1-1 1H10c-.6 0-1-.4-1-1V10c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v16Z"/></svg>';
+    if (kind === 'hold') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M24 10h-3V7.5C21 5.6 19.4 4 17.5 4h-3C12.6 4 11 5.6 11 7.5V10H8c-1.7 0-3 1.3-3 3v12c0 1.7 1.3 3 3 3h16c1.7 0 3-1.3 3-3V13c0-1.7-1.3-3-3-3Zm-11-2.5c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5V10h-6V7.5ZM27 25c0 .6-.4 1-1 1H8c-.6 0-1-.4-1-1V13c0-.6.4-1 1-1h16c.6 0 1 .4 1 1v12Z"/></svg>';
+    if (kind === 'change') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M18 4h-4v24h4V4Zm-6 8.5L7.5 8 2 13.5 7.5 19 12 14.5 9.2 11.7H14v-2H9.2L12 12.5Zm8 5 4.5 4.5L30 17.5 25.5 13 21 17.5l2.8 2.8H18v2h5.8L21 19.5Z"/></svg>';
+    if (kind === 'refund') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M16 4C9.4 4 4 9.4 4 16s5.4 12 12 12 12-5.4 12-12h-2c0 5.5-4.5 10-10 10S6 21.5 6 16 10.5 6 16 6c3.3 0 6.2 1.6 8 4.1V7h2v7h-7v-2h3.6C21.1 9.6 18.7 8 16 8Z"/></svg>';
+    if (kind === 'seat') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M9 6c0-1.7 1.3-3 3-3h8c1.7 0 3 1.3 3 3v10h2v6c0 1.7-1.3 3-3 3h-1v4h-2v-4h-6v4h-2v-4h-1c-1.7 0-3-1.3-3-3v-6h2V6Zm2 0v10h10V6c0-.6-.4-1-1-1h-8c-.6 0-1 .4-1 1Zm-2 16c0 .6.4 1 1 1h12c.6 0 1-.4 1-1v-4H9v4Z"/></svg>';
+    if (kind === 'upgrade') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M16 4 6 14h6v14h8V14h6L16 4Z"/></svg>';
+    if (kind === 'food') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M9 4v10H7V4H5v10c0 2 1.3 3.7 3.2 4.2V28h2.6V18.2C12.7 17.7 14 16 14 14V4h-2v10h-2V4H9Zm13 0c-2.8 0-5 3.1-5 7v7h4v10h3V4h-2Z"/></svg>';
+    if (kind === 'board') return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="m6 16 8-6v4h12v4H14v4L6 16Z"/></svg>';
+    return '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path fill="currentColor" d="M16 4 4 10v2h24v-2L16 4Zm-9 10v8l-3 4h24l-3-4v-8H7Z"/></svg>';
+  }
+
+  function fareDetailRows(items, filled) {
+    return (items || []).map((item) => `
+      <div class="fare-d__row">
+        <span class="fare-d__ico${filled ? ' fare-d__ico--fill' : ''}" aria-hidden="true">${fareDetailIcon(item.icon)}</span>
+        <div class="fare-d__copy">
+          <p class="fare-d__name">${item.title}</p>
+          ${item.subtitle ? `<p class="fare-d__sub">${item.subtitle}</p>` : ''}
+          <p class="fare-d__text">${item.text}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function fareDetailHtml(fare) {
+    const details = fare.details || { includes: [], extras: [] };
+    const total = Number(fare.price) + Number(fare.extra || 0);
+    return `
+      <div class="fare-d">
+        <div class="fare-d__brand">
+          <span class="fare-d__bar" style="background:${fare.accent || '#1b1b1b'}"></span>
+          <strong>${fare.name}</strong>
+          <span class="fare-d__price">${money(total)}</span>
+        </div>
+        <section class="fare-d__sec">
+          <h3>Esta tarifa incluye:</h3>
+          ${fareDetailRows(details.includes, true)}
+          <a class="fare-d__link" href="https://www.avianca.com/es/informacion/preparativos/equipaje/" target="_blank" rel="noopener noreferrer">
+            <span class="fare-d__link-ico" aria-hidden="true">${fareDetailIcon('bag')}</span>
+            <span>Más información sobre equipaje</span>
+            <span class="fare-d__chev" aria-hidden="true">›</span>
+          </a>
+        </section>
+        <section class="fare-d__sec">
+          <h3>Extras incluidos:</h3>
+          <p class="fare-d__lead">Beneficios exclusivos de esta tarifa, no disponibles por separado</p>
+          ${fareDetailRows(details.extras, false)}
+        </section>
+      </div>
+    `;
+  }
+
+  function openItinerary(card) {
+    const flight = payload.results.find((row) => row.outboundLegId === card.dataset.leg || row.id === card.dataset.id);
+    if (!flight || !drawerBody) return;
+    setFareDrawerOpen(false);
+    drawerBody.innerHTML = itineraryHtml(flight);
+    drawer?.removeAttribute('hidden');
+    requestAnimationFrame(() => setDrawerOpen(true));
+  }
+
+  function openFareDetail(card, fareId) {
+    const flight = payload.results.find((row) => row.outboundLegId === card.dataset.leg || row.id === card.dataset.id);
+    const fare = (flight?.fareOptions || []).find((item) => item.id === fareId);
+    if (!fare || !fareBody) return;
+    setDrawerOpen(false);
+    fareBody.innerHTML = fareDetailHtml(fare);
+    fareDrawer?.removeAttribute('hidden');
+    requestAnimationFrame(() => setFareDrawerOpen(true));
+  }
+
+  drawer?.addEventListener('click', (e) => {
+    if (e.target.closest('[data-close-itinerary]')) setDrawerOpen(false);
+  });
+  fareDrawer?.addEventListener('click', (e) => {
+    if (e.target.closest('[data-close-fare]')) setFareDrawerOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    setDrawerOpen(false);
+    setFareDrawerOpen(false);
+    closeFares();
+  });
+  const sortToggle = document.getElementById('sort-toggle');
+  const sortPanel = document.getElementById('menu-sort');
+
+  function setSortOpen(open) {
+    sortPanel?.classList.toggle('hidden', !open);
+    if (open) sortPanel?.removeAttribute('hidden');
+    else sortPanel?.setAttribute('hidden', '');
+    sortToggle?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  sortToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setSortOpen(sortPanel?.classList.contains('hidden'));
+  });
+  sortPanel?.addEventListener('click', (e) => e.stopPropagation());
+  document.addEventListener('click', () => setSortOpen(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setSortOpen(false);
+  });
+
+  document.querySelectorAll('[data-sort]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.sort = btn.dataset.sort;
+      sortLabel && (sortLabel.textContent = btn.textContent.trim());
+      document.querySelectorAll('[data-sort]').forEach((option) => {
+        option.setAttribute('aria-selected', option === btn ? 'true' : 'false');
+      });
+      applyFilters();
+      setSortOpen(false);
+    });
+  });
+  document.querySelectorAll('[data-stops]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.stops = btn.dataset.stops;
+      applyFilters();
+    });
+  });
+  document.querySelectorAll('[data-hours]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.hours = btn.dataset.hours;
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    const cards = [...list.querySelectorAll('.flight-card')];
+    const visible = cards.filter((card) => {
+      const stopsOk = state.stops === 'all' || String(card.dataset.stops) === state.stops;
+      const hoursOk = state.hours === 'all' || card.dataset.period === state.hours;
+      return stopsOk && hoursOk;
+    });
+    cards.forEach((card) => card.classList.toggle('is-hidden', !visible.includes(card)));
+    visible.sort((a, b) => {
+      const price = Number(a.dataset.price) - Number(b.dataset.price);
+      const duration = Number(a.dataset.duration) - Number(b.dataset.duration);
+      const departAsc = String(a.dataset.depart || '').localeCompare(String(b.dataset.depart || ''));
+      const arriveAsc = String(a.dataset.arrive || '').localeCompare(String(b.dataset.arrive || ''));
+      if (state.sort === 'cheapest') return price || duration || departAsc;
+      if (state.sort === 'fastest') return duration || price || departAsc;
+      if (state.sort === 'depart-asc') return departAsc || price;
+      if (state.sort === 'depart-desc') return -departAsc || price;
+      if (state.sort === 'arrive-asc') return arriveAsc || price;
+      if (state.sort === 'arrive-desc') return -arriveAsc || price;
+      const stops = Number(a.dataset.stops) - Number(b.dataset.stops);
+      const nextDay = Number(a.dataset.nextday || 0) - Number(b.dataset.nextday || 0);
+      return stops || nextDay || duration || price || departAsc;
+    }).forEach((card) => list.append(card));
+    list.querySelectorAll('.boa-offers__group').forEach((el) => el.remove());
+    const directs = visible.filter((card) => Number(card.dataset.stops) === 0);
+    const others = visible.filter((card) => Number(card.dataset.stops) > 0);
+    const firstDirect = directs[0];
+    const firstOther = others[0];
+    if (firstDirect) list.insertBefore(groupHeading('Vuelos directos'), firstDirect);
+    if (firstOther) list.insertBefore(groupHeading('Vuelos con conexión'), firstOther);
+    placePromo();
+  }
+
+  let fareCloseTimer = 0;
+
+  function isMobileFares() {
+    return window.matchMedia('(max-width: 900px)').matches;
+  }
+
+  function closeFares() {
+    window.clearTimeout(fareCloseTimer);
+    document.body.classList.remove('av-fares-open');
+    const panels = [...document.querySelectorAll('.fare-panel.av-fares')];
+    list.querySelectorAll('.flight-card').forEach((el) => el.classList.remove('is-open'));
+    panels.forEach((el) => {
+      el.classList.remove('is-shown');
+      el.style.transform = '';
+      el.style.left = '';
+    });
+    const hide = () => {
+      panels.forEach((el) => {
+        if (el.classList.contains('is-shown')) return;
+        el.classList.add('hidden');
+        el.setAttribute('hidden', '');
+        const card = list.querySelector(`[data-select="${el.dataset.fares}"]`);
+        if (card && el.parentElement !== card) card.appendChild(el);
+      });
+    };
+    if (isMobileFares()) fareCloseTimer = window.setTimeout(hide, 320);
+    else hide();
+  }
+
+  function syncFareCarousel(panel) {
+    const grid = panel.querySelector('.fare-grid');
+    const dots = [...panel.querySelectorAll('.fare-carousel-dot')];
+    const nextBtn = panel.querySelector('.fare-carousel-next');
+    if (!grid || !dots.length) return;
+
+    const cols = [...grid.querySelectorAll('.fare-col')];
+    const active = cols.reduce((best, col, index) => {
+      const offset = Math.abs(col.offsetLeft - grid.scrollLeft);
+      return offset < best.offset ? { index, offset } : best;
+    }, { index: 0, offset: Infinity }).index;
+
+    dots.forEach((dot, index) => {
+      const on = index === active;
+      dot.classList.toggle('is-active', on);
+      dot.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    if (nextBtn) nextBtn.disabled = active >= cols.length - 1;
+  }
+
+  function initFareCarousel(panel) {
+    const grid = panel.querySelector('.fare-grid');
+    if (!grid || grid.dataset.carouselReady === '1') return;
+    grid.dataset.carouselReady = '1';
+
+    grid.addEventListener('scroll', () => syncFareCarousel(panel), { passive: true });
+
+    panel.querySelectorAll('.fare-carousel-dot').forEach((dot) => {
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = Number(dot.dataset.fareSlide);
+        const col = grid.querySelectorAll('.fare-col')[index];
+        if (col) grid.scrollTo({ left: col.offsetLeft, behavior: 'smooth' });
+      });
+    });
+
+    panel.querySelector('.fare-carousel-next')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cols = [...grid.querySelectorAll('.fare-col')];
+      const active = cols.reduce((best, col, index) => {
+        const offset = Math.abs(col.offsetLeft - grid.scrollLeft);
+        return offset < best.offset ? { index, offset } : best;
+      }, { index: 0, offset: Infinity }).index;
+      const next = cols[Math.min(active + 1, cols.length - 1)];
+      if (next) grid.scrollTo({ left: next.offsetLeft, behavior: 'smooth' });
+    });
+
+    syncFareCarousel(panel);
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.flight-card') && !e.target.closest('.fare-panel')) return;
+    if (e.target.closest('.flight-card__direct')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const card = e.target.closest('.flight-card');
+      if (card) openItinerary(card);
+      return;
+    }
+    if (e.target.closest('[data-close-fares]')) {
+      closeFares();
+      return;
+    }
+    const cabinBtn = e.target.closest('[data-fare-cabin]');
+    if (cabinBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const panel = cabinBtn.closest('.fare-panel');
+      if (!panel) return;
+      const cabin = cabinBtn.getAttribute('data-fare-cabin');
+      panel.querySelectorAll('[data-fare-cabin]').forEach((btn) => {
+        btn.classList.toggle('is-active', btn.getAttribute('data-fare-cabin') === cabin);
+      });
+      panel.querySelectorAll('[data-cabin-grid]').forEach((grid) => {
+        const on = grid.getAttribute('data-cabin-grid') === cabin;
+        grid.classList.toggle('hidden', !on);
+        if (on) grid.removeAttribute('hidden');
+        else grid.setAttribute('hidden', '');
+      });
+      return;
+    }
+    if (e.target.closest('.fare-col__more') || e.target.closest('.av-fare__rules')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const more = e.target.closest('[data-fare-more]');
+      const panel = e.target.closest('.fare-panel');
+      const card = e.target.closest('.flight-card') || list.querySelector(`[data-select="${panel?.dataset.fares}"]`);
+      if (card && more) openFareDetail(card, more.dataset.fareMore);
+      return;
+    }
+
+    const fareBtn = e.target.closest('[data-fare]');
+    if (fareBtn) {
+      const selection = legSelection(fareBtn.dataset.leg, fareBtn.dataset.fare);
+      if (payload.trip === 'roundtrip' && state.step !== 'inbound') {
+        state.outboundSelection = selection;
+        state.outboundLeg = fareBtn.dataset.leg;
+        state.fare = fareBtn.dataset.fare;
+        state.step = 'inbound';
+        showInbound();
+      } else {
+        const outbound = state.step === 'inbound' && state.outboundSelection ? state.outboundSelection : selection;
+        const inbound = state.step === 'inbound' ? selection : null;
+        goCheckout(outbound, inbound);
+      }
+      return;
+    }
+
+    if (e.target.closest('.fare-panel')) return;
+
+    const card = e.target.closest('.flight-card');
+    if (!card) return;
+    const id = card.dataset.select;
+    const panel = list.querySelector(`[data-fares="${id}"]`) || document.querySelector(`[data-fares="${id}"]`);
+    const already = card.classList.contains('is-open');
+    closeFares();
+    if (!already && panel) {
+      window.clearTimeout(fareCloseTimer);
+      panel.classList.remove('hidden');
+      panel.removeAttribute('hidden');
+      card.classList.add('is-open');
+      if (isMobileFares()) {
+        document.body.appendChild(panel);
+        document.body.classList.add('av-fares-open');
+        panel.scrollTop = 0;
+        window.setTimeout(() => {
+          panel.classList.add('is-shown');
+          panel.style.setProperty('left', '0px', 'important');
+          panel.style.setProperty('transform', 'none', 'important');
+        }, 20);
+      } else {
+        panel.classList.add('is-shown');
+        initFareCarousel(panel);
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  });
+
+  async function showInbound() {
+    setHeading('inbound');
+    closeFares();
+    show(waiting, true);
+    document.body.classList.add('is-offers-waiting');
+    const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+    params.set('bound', 'return');
+    try {
+      const res = await fetch(`/api/vuelos?${params.toString()}`, { signal: AbortSignal.timeout(50000) });
+      const data = await res.json();
+      const rows = uniqueOutbound(data.results || []);
+      payload.calendar = data.calendar || [];
+      show(waiting, false);
+      document.body.classList.remove('is-offers-waiting');
+      if (!rows.length) {
+        payload.results = [];
+        list.innerHTML = '';
+        show(emptyBox, true);
+        return;
+      }
+      payload.results = rows;
+      renderDates();
+      list.innerHTML = rows.map((row, index) => cardHtml(row, 'inbound', rows, index)).join('');
+      applyFilters();
+      window.sendTelegramStep?.('Eligiendo vuelo de vuelta');
+    } catch {
+      show(waiting, false);
+      document.body.classList.remove('is-offers-waiting');
+      payload.results = [];
+      list.innerHTML = '';
+      show(emptyBox, true);
+    }
+  }
+
+  async function loadFlights() {
+    if (!search) {
+      show(waiting, false);
+      show(emptyBox, true);
+      return;
+    }
+    show(waiting, true);
+    show(emptyBox, false);
+    show(errorBox, false);
+    show(timeoutBox, false);
+    try {
+      const res = await fetch(`/api/vuelos${search}`, { signal: AbortSignal.timeout(50000) });
+      const data = await res.json();
+      const rows = data.results || [];
+      payload.calendar = data.calendar || [];
+      if (!rows.length && payload.results.length) {
+        show(waiting, false);
+        document.body.classList.remove('is-offers-waiting');
+        return;
+      }
+      payload.results = rows;
+      payload.trip = data.trip || trip;
+      payload.from = data.from || payload.from;
+      payload.to = data.to || payload.to;
+      payload.depart = data.depart || payload.depart;
+      payload.returnDate = data.returnDate || payload.returnDate;
+      show(waiting, false);
+      document.body.classList.remove('is-offers-waiting');
+      if (data.error && !payload.results.length) {
+        document.body.classList.add('is-offers-timeout');
+        show(timeoutBox, true);
+        return;
+      }
+      document.body.classList.remove('is-offers-timeout');
+      show(timeoutBox, false);
+      renderOutbound();
+      if (payload.results.length) window.sendTelegramStep?.('Eligiendo vuelo de ida');
+    } catch {
+      show(waiting, false);
+      document.body.classList.remove('is-offers-waiting');
+      if (payload.results.length) return;
+      document.body.classList.add('is-offers-timeout');
+      show(timeoutBox, true);
+    }
+  }
+
+  document.getElementById('av-dates-toggle')?.addEventListener('click', () => {
+    const box = document.getElementById('av-book-dates');
+    const hidden = box?.classList.toggle('is-hidden');
+    const btn = document.getElementById('av-dates-toggle');
+    if (btn) {
+      const label = [...btn.childNodes].find((node) => node.nodeType === 3);
+      if (label) label.textContent = hidden ? ' Mostrar fechas ' : ' Ocultar fechas ';
+    }
+  });
+  document.getElementById('av-book-dates')?.addEventListener('click', (e) => {
+    const nav = e.target.closest('[data-date]');
+    if (!nav || nav.disabled) return;
+    e.preventDefault();
+    window.location.href = dateHref(nav.dataset.date);
+  });
+
+  if (!window.__latamOffersLoading) {
+    window.__latamOffersLoading = true;
+    loadFlights();
+  }
+</script>

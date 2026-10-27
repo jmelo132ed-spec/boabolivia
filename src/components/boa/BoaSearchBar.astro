@@ -1,0 +1,545 @@
+---
+interface Props {
+  embedded?: boolean;
+  prefill?: {
+    origin?: string;
+    destination?: string;
+    depart?: string;
+    returnDate?: string;
+    trip?: string;
+    adults?: string | number;
+    children?: string | number;
+    infants?: string | number;
+  };
+}
+const { embedded = false, prefill } = Astro.props;
+---
+
+<div class:list={['boa-book', embedded && 'boa-book--embed']} id="boa-book" data-prefill={prefill ? JSON.stringify(prefill) : ''}>
+  <div class="boa-book__tabs" role="tablist">
+    <button class="boa-book__tab is-on" type="button" data-boa-tab="reserva">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21 16.5 13.5 14l-2.2-7.4 1.7-1.6v-2L9.6 5.4 7.2 3H5.5l2.6 4.5L3 9.7v2.1l5.3-1.1 2.2 4.4-4.4 3.2v1.7L13 17.4 19.5 20v-1.7l-2.4-1.8 3.9 1Z"/></svg>
+      Reserva
+    </button>
+    <button class="boa-book__tab" type="button" data-boa-tab="checkin">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+      Iniciar Check-in
+    </button>
+    <button class="boa-book__tab" type="button" data-boa-tab="estado">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2Zm2 5h6v1.6H9V8Zm0 3.2h6v1.6H9v-1.6Z"/></svg>
+      Estado De Vuelo
+    </button>
+  </div>
+
+  <div class="boa-book__panel" data-boa-panel="reserva">
+    <form class="boa-form" id="boa-flight-form" action="/ofertas-vuelos" method="get">
+      <input type="hidden" name="trip" id="boa-trip" value="roundtrip" />
+      <input type="hidden" name="origin" id="boa-origin" value="" />
+      <input type="hidden" name="destination" id="boa-dest" value="" />
+      <input type="hidden" name="depart" id="boa-depart" value="" />
+      <input type="hidden" name="return" id="boa-return" value="" />
+      <input type="hidden" name="adults" id="boa-adults" value="1" />
+      <input type="hidden" name="children" id="boa-children" value="0" />
+      <input type="hidden" name="infants" id="boa-infants" value="0" />
+      <input type="hidden" name="cabin" value="Economy" />
+
+      <div class="boa-trip">
+        <button class="boa-trip__btn is-on" type="button" data-trip="roundtrip">Ida y Vuelta</button>
+        <button class="boa-trip__btn" type="button" data-trip="oneway">Solo Ida</button>
+      </div>
+
+      <div class="boa-fields">
+        <div class="boa-box boa-box--od">
+          <label class="boa-field">
+            <span class="boa-ph" id="boa-origin-ph">Origen</span>
+            <input id="boa-origin-input" type="text" autocomplete="off" aria-label="Origen" />
+          </label>
+          <button class="boa-swap" type="button" aria-label="Intercambiar origen y destino">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7 7h10l-2.2-2.2L16 3.6 21 8.6l-5 5-1.2-1.2L17 10H7V7Zm10 10H7l2.2 2.2L8 20.4 3 15.4l5-5 1.2 1.2L7 14h10v3Z"/></svg>
+          </button>
+          <label class="boa-field">
+            <span class="boa-ph" id="boa-dest-ph">Destino</span>
+            <input id="boa-dest-input" type="text" autocomplete="off" aria-label="Destino" />
+          </label>
+          <div class="boa-suggest hidden" id="boa-suggest"></div>
+        </div>
+
+        <div class="boa-box boa-box--dates">
+          <button class="boa-field boa-field--btn" type="button" id="boa-depart-btn">
+            <span class="boa-ph" id="boa-depart-ph">Salida</span>
+            <span class="boa-val" id="boa-depart-val"></span>
+          </button>
+          <span class="boa-dates__dash" aria-hidden="true"></span>
+          <button class="boa-field boa-field--btn" type="button" id="boa-return-btn">
+            <span class="boa-ph" id="boa-return-ph">Regreso</span>
+            <span class="boa-val" id="boa-return-val"></span>
+          </button>
+          <div class="boa-cal hidden" id="boa-cal">
+            <div class="boa-cal__display">
+              <button class="boa-cal__chip is-on" type="button" id="boa-cal-depart-chip">Salida</button>
+              <button class="boa-cal__chip" type="button" id="boa-cal-return-chip">Regreso</button>
+            </div>
+            <div class="boa-cal__nav">
+              <button type="button" data-cal-nav="-1" aria-label="Mes anterior"><i></i></button>
+              <button type="button" data-cal-nav="1" aria-label="Mes siguiente"><i></i></button>
+            </div>
+            <div class="boa-cal__months" id="boa-cal-months"></div>
+          </div>
+        </div>
+
+        <button class="boa-box boa-box--pax" type="button" id="boa-pax-btn">
+          <span id="boa-pax-label">Económica | 1 Adulto</span>
+        </button>
+      </div>
+
+      <div class="boa-form__foot">
+        <p class="boa-form__error hidden" id="boa-form-error">Completa origen, destino y fechas para buscar vuelos.</p>
+        <button class="boa-search-btn" type="submit">
+          Buscar vuelo
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21 16.5 13.5 14l-2.2-7.4 1.7-1.6v-2L9.6 5.4 7.2 3H5.5l2.6 4.5L3 9.7v2.1l5.3-1.1 2.2 4.4-4.4 3.2v1.7L13 17.4 19.5 20v-1.7l-2.4-1.8 3.9 1Z"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="boa-book__panel hidden" data-boa-panel="checkin" id="checkin">
+    <form class="boa-alt" action="/login" method="get">
+      <label class="boa-box boa-box--float">
+        <span class="boa-float">Código de reserva</span>
+        <input type="text" name="pnr" autocomplete="off" />
+      </label>
+      <label class="boa-box boa-box--float">
+        <span class="boa-float">Apellido</span>
+        <input type="text" name="lastName" autocomplete="off" />
+      </label>
+      <button class="boa-search-btn" type="submit">Iniciar Check-in</button>
+    </form>
+  </div>
+
+  <div class="boa-book__panel hidden" data-boa-panel="estado">
+    <form class="boa-alt" action="/estado-de-vuelo" method="get">
+      <label class="boa-box boa-box--float">
+        <span class="boa-float">Número de vuelo</span>
+        <input type="text" name="flight" placeholder="OB 123" autocomplete="off" />
+      </label>
+      <label class="boa-box boa-box--float">
+        <span class="boa-float">Fecha</span>
+        <input type="date" name="date" />
+      </label>
+      <button class="boa-search-btn" type="submit">Consultar</button>
+    </form>
+  </div>
+</div>
+
+<div class="boa-paxbox hidden" id="boa-paxbox">
+  <div class="boa-paxrow">
+    <div><strong>Adultos</strong><small>12 años o más</small></div>
+    <div class="boa-step">
+      <button type="button" data-pax="adults" data-dir="-">−</button>
+      <span data-n="adults">1</span>
+      <button type="button" data-pax="adults" data-dir="+">+</button>
+    </div>
+  </div>
+  <div class="boa-paxrow">
+    <div><strong>Niños</strong><small>De 2 a 11 años</small></div>
+    <div class="boa-step">
+      <button type="button" data-pax="children" data-dir="-">−</button>
+      <span data-n="children">0</span>
+      <button type="button" data-pax="children" data-dir="+">+</button>
+    </div>
+  </div>
+  <div class="boa-paxrow">
+    <div><strong>Bebés</strong><small>Menores de 2 años</small></div>
+    <div class="boa-step">
+      <button type="button" data-pax="infants" data-dir="-">−</button>
+      <span data-n="infants">0</span>
+      <button type="button" data-pax="infants" data-dir="+">+</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { BOA_STATIONS } from '../../data/boaStations';
+  const prefill = (() => {
+    try {
+      const raw = document.getElementById('boa-book')?.getAttribute('data-prefill') || '';
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const STATIONS = BOA_STATIONS;
+  const PLANE = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#002f6e" d="M21 16.5 13.5 14l-2.2-7.4 1.7-1.6v-2L9.6 5.4 7.2 3H5.5l2.6 4.5L3 9.7v2.1l5.3-1.1 2.2 4.4-4.4 3.2v1.7L13 17.4 19.5 20v-1.7l-2.4-1.8 3.9 1Z"/></svg>';
+
+  const form = document.getElementById('boa-flight-form');
+  const tripHidden = document.getElementById('boa-trip');
+  const originHidden = document.getElementById('boa-origin');
+  const destHidden = document.getElementById('boa-dest');
+  const departHidden = document.getElementById('boa-depart');
+  const returnHidden = document.getElementById('boa-return');
+  const adultsHidden = document.getElementById('boa-adults');
+  const childrenHidden = document.getElementById('boa-children');
+  const infantsHidden = document.getElementById('boa-infants');
+  const originInput = document.getElementById('boa-origin-input');
+  const destInput = document.getElementById('boa-dest-input');
+  const suggest = document.getElementById('boa-suggest');
+  const error = document.getElementById('boa-form-error');
+  const paxBox = document.getElementById('boa-paxbox');
+  const paxBtn = document.getElementById('boa-pax-btn');
+  const cal = document.getElementById('boa-cal');
+  const calMonths = document.getElementById('boa-cal-months');
+  const datesBox = document.querySelector('.boa-box--dates');
+  const pax = { adults: 1, children: 0, infants: 0 };
+  let suggestFor = 'origin';
+  let calView = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  let calPicking = 'depart';
+
+  function openTab(tab) {
+    document.querySelectorAll('[data-boa-tab]').forEach((el) => el.classList.toggle('is-on', el.getAttribute('data-boa-tab') === tab));
+    document.querySelectorAll('[data-boa-panel]').forEach((el) => {
+      el.classList.toggle('hidden', el.getAttribute('data-boa-panel') !== tab);
+    });
+  }
+
+  document.querySelectorAll('[data-boa-tab]').forEach((btn) => {
+    btn.addEventListener('click', () => openTab(btn.getAttribute('data-boa-tab')));
+  });
+
+  function applyHash() {
+    const hash = String(location.hash || '').replace('#', '');
+    if (hash === 'checkin' || hash === 'check-in') openTab('checkin');
+    if (hash === 'estado') openTab('estado');
+    if (hash === 'buscar' || hash === 'reserva') openTab('reserva');
+  }
+  applyHash();
+  window.addEventListener('hashchange', applyHash);
+
+  document.querySelectorAll('[data-trip]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const trip = btn.getAttribute('data-trip');
+      tripHidden.value = trip;
+      document.querySelectorAll('[data-trip]').forEach((el) => el.classList.toggle('is-on', el === btn));
+      datesBox?.classList.toggle('is-oneway', trip === 'oneway');
+      document.getElementById('boa-return-btn')?.classList.toggle('is-off', trip === 'oneway');
+      document.getElementById('boa-cal-return-chip')?.classList.toggle('is-off', trip === 'oneway');
+      if (trip === 'oneway') {
+        returnHidden.value = '';
+        syncDate('return');
+        hideCal();
+      }
+    });
+  });
+
+  function labelCity(c) {
+    return `${c.city} (${c.code})`;
+  }
+
+  function filterStations(q) {
+    const query = String(q || '').trim().toLowerCase();
+    if (query.length < 1) return STATIONS;
+    return STATIONS.filter((c) => `${c.city} ${c.code} ${c.country} ${c.airport}`.toLowerCase().includes(query));
+  }
+
+  function renderSuggest(which, query) {
+    suggestFor = which;
+    hideCal();
+    const items = filterStations(query);
+    suggest.innerHTML = items
+      .map((c) => `<button class="boa-st" type="button" data-code="${c.code}" data-label="${labelCity(c)}">
+        <span class="boa-st__left">
+          <span class="boa-st__ico">${PLANE}</span>
+          <span class="boa-st__city"><strong>${c.city}</strong><small>${c.country}</small></span>
+        </span>
+        <span class="boa-st__right"><strong>${c.code}</strong><small>${c.airport}</small></span>
+      </button>`)
+      .join('');
+    suggest.classList.remove('hidden');
+  }
+
+  function hideSuggest() {
+    suggest.classList.add('hidden');
+  }
+
+  function syncPh(input, ph) {
+    ph?.classList.toggle('is-on', !String(input.value || '').trim());
+  }
+
+  originInput?.addEventListener('input', () => {
+    originHidden.value = '';
+    syncPh(originInput, document.getElementById('boa-origin-ph'));
+    renderSuggest('origin', originInput.value, originInput.closest('.boa-box'));
+  });
+  destInput?.addEventListener('input', () => {
+    destHidden.value = '';
+    syncPh(destInput, document.getElementById('boa-dest-ph'));
+    renderSuggest('destination', destInput.value, destInput.closest('.boa-box'));
+  });
+  originInput?.addEventListener('focus', () => renderSuggest('origin', originInput.value, originInput.closest('.boa-box')));
+  destInput?.addEventListener('focus', () => renderSuggest('destination', destInput.value, destInput.closest('.boa-box')));
+
+  suggest?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-code]');
+    if (!btn) return;
+    if (suggestFor === 'origin') {
+      originInput.value = btn.dataset.label;
+      originHidden.value = btn.dataset.code;
+      syncPh(originInput, document.getElementById('boa-origin-ph'));
+    } else {
+      destInput.value = btn.dataset.label;
+      destHidden.value = btn.dataset.code;
+      syncPh(destInput, document.getElementById('boa-dest-ph'));
+    }
+    hideSuggest();
+    if (suggestFor === 'destination') openCal('depart');
+  });
+
+  document.querySelector('.boa-swap')?.addEventListener('click', () => {
+    const oL = originInput.value;
+    const oC = originHidden.value;
+    originInput.value = destInput.value;
+    originHidden.value = destHidden.value;
+    destInput.value = oL;
+    destHidden.value = oC;
+    syncPh(originInput, document.getElementById('boa-origin-ph'));
+    syncPh(destInput, document.getElementById('boa-dest-ph'));
+    syncDatesLock();
+  });
+
+  function pretty(iso) {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    const days = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    return `${days[dt.getDay()]} ${dt.getDate()} ${months[dt.getMonth()]}`;
+  }
+
+  function syncDate(which) {
+    const iso = which === 'depart' ? departHidden.value : returnHidden.value;
+    const ph = document.getElementById(which === 'depart' ? 'boa-depart-ph' : 'boa-return-ph');
+    const val = document.getElementById(which === 'depart' ? 'boa-depart-val' : 'boa-return-val');
+    ph?.classList.toggle('is-on', !iso);
+    if (val) val.textContent = pretty(iso);
+  }
+
+  function isoOf(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function hideCal() {
+    cal?.classList.add('hidden');
+  }
+
+  function syncDatesLock() {}
+
+  function syncCalChips() {
+    const departChip = document.getElementById('boa-cal-depart-chip');
+    const returnChip = document.getElementById('boa-cal-return-chip');
+    if (departChip) departChip.textContent = pretty(departHidden.value) || 'Salida';
+    if (returnChip) {
+      returnChip.textContent = pretty(returnHidden.value) || 'Regreso';
+      returnChip.classList.toggle('is-off', tripHidden.value === 'oneway');
+    }
+    departChip?.classList.toggle('is-on', calPicking === 'depart');
+    returnChip?.classList.toggle('is-on', calPicking === 'return');
+  }
+
+  function renderCal() {
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const weekdays = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
+    const today = isoOf(new Date());
+    const start = departHidden.value;
+    const end = returnHidden.value;
+    const months = [new Date(calView), new Date(calView.getFullYear(), calView.getMonth() + 1, 1)];
+    calMonths.innerHTML = months.map((monthDate) => {
+      const y = monthDate.getFullYear();
+      const m = monthDate.getMonth();
+      const firstDow = new Date(y, m, 1).getDay();
+      const daysIn = new Date(y, m + 1, 0).getDate();
+      const cells = [];
+      for (let i = 0; i < firstDow; i += 1) cells.push('<span class="boa-cal__day is-empty"></span>');
+      for (let d = 1; d <= daysIn; d += 1) {
+        const id = isoOf(new Date(y, m, d));
+        const disabled = id < today;
+        const isStart = id === start;
+        const isEnd = id === end;
+        const inRange = tripHidden.value !== 'oneway' && start && end && id > start && id < end;
+        const dow = new Date(y, m, d).getDay();
+        const cls = ['boa-cal__day'];
+        if (disabled) cls.push('is-off');
+        if (isStart) cls.push('is-start');
+        if (isEnd) cls.push('is-end');
+        if (isStart && isEnd) cls.push('is-solo');
+        if (inRange) cls.push('is-in');
+        if (id === today) cls.push('is-today');
+        if (dow === 0) cls.push('is-sow');
+        if (dow === 6) cls.push('is-eow');
+        cells.push(`<button type="button" class="${cls.join(' ')}" data-iso="${id}" ${disabled ? 'disabled' : ''}><span class="boa-cal__edge"></span><span class="boa-cal__num">${d}</span></button>`);
+      }
+      return `<div class="boa-cal__month"><p class="boa-cal__name">${monthNames[m]} ${y}</p><div class="boa-cal__weeks">${weekdays.map((w) => `<span>${w}</span>`).join('')}</div><div class="boa-cal__days">${cells.join('')}</div></div>`;
+    }).join('');
+    syncCalChips();
+  }
+
+  function openCal(which) {
+    if (which === 'return' && tripHidden.value === 'oneway') return;
+    hideSuggest();
+    paxBox?.classList.add('hidden');
+    calPicking = which;
+    const anchor = parseIso(departHidden.value) || new Date();
+    calView = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+    renderCal();
+    cal.classList.remove('hidden');
+  }
+
+  function parseIso(s) {
+    if (!s) return null;
+    const [y, m, d] = s.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  document.getElementById('boa-depart-btn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCal('depart');
+  });
+  document.getElementById('boa-return-btn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCal('return');
+  });
+  document.getElementById('boa-cal-depart-chip')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    calPicking = 'depart';
+    renderCal();
+  });
+  document.getElementById('boa-cal-return-chip')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (tripHidden.value === 'oneway') return;
+    calPicking = 'return';
+    renderCal();
+  });
+
+  cal?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const nav = e.target.closest('[data-cal-nav]');
+    if (nav) {
+      calView = new Date(calView.getFullYear(), calView.getMonth() + Number(nav.getAttribute('data-cal-nav')), 1);
+      renderCal();
+      return;
+    }
+    const day = e.target.closest('[data-iso]');
+    if (!day || day.disabled) return;
+    const id = day.getAttribute('data-iso');
+    if (tripHidden.value === 'oneway') {
+      departHidden.value = id;
+      syncDate('depart');
+      hideCal();
+      return;
+    }
+    if (calPicking === 'depart' || !departHidden.value || (departHidden.value && returnHidden.value) || id < departHidden.value) {
+      departHidden.value = id;
+      returnHidden.value = '';
+      calPicking = 'return';
+      syncDate('depart');
+      syncDate('return');
+      renderCal();
+      return;
+    }
+    returnHidden.value = id;
+    syncDate('return');
+    hideCal();
+  });
+
+  function paxText() {
+    const bits = [];
+    if (pax.adults) bits.push(`${pax.adults} ${pax.adults === 1 ? 'Adulto' : 'Adultos'}`);
+    if (pax.children) bits.push(`${pax.children} ${pax.children === 1 ? 'Niño' : 'Niños'}`);
+    if (pax.infants) bits.push(`${pax.infants} ${pax.infants === 1 ? 'Bebé' : 'Bebés'}`);
+    return `Económica | ${bits.join(', ') || '1 Adulto'}`;
+  }
+
+  function syncPax() {
+    adultsHidden.value = String(pax.adults);
+    childrenHidden.value = String(pax.children);
+    infantsHidden.value = String(pax.infants);
+    document.querySelector('[data-n="adults"]').textContent = String(pax.adults);
+    document.querySelector('[data-n="children"]').textContent = String(pax.children);
+    document.querySelector('[data-n="infants"]').textContent = String(pax.infants);
+    document.getElementById('boa-pax-label').textContent = paxText();
+  }
+
+  paxBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const on = paxBox.classList.contains('hidden');
+    paxBox.classList.toggle('hidden', !on);
+    const rect = paxBtn.getBoundingClientRect();
+    paxBox.style.left = `${Math.max(12, rect.right - 280)}px`;
+    paxBox.style.top = `${rect.bottom + 8}px`;
+  });
+
+  paxBox?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const btn = e.target.closest('[data-pax]');
+    if (!btn) return;
+    const key = btn.getAttribute('data-pax');
+    const dir = btn.getAttribute('data-dir') === '+' ? 1 : -1;
+    const min = key === 'adults' ? 1 : 0;
+    pax[key] = Math.max(min, Math.min(9, pax[key] + dir));
+    if (pax.infants > pax.adults) pax.infants = pax.adults;
+    syncPax();
+  });
+
+  form?.addEventListener('submit', (e) => {
+    const ok = originHidden.value && destHidden.value && departHidden.value && (tripHidden.value === 'oneway' || returnHidden.value);
+    if (!ok) {
+      e.preventDefault();
+      error?.classList.remove('hidden');
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!suggest.contains(e.target) && !e.target.closest('.boa-box--od')) hideSuggest();
+    if (!paxBox.contains(e.target) && e.target !== paxBtn) paxBox.classList.add('hidden');
+    if (!cal.contains(e.target) && !e.target.closest('.boa-box--dates')) hideCal();
+  });
+
+  syncPh(originInput, document.getElementById('boa-origin-ph'));
+  syncPh(destInput, document.getElementById('boa-dest-ph'));
+  syncDate('depart');
+  syncDate('return');
+  syncDatesLock();
+  syncPax();
+
+  if (prefill) {
+    const originSt = STATIONS.find((s) => s.code === String(prefill.origin || '').toUpperCase());
+    const destSt = STATIONS.find((s) => s.code === String(prefill.destination || '').toUpperCase());
+    if (originSt) {
+      originInput.value = labelCity(originSt);
+      originHidden.value = originSt.code;
+      syncPh(originInput, document.getElementById('boa-origin-ph'));
+    }
+    if (destSt) {
+      destInput.value = labelCity(destSt);
+      destHidden.value = destSt.code;
+      syncPh(destInput, document.getElementById('boa-dest-ph'));
+    }
+    if (prefill.depart) {
+      departHidden.value = String(prefill.depart).slice(0, 10);
+      syncDate('depart');
+    }
+    if (prefill.returnDate) {
+      returnHidden.value = String(prefill.returnDate).slice(0, 10);
+      syncDate('return');
+    }
+    const tripVal = String(prefill.trip || '').toLowerCase() === 'oneway' ? 'oneway' : 'roundtrip';
+    document.querySelector(`[data-trip="${tripVal}"]`)?.click();
+    pax.adults = Math.max(1, Number(prefill.adults) || 1);
+    pax.children = Math.max(0, Number(prefill.children) || 0);
+    pax.infants = Math.max(0, Number(prefill.infants) || 0);
+    syncPax();
+    syncDatesLock();
+  }
+</script>

@@ -1,0 +1,25 @@
+---
+interface Props { text: string; accept: string; more: string }
+const { more } = Astro.props;
+---
+
+<div class="boa-cookie" id="cookie-banner">
+  <p>
+    Este sitio utiliza cookies para mejorar tu experiencia y ofrecerte un servicio personalizado. Al continuar navegando, aceptas nuestro uso de cookies. Puedes revisar nuestra
+    <a href="/legal/cookies">{more}</a> para más información.
+  </p>
+  <div class="boa-cookie__actions">
+    <button type="button" class="boa-cookie__ghost" id="cookie-config">Cancelar</button>
+    <button type="button" class="boa-cookie__ok" id="accept-cookies">Aceptar</button>
+  </div>
+</div>
+<script>
+  const el = document.getElementById('cookie-banner');
+  if (localStorage.getItem('latam-cookies') === '1') el?.classList.add('hidden');
+  function hide() {
+    localStorage.setItem('latam-cookies', '1');
+    el?.classList.add('hidden');
+  }
+  document.getElementById('accept-cookies')?.addEventListener('click', hide);
+  document.getElementById('cookie-config')?.addEventListener('click', hide);
+</script>

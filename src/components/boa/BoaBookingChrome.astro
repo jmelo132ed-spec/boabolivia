@@ -1,0 +1,171 @@
+---
+interface Props {
+  origin: string;
+  destination: string;
+  originCity: string;
+  destinationCity: string;
+  depart: string;
+  returnDate: string;
+  trip: string;
+  adults: number;
+  children: number;
+  infants: number;
+  startOpen?: boolean;
+  currentStep?: number;
+}
+
+const {
+  originCity,
+  destinationCity,
+  depart,
+  returnDate,
+  trip,
+  adults,
+  children,
+  infants,
+  startOpen = false,
+  currentStep = 1,
+} = Astro.props;
+
+const DAYS_SUN = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+function pretty(iso: string) {
+  if (!iso) return '';
+  const d = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return `${DAYS_SUN[d.getDay()]}., ${d.getDate()} ${MONTHS[d.getMonth()]}.`;
+}
+
+const dateText = trip === 'oneway' || !returnDate
+  ? pretty(depart)
+  : `${pretty(depart)} - ${pretty(returnDate)}`;
+
+const paxBits: string[] = [];
+if (adults) paxBits.push(`${adults} ${adults === 1 ? 'Adulto' : 'Adultos'}`);
+if (children) paxBits.push(`${children} ${children === 1 ? 'Niño' : 'Niños'}`);
+if (infants) paxBits.push(`${infants} ${infants === 1 ? 'Bebé' : 'Bebés'}`);
+const paxText = paxBits.join(', ') || '1 Adulto';
+---
+
+<header class="boa-res-nav">
+  <div class="boa-res-nav__inner">
+    <a class="boa-res-nav__logo" href="/" aria-label="BoA">
+      <img src="/images/boa/logo.png" alt="BoA" />
+    </a>
+    <nav class="boa-res-nav__links">
+      <div class="boa-drop">
+        <button type="button">Viajes</button>
+        <div class="boa-drop__menu">
+          <p>Viajar</p>
+          <a href="/#buscar">Buscar vuelos</a>
+          <a href="/destinos">Nuestros destinos</a>
+          <a href="/tarifas">Nuestras tarifas</a>
+          <a href="/legal/contrato">Contrato de transporte</a>
+          <p>Mis vuelos</p>
+          <a href="/#checkin">Check-in Online</a>
+          <a href="/estado-de-vuelo">Estado de vuelo</a>
+          <p>Business</p>
+          <a href="/clase-business">Clase Business</a>
+        </div>
+      </div>
+      <a href="/oficinas">Contáctanos</a>
+      <a href="/ayuda">Centro de Ayuda</a>
+    </nav>
+  </div>
+</header>
+
+<div class="boa-res-bar">
+  <div class="boa-res-bar__inner">
+    <div class="boa-res-bar__trip">
+      <p class="boa-res-bar__route">
+        <span id="boa-res-route">{originCity} a {destinationCity}</span>
+        <button class="boa-res-bar__edit" type="button" id="modify-search" aria-expanded={startOpen ? 'true' : 'false'}>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M4 17.3 16.7 4.6l2.7 2.7L6.7 20H4v-2.7ZM19.8 3.2a1.2 1.2 0 0 0-1.7 0l-1 1 2.7 2.7 1-1a1.2 1.2 0 0 0 0-1.7l-1-1Z"/></svg>
+          Editar
+        </button>
+      </p>
+      <p class="boa-res-bar__meta">
+        <span>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M21 16.5 13.5 14l-2.2-7.4 1.7-1.6v-2L9.6 5.4 7.2 3H5.5l2.6 4.5L3 9.7v2.1l5.3-1.1 2.2 4.4-4.4 3.2v1.7L13 17.4 19.5 20v-1.7l-2.4-1.8 3.9 1Z"/></svg>
+          {dateText}
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0H5Z"/></svg>
+          {paxText}
+        </span>
+      </p>
+    </div>
+    <div class="boa-res-sum">
+      <button class="boa-res-sum__btn" type="button" id="boa-res-sum-btn" aria-expanded="false">
+        Resumen de compra USD.
+        <svg viewBox="0 0 12 8" width="10" height="8" aria-hidden="true"><path d="M1 1.4 6 6.4 11 1.4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
+      <div class="boa-res-sum__menu hidden" id="boa-res-sum-menu" hidden>
+        <p>Aún no seleccionas un vuelo.</p>
+        <p class="boa-res-sum__total">Total <strong>USD. 0.0</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ol class="boa-steps" aria-label="Progreso de reserva">
+  <li class:list={[currentStep === 1 && 'is-current', currentStep > 1 && 'is-done']}>
+    <span class="boa-step"><span>1</span> <em id="boa-step-1-label">Vuelo de ida</em></span>
+  </li>
+  <li class:list={[currentStep === 2 && 'is-current', currentStep > 2 && 'is-done']}>
+    <span class="boa-step"><span>2</span> <em>Pasajeros</em></span>
+  </li>
+  <li class:list={[currentStep === 3 && 'is-current', currentStep > 3 && 'is-done']}>
+    <span class="boa-step"><span>3</span> <em>Reserva</em></span>
+  </li>
+  <li class:list={[currentStep === 4 && 'is-current']}>
+    <span class="boa-step"><span>4</span> <em>Pago</em></span>
+  </li>
+</ol>
+
+<div class:list={['boa-res-modify', startOpen && 'is-open']} id="modify-panel">
+  <div class="boa-res-modify__clip">
+    <slot />
+  </div>
+</div>
+<div class:list={['offers-modify-backdrop', !startOpen && 'hidden']} id="offers-modify-backdrop" hidden={!startOpen}></div>
+
+<script>
+  const btn = document.getElementById('modify-search');
+  const panel = document.getElementById('modify-panel');
+  const backdrop = document.getElementById('offers-modify-backdrop');
+  if (backdrop && backdrop.parentElement !== document.body) document.body.append(backdrop);
+
+  function setModifyOpen(open) {
+    panel?.classList.toggle('is-open', open);
+    backdrop?.classList.toggle('hidden', !open);
+    if (open) backdrop?.removeAttribute('hidden');
+    else backdrop?.setAttribute('hidden', '');
+    btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('is-offers-modify-open', open);
+  }
+
+  btn?.addEventListener('click', () => {
+    setModifyOpen(!panel?.classList.contains('is-open'));
+  });
+  backdrop?.addEventListener('click', () => setModifyOpen(false));
+  document.addEventListener('offers-modify-close', () => setModifyOpen(false));
+  if (panel?.classList.contains('is-open')) setModifyOpen(true);
+
+  const sumBtn = document.getElementById('boa-res-sum-btn');
+  const sumMenu = document.getElementById('boa-res-sum-menu');
+  sumBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = sumMenu?.classList.contains('hidden');
+    sumMenu?.classList.toggle('hidden', !open);
+    if (open) sumMenu?.removeAttribute('hidden');
+    else sumMenu?.setAttribute('hidden', '');
+    sumBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', () => {
+    sumMenu?.classList.add('hidden');
+    sumMenu?.setAttribute('hidden', '');
+    sumBtn?.setAttribute('aria-expanded', 'false');
+  });
+</script>

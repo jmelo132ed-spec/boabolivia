@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="129.5 -0.2 41.4 41.4" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="av-shine" gradientUnits="userSpaceOnUse" x1="148" y1="-28" x2="148" y2="8">
+      <stop offset="0" stop-color="#f4f4f4"/>
+      <stop offset="0.22" stop-color="#cfcfcf"/>
+      <stop offset="0.48" stop-color="#4a4a4a"/>
+      <stop offset="1" stop-color="#3d3d3d"/>
+      <animate attributeName="y1" values="-32;36" dur="3s" calcMode="linear" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="4;72" dur="3s" calcMode="linear" repeatCount="indefinite"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#av-shine)" stroke-width="0.16" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M150.229 27.9145C143.181 19.7246 138.434 9.24644 136.531 0.515625C136.531 0.515625 132.656 3.93246 132.349 11.1183C132.008 18.9716 136.221 26.889 150.095 27.8989C150.139 27.9067 150.186 27.9067 150.229 27.9125V27.9145Z"/>
+    <path d="M150.229 27.9125C151.389 29.2551 152.607 30.5413 153.891 31.7477H157.574C159.102 31.7477 159.779 31.8741 160.205 32.0668C159.551 30.0373 157.491 28.4554 150.229 27.9125Z"/>
+    <path d="M153.891 31.7477C148.421 31.7477 138.978 31.7477 138.978 31.7477C139.177 32.2108 139.86 32.5357 141.414 32.6272C150.723 33.1798 152.04 40.4843 165.363 40.4843C166.533 40.4843 167.262 40.4143 168 40.2761C162.735 38.6572 158.006 35.614 153.891 31.7457V31.7477Z"/>
+  </g>
+</svg>

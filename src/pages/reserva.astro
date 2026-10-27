@@ -1,0 +1,75 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import BoaSearchBar from '../components/boa/BoaSearchBar.astro';
+import BoaBookingChrome from '../components/boa/BoaBookingChrome.astro';
+import BoaReviewBoard from '../components/boa/BoaReviewBoard.astro';
+import { BOA_STATIONS } from '../data/boaStations';
+import { parseOffersQuery } from '../services/searchQuery';
+
+const query = parseOffersQuery(Astro.url.searchParams);
+const origin = query.origin;
+const destination = query.destination;
+const from = BOA_STATIONS.find((c) => c.code === origin) ?? { city: origin || 'Origen', code: origin || '—', airport: '' };
+const to = BOA_STATIONS.find((c) => c.code === destination) ?? { city: destination || 'Destino', code: destination || '—', airport: '' };
+---
+
+<Layout title="Revisar y Pagar | BoA" bodyClass="boa-page boa-reserva is-review-page is-offers-waiting">
+  <div class="offers-wait-screen" id="rev-wait-screen" role="status" aria-live="polite" aria-label="Cargando">
+    <div class="boa-loader" aria-hidden="true">
+      <span class="boa-loader__ring"></span>
+      <span class="boa-loader__mid"></span>
+      <span class="boa-loader__dot"></span>
+    </div>
+  </div>
+
+  <div class="boa-pay-overlay" id="boa-pay-overlay" hidden aria-hidden="true" role="status" aria-live="polite" aria-label="Cargando">
+    <div class="boa-pay-splash">
+      <img class="boa-pay-splash__logo" src="/images/boa/iso.svg" width="64" height="64" alt="" />
+      <span class="boa-pay-splash__ring boa-pay-splash__ring--in" aria-hidden="true"></span>
+      <span class="boa-pay-splash__ring boa-pay-splash__ring--out" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <BoaBookingChrome
+    origin={from.code}
+    destination={to.code}
+    originCity={from.city}
+    destinationCity={to.city}
+    depart={query.depart}
+    returnDate={query.returnDate}
+    trip={query.trip}
+    adults={Number(query.adults)}
+    children={Number(query.children)}
+    infants={Number(query.infants)}
+    currentStep={3}
+  >
+    <BoaSearchBar
+      embedded
+      prefill={{
+        origin,
+        destination,
+        depart: query.depart,
+        returnDate: query.returnDate,
+        trip: query.trip,
+        adults: query.adults,
+        children: query.children,
+        infants: query.infants,
+      }}
+    />
+  </BoaBookingChrome>
+
+  <div class="checkout-scroll boa-res-scroll">
+    <BoaReviewBoard />
+  </div>
+</Layout>
+
+<script>
+  window.setTimeout(() => {
+    const wait = document.getElementById('rev-wait-screen');
+    wait?.classList.add('hidden');
+    wait?.setAttribute('hidden', '');
+    document.body.classList.remove('is-offers-waiting');
+  }, 1400);
+</script>

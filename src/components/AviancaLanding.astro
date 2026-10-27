@@ -1,0 +1,142 @@
+---
+const faqs = [
+  {
+    q: '¿Cuál es la tarifa más económica para volar a Guatemala?',
+    a: 'Los vuelos a Guatemala están disponibles ida y vuelta desde USD 124, con precios actualizados en las últimas 24 horas según la disponibilidad.',
+  },
+  {
+    q: '¿A qué ciudades de Guatemala puedo volar con Avianca?',
+    a: 'Puedes viajar a Ciudad de Guatemala dentro de Guatemala. Selecciona tu ciudad de origen en el buscador para ver rutas disponibles y las mejores tarifas para cada destino.',
+  },
+  {
+    q: '¿Puedo acumular o canjear Lifemiles al viajar a Guatemala?',
+    a: 'Sí. Puedes acumular o redimir Lifemiles en todas tus compras. Si aún no estás inscrito, <a href="https://www.Lifemiles.com/enrollment/step/1?utm_source=avianca&utm_medium=referral&utm_campaign=airplane_afiliacion_es">regístrate aquí</a> y empieza a disfrutar beneficios exclusivos, descuentos y más oportunidades para ahorrar en tus vuelos.',
+  },
+  {
+    q: '¿Cuál es el mejor momento para reservar vuelos a Guatemala?',
+    a: 'Reservar con anticipación suele ofrecer mejores tarifas. Te recomendamos revisar esta página frecuentemente para encontrar las opciones más económicas disponibles.',
+  },
+  {
+    q: '¿Cuántas millas necesito para volar a Guatemala?',
+    a: 'Puedes redimir tus vuelos a Guatemala desde aproximadamente 2.580 millas por trayecto. Para asegurar tus boletos de avión con la mejor tarifa, ten en cuenta que la cantidad exacta de millas requeridas dependerá de tu ciudad de origen, la temporada de viaje y la disponibilidad de la cabina. Estos valores se actualizan constantemente, por lo que te sugerimos revisar el buscador de vuelos para encontrar las ofertas vigentes y organizar tu próximo viaje.',
+  },
+];
+---
+
+<section class="av-block av-offers">
+  <div class="av-offers__bar">
+    <div class="av-offers__from">
+      <h2>Ofertas desde</h2>
+      <button type="button" class="av-link-select">
+        Ciudad de Guatemala
+        <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="av-offers__filters">
+      <button type="button" class="av-chip-light">
+        Presupuesto
+        <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <div class="av-toggle" role="radiogroup" aria-label="Currency or miles">
+        <button type="button" class="is-active" aria-pressed="true">USD</button>
+        <button type="button" aria-pressed="false">Millas</button>
+      </div>
+    </div>
+  </div>
+
+  <a class="av-deal" href="/ofertas-vuelos?origin=GUA&destination=FRS&trip=roundtrip&cabin=Economy">
+    <span class="av-deal__bg" style="background-image:url('/images/avianca/flores.jpg')"></span>
+    <span class="av-deal__tag">Acumula millas</span>
+    <span class="av-deal__glass">
+      <span class="av-deal__city">Flores, Guatemala</span>
+      <span class="av-deal__sub">Ida y vuelta desde</span>
+      <span class="av-deal__price">USD 124</span>
+    </span>
+  </a>
+</section>
+
+<section class="av-block av-guide" id="travel-info">
+  <h2>Guía de viaje a Guatemala</h2>
+  <div class="av-guide__card">
+    <div class="av-guide__tabs" role="tablist" aria-label="Información de viaje">
+      <button type="button" class="is-active" role="tab" aria-selected="true" data-av-tab="discover">Descubrir</button>
+      <button type="button" role="tab" aria-selected="false" data-av-tab="entry">Requisitos de entrada</button>
+    </div>
+    <article class="av-guide__panel" data-av-panel="discover">
+      <img src="/images/avianca/guide-guatemala.png" alt="Descubre Guatemala" />
+      <div>
+        <h3>Descubre Guatemala</h3>
+        <p>Descubre Guatemala, un destino único lleno de cultura, historia y paisajes fascinantes. Vive experiencias inolvidables explorando sus ciudades, tradiciones y la calidez de su gente.</p>
+        <dl>
+          <div>
+            <dt>Moneda</dt>
+            <dd>Quetzal (GTQ)</dd>
+          </div>
+          <div>
+            <dt>Idioma</dt>
+            <dd>Español</dd>
+          </div>
+          <div>
+            <dt>Destino más popular</dt>
+            <dd>Ciudad de Guatemala</dd>
+          </div>
+        </dl>
+      </div>
+    </article>
+    <article class="av-guide__panel hidden" data-av-panel="entry">
+      <div>
+        <h3>Requisitos de entrada</h3>
+        <p>Introduce tus datos en el buscador de vuelos y consulta la documentación necesaria para tu viaje a Guatemala. Los requisitos pueden variar según nacionalidad y residencia.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="av-block av-faq">
+  <h2>FAQ: Volando a Guatemala</h2>
+  <div class="av-faq__list">
+    {faqs.map((item) => (
+      <details>
+        <summary>{item.q}</summary>
+        <p set:html={item.a} />
+      </details>
+    ))}
+  </div>
+</section>
+
+<section class="av-block av-terms">
+  <details>
+    <summary>Términos y condiciones</summary>
+    <ul>
+      <li>La tarifa en moneda local del flujo de compra, si aplica, varía de acuerdo con la tasa de cambio aplicable según IATA. Tarifas sujetas a disponibilidad de cupo. Tarifas sujetas a cambios sin previo aviso. Las tarifas mostradas se calculan para adultos, se actualizan cada 24 horas y pueden no reflejar la disponibilidad en tiempo real al momento de la reserva</li>
+      <li>El porcentaje descuento, en caso de ser anunciado, aplica únicamente en la tarifa base sin incluir combustible, impuestos ni tasas aeroportuarias.</li>
+      <li>La acumulación de millas en destinos operados junto con aerolíneas aliadas aplica únicamente en los trayectos operados por Avianca Holdings. Con algunas aerolíneas existen acuerdos de Frequent Flyer Program cuyas condiciones pueden variar; para mayor información, consulta directamente con la aerolínea que opera el trayecto.</li>
+      <li>(*) La tarifa por trayecto aplica únicamente para la compra del vuelo ida y vuelta.</li>
+      <li>Aquí puede <a href="https://informacionvuelo.avianca.com/es/estado-de-vuelo">consultar el estado del vuelo</a> para verificar si es directo o cuenta con conexiones, así como el punto exacto donde se realiza la escala.</li>
+      <li>Tenga en cuenta que las tarifas mostradas pueden variar debido a las actualizaciones de cache, y cualquier promoción también puede estar sujeta a cambios basados en el cache.</li>
+    </ul>
+  </details>
+</section>
+
+<script>
+  document.querySelectorAll('[data-av-tab]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-av-tab]').forEach((b) => {
+        b.classList.toggle('is-active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+      const key = btn.getAttribute('data-av-tab');
+      document.querySelectorAll('[data-av-panel]').forEach((p) => {
+        p.classList.toggle('hidden', p.getAttribute('data-av-panel') !== key);
+      });
+    });
+  });
+  document.querySelector('.av-toggle')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    document.querySelectorAll('.av-toggle button').forEach((b) => {
+      b.classList.toggle('is-active', b === btn);
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
+  });
+</script>

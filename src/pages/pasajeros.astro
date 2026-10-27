@@ -1,0 +1,67 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import BoaSearchBar from '../components/boa/BoaSearchBar.astro';
+import BoaBookingChrome from '../components/boa/BoaBookingChrome.astro';
+import PassengerBoard from '../components/checkout/PassengerBoard.astro';
+import { BOA_STATIONS } from '../data/boaStations';
+import { parseOffersQuery } from '../services/searchQuery';
+
+const query = parseOffersQuery(Astro.url.searchParams);
+const origin = query.origin;
+const destination = query.destination;
+const from = BOA_STATIONS.find((c) => c.code === origin) ?? { city: origin || 'Origen', code: origin || '—', airport: '' };
+const to = BOA_STATIONS.find((c) => c.code === destination) ?? { city: destination || 'Destino', code: destination || '—', airport: '' };
+---
+
+<Layout title="Pasajeros | BoA" bodyClass="boa-page boa-reserva is-passengers-page is-offers-waiting">
+  <div class="offers-wait-screen" id="pax-wait-screen" role="status" aria-live="polite" aria-label="Cargando">
+    <div class="boa-loader" aria-hidden="true">
+      <span class="boa-loader__ring"></span>
+      <span class="boa-loader__mid"></span>
+      <span class="boa-loader__dot"></span>
+    </div>
+  </div>
+
+  <BoaBookingChrome
+    origin={from.code}
+    destination={to.code}
+    originCity={from.city}
+    destinationCity={to.city}
+    depart={query.depart}
+    returnDate={query.returnDate}
+    trip={query.trip}
+    adults={Number(query.adults)}
+    children={Number(query.children)}
+    infants={Number(query.infants)}
+    currentStep={2}
+  >
+    <BoaSearchBar
+      embedded
+      prefill={{
+        origin,
+        destination,
+        depart: query.depart,
+        returnDate: query.returnDate,
+        trip: query.trip,
+        adults: query.adults,
+        children: query.children,
+        infants: query.infants,
+      }}
+    />
+  </BoaBookingChrome>
+
+  <div class="checkout-scroll boa-res-scroll">
+    <PassengerBoard />
+  </div>
+</Layout>
+
+<script>
+  window.setTimeout(() => {
+    const wait = document.getElementById('pax-wait-screen');
+    wait?.classList.add('hidden');
+    wait?.setAttribute('hidden', '');
+    document.body.classList.remove('is-offers-waiting');
+  }, 1800);
+</script>

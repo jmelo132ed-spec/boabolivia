@@ -1,0 +1,275 @@
+---
+import { PORCENTAJE_DESCUENTO } from 'astro:env/client';
+import { aviancaOfferCards, aviancaOfferFaqs, offerSearchHref } from '../data/aviancaOffers';
+import { ticketAfterDiscount } from '../services/ticketDiscount';
+
+const featured = aviancaOfferCards.filter((o) => o.featured);
+const list = aviancaOfferCards.filter((o) => !o.featured);
+const visibleCount = 8;
+const discountPct = Number(PORCENTAJE_DESCUENTO) || 0;
+
+function usdLabel(value: number) {
+  const n = Math.round((Number(value) || 0) * 100) / 100;
+  if (Number.isInteger(n)) return `USD ${n}`;
+  const [int, dec] = n.toFixed(2).split('.');
+  return `USD ${int},${dec}`;
+}
+
+function offerPriceHtml(raw: number) {
+  const after = ticketAfterDiscount(raw, discountPct);
+  if (!(discountPct > 0) || Math.abs(after - raw) < 0.005) return usdLabel(raw);
+  return `<span class="ticket-price"><span class="ticket-price__was">${usdLabel(raw)}</span><span class="ticket-price__now">${usdLabel(after)}</span></span>`;
+}
+---
+
+<section class="av-block av-offers-cat" data-descuento={discountPct}>
+  <p class="av-tip">
+    <span class="av-tip__icon" aria-hidden="true">i</span>
+    <span>¿Sabías que al <strong>buscar ida y vuelta</strong> podrás encontrar mejores tarifas?</span>
+    <button type="button" class="av-tip__close" aria-label="Cerrar" data-av-tip-close>×</button>
+  </p>
+
+  <div class="av-offers__bar">
+    <div class="av-offers__from">
+      <h2>Ofertas desde</h2>
+      <div class="av-filter">
+        <button type="button" class="av-link-select" data-av-filter="from" aria-expanded="false">
+          Ciudad de Guatemala
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="av-filter__panel hidden">
+          <button type="button" data-from="GUA">Ciudad de Guatemala</button>
+        </div>
+      </div>
+    </div>
+    <div class="av-offers__filters">
+      <div class="av-filter">
+        <button type="button" class="av-chip-light" data-av-filter="sort" aria-expanded="false">
+          Recomendadas
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="av-filter__panel hidden">
+          <button type="button" data-sort="recommended">Recomendadas</button>
+          <button type="button" data-sort="price-asc">Precio más bajo</button>
+          <button type="button" data-sort="price-desc">Precio más alto</button>
+        </div>
+      </div>
+      <div class="av-filter">
+        <button type="button" class="av-chip-light" data-av-filter="dest" aria-expanded="false">
+          Destinos
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="av-filter__panel av-filter__panel--wide hidden">
+          {list.map((o) => (
+            <button type="button" data-dest={o.code}>{o.city}</button>
+          ))}
+        </div>
+      </div>
+      <div class="av-filter">
+        <button type="button" class="av-chip-light" data-av-filter="budget" aria-expanded="false">
+          Presupuesto
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="av-filter__panel hidden">
+          <button type="button" data-budget="all">Todos</button>
+          <button type="button" data-budget="200">Hasta USD 200</button>
+          <button type="button" data-budget="400">USD 200 a 400</button>
+          <button type="button" data-budget="401">Más de USD 400</button>
+        </div>
+      </div>
+      <div class="av-toggle" role="radiogroup" aria-label="Currency or miles">
+        <button type="button" class="is-active" data-currency="usd" aria-pressed="true">USD</button>
+        <button type="button" data-currency="miles" aria-pressed="false">Millas</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="av-promo-grid">
+    {featured.map((o) => (
+      <a class="av-deal" href={offerSearchHref(o.code)} data-offer-card data-code={o.code} data-price={o.price} data-city={o.city}>
+        <span class="av-deal__bg" style={`background-image:url('${o.image}')`}></span>
+        <span class="av-deal__tag">Acumula millas</span>
+        <span class="av-deal__glass">
+          <span class="av-deal__city">{o.city}</span>
+          <span class="av-deal__sub">Ida y vuelta desde</span>
+          <span class="av-deal__price" data-price-label set:html={offerPriceHtml(o.price)}></span>
+        </span>
+      </a>
+    ))}
+  </div>
+
+  <div class="av-offer-rows" id="av-offer-rows">
+    {list.map((o, i) => (
+      <a
+        class={`av-offer-row${i >= visibleCount ? ' is-more hidden' : ''}`}
+        href={offerSearchHref(o.code)}
+        data-offer-card
+        data-code={o.code}
+        data-price={o.price}
+        data-city={o.city}
+      >
+        <img src={o.image} alt="" />
+        <span class="av-offer-row__copy">
+          <strong>{o.city}</strong>
+          <small>Ida y vuelta desde</small>
+        </span>
+        <span class="av-offer-row__tag">Acumula millas</span>
+        <span class="av-offer-row__price"><span data-price-label set:html={offerPriceHtml(o.price)}></span> <span aria-hidden="true">›</span></span>
+      </a>
+    ))}
+  </div>
+
+  <div class="av-more-wrap">
+    <button type="button" class="av-more" data-av-more>Ver más ofertas</button>
+  </div>
+</section>
+
+<section class="av-block av-faq">
+  <h2>¿Por qué viajar con BoA?</h2>
+  <div class="av-faq__list">
+    {aviancaOfferFaqs.map((item) => (
+      <details>
+        <summary>{item.q}</summary>
+        <p set:html={item.a} />
+      </details>
+    ))}
+  </div>
+</section>
+
+<section class="av-block av-terms">
+  <details>
+    <summary>Términos y condiciones</summary>
+    <p>Tarifas disponibles hasta agotar existencias, en clase económica con impuestos y cargos incluidos, sujetas a disponibilidad de cupo y a cambios sin previo aviso. Los valores son aproximados. Las fechas de vuelo pueden variar dependiendo del destino.</p>
+  </details>
+</section>
+
+<script>
+  const milesRate = 120;
+  let currency: 'usd' | 'miles' = 'usd';
+  let sort = 'recommended';
+  let dest = '';
+  let budget = 'all';
+  const discountPct = Number(document.querySelector<HTMLElement>('.av-offers-cat')?.dataset.descuento || 0) || 0;
+
+  function ticketAfterDiscount(original: number) {
+    const raw = Math.round((Number(original) || 0) * 100) / 100;
+    const tax = Math.round(raw * (233.56 / 1162.56) * 100) / 100;
+    const fare = Math.max(0, Math.round((raw - tax) * 100) / 100);
+    if (!(discountPct > 0)) return Math.round((fare + tax) * 100) / 100;
+    const fareAfter = Math.round(fare * (1 - Math.min(100, discountPct) / 100) * 100) / 100;
+    return Math.round((fareAfter + tax) * 100) / 100;
+  }
+
+  function usdLabel(value: number) {
+    const n = Math.round((Number(value) || 0) * 100) / 100;
+    if (Number.isInteger(n)) return `USD ${n}`;
+    const [int, dec] = n.toFixed(2).split('.');
+    return `USD ${int},${dec}`;
+  }
+
+  function priceLabel(value: number) {
+    const after = ticketAfterDiscount(value);
+    if (currency === 'miles') return `${Math.round(after * milesRate)} millas`;
+    if (discountPct > 0 && Math.abs(after - value) >= 0.005) {
+      return `<span class="ticket-price"><span class="ticket-price__was">${usdLabel(value)}</span><span class="ticket-price__now">${usdLabel(after)}</span></span>`;
+    }
+    return usdLabel(value);
+  }
+
+  function applyFilters() {
+    const rows = [...document.querySelectorAll<HTMLElement>('.av-offer-row')];
+    const visibleMore = !document.querySelector('[data-av-more]') || document.querySelector('[data-av-more]')?.classList.contains('hidden');
+    rows.forEach((row, i) => {
+      const price = ticketAfterDiscount(Number(row.dataset.price || 0));
+      const code = row.dataset.code || '';
+      let show = true;
+      if (dest && code !== dest) show = false;
+      if (budget === '200' && price > 200) show = false;
+      if (budget === '400' && (price < 200 || price > 400)) show = false;
+      if (budget === '401' && price <= 400) show = false;
+      if (!visibleMore && row.classList.contains('is-more') && !dest && budget === 'all') show = false;
+      row.classList.toggle('hidden', !show);
+    });
+    const list = document.getElementById('av-offer-rows');
+    if (!list) return;
+    const shown = rows.filter((r) => !r.classList.contains('hidden'));
+    shown.sort((a, b) => {
+      if (sort === 'price-asc') return Number(a.dataset.price) - Number(b.dataset.price);
+      if (sort === 'price-desc') return Number(b.dataset.price) - Number(a.dataset.price);
+      return 0;
+    });
+    shown.forEach((el) => list.appendChild(el));
+  }
+
+  function syncPrices() {
+    document.querySelectorAll<HTMLElement>('[data-offer-card]').forEach((card) => {
+      const value = Number(card.dataset.price || 0);
+      card.querySelectorAll('[data-price-label]').forEach((el) => {
+        const html = priceLabel(value);
+        if (html.includes('<')) el.innerHTML = html;
+        else el.textContent = html;
+      });
+    });
+  }
+
+  document.querySelector('[data-av-tip-close]')?.addEventListener('click', (e) => {
+    (e.currentTarget as HTMLElement).closest('.av-tip')?.classList.add('hidden');
+  });
+
+  document.querySelectorAll('.av-filter').forEach((el) => {
+    el.addEventListener('click', (e) => e.stopPropagation());
+  });
+  document.querySelectorAll('[data-av-filter]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wrap = (btn as HTMLElement).closest('.av-filter');
+      const panel = wrap?.querySelector('.av-filter__panel');
+      document.querySelectorAll('.av-filter__panel').forEach((p) => {
+        if (p !== panel) p.classList.add('hidden');
+      });
+      panel?.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', panel?.classList.contains('hidden') ? 'false' : 'true');
+    });
+  });
+
+  document.querySelectorAll('[data-sort]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      sort = (btn as HTMLElement).dataset.sort || 'recommended';
+      const label = document.querySelector('[data-av-filter="sort"]');
+      if (label) label.childNodes[0].textContent = `${btn.textContent} `;
+      applyFilters();
+    });
+  });
+  document.querySelectorAll('[data-dest]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      dest = (btn as HTMLElement).dataset.dest || '';
+      applyFilters();
+    });
+  });
+  document.querySelectorAll('[data-budget]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      budget = (btn as HTMLElement).dataset.budget || 'all';
+      applyFilters();
+    });
+  });
+
+  document.querySelector('.av-toggle')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('button');
+    if (!btn) return;
+    currency = (btn.getAttribute('data-currency') as 'usd' | 'miles') || 'usd';
+    document.querySelectorAll('.av-toggle button').forEach((b) => {
+      b.classList.toggle('is-active', b === btn);
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
+    syncPrices();
+  });
+
+  document.querySelector('[data-av-more]')?.addEventListener('click', (e) => {
+    document.querySelectorAll('.av-offer-row.is-more').forEach((el) => el.classList.remove('hidden'));
+    (e.currentTarget as HTMLElement).classList.add('hidden');
+  });
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.av-filter__panel').forEach((p) => p.classList.add('hidden'));
+  });
+</script>

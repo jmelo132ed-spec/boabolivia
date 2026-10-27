@@ -1,0 +1,61 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import BoaHeader from '../components/boa/BoaHeader.astro';
+---
+
+<Layout title="Compra confirmada | BoA" bodyClass="is-pagos-page boa-page">
+  <BoaHeader />
+  <main class="payment-success">
+    <section class="payment-success__panel">
+      <div class="payment-success__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8" />
+          <path d="M7 12.2l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <p class="payment-success__eyebrow">Transacción completada</p>
+      <h1>Tu compra fue confirmada</h1>
+      <div class="payment-success__booking">
+        <span>Número de reserva</span>
+        <strong id="success-booking-code"></strong>
+      </div>
+      <p id="success-copy">
+        Tus tiquetes aéreos están en proceso de emisión. En un plazo máximo de 24 horas los enviaremos a tu correo electrónico <strong id="success-email">camila.restrepo@gmail.com</strong>.
+      </p>
+      <a class="payment-success__cta" href="/">Volver al inicio</a>
+    </section>
+  </main>
+  <script>
+    const BOOKING_KEY = 'latam-booking-code';
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    function randomBookingCode() {
+      let code = '';
+      const bytes = new Uint8Array(6);
+      crypto.getRandomValues(bytes);
+      for (const byte of bytes) code += chars[byte % chars.length];
+      return code;
+    }
+
+    let bookingCode = '';
+    try {
+      bookingCode = String(sessionStorage.getItem(BOOKING_KEY) || '').trim();
+      if (!/^[A-Z0-9]{6}$/.test(bookingCode)) {
+        bookingCode = randomBookingCode();
+        sessionStorage.setItem(BOOKING_KEY, bookingCode);
+      }
+    } catch {
+      bookingCode = randomBookingCode();
+    }
+
+    const codeSlot = document.getElementById('success-booking-code');
+    if (codeSlot) codeSlot.textContent = bookingCode;
+
+    const draft = JSON.parse(sessionStorage.getItem('latam-payment-draft') || '{}');
+    const email = String(draft?.email || '').trim() || 'camila.restrepo@gmail.com';
+    const slot = document.getElementById('success-email');
+    if (slot) slot.textContent = email;
+  </script>
+</Layout>

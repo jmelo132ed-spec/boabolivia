@@ -1,0 +1,297 @@
+---
+import BoaWorldpayForm from './BoaWorldpayForm.astro';
+---
+<section class="boa-pay" id="boa-pay">
+  <header class="boa-pay__intro">
+    <h1>Pagar reserva</h1>
+    <p>Se ha generado un código de reserva de pago inmediato. Finaliza tu reserva realizando el pago.</p>
+    <p class="boa-pay__invoice" id="boa-pay-invoice" hidden>Si Ud. Compra boletos de ruta originada en Bolivia, puede solicitar su factura al concluir la compra al correo de ventasweb@boa.bo, enviando el NIT y Razón Social que requiere incluir, si no requiere una factura, ingresar su número de identificación simplemente.</p>
+  </header>
+
+  <article class="boa-pay-nit" id="boa-pay-nit" hidden>
+    <div class="boa-pay-nit__row">
+      <h2>Ingresar Nit y Razón social</h2>
+      <label class="boa-pay-field" id="boa-pay-nit-field">
+        <input id="boa-pay-nit-input" type="text" name="nit" maxlength="20" placeholder="Nit" autocomplete="off" />
+        <span class="boa-pay-field__err" hidden></span>
+      </label>
+      <label class="boa-pay-field" id="boa-pay-razon-field">
+        <input id="boa-pay-razon-input" type="text" name="razon_social" maxlength="80" placeholder="Razón Social" autocomplete="organization" />
+        <span class="boa-pay-field__err" hidden></span>
+      </label>
+    </div>
+  </article>
+
+  <article class="boa-pay-method" id="boa-pay-method">
+    <div class="boa-pay-method__head">
+      <h2>Tarjeta de Crédito/Débito</h2>
+      <span class="boa-pay-method__check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="10" fill="#002e6e"/><path d="M7.2 12.3 10.4 15.4 16.8 8.8" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </div>
+    <div class="boa-pay-method__body">
+      <div class="boa-pay-stack" aria-hidden="true">
+        <span class="boa-pay-stack__mc">
+          <img src="/images/boa/pay/master.png" alt="" width="54" height="34" />
+          <i>
+            <svg viewBox="0 0 12 12" width="12" height="12"><circle cx="6" cy="6" r="6" fill="#fff"/><path d="M3.2 6.2 5.1 8 8.8 4" fill="none" stroke="#2e7d32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </i>
+        </span>
+        <span class="boa-pay-stack__visa">
+          <img src="/images/boa/pay/visa.png" alt="" width="54" height="18" />
+        </span>
+      </div>
+      <p>Paga con tu tarjeta de crédito o débito utilizando nuestra pasarela de pago.</p>
+    </div>
+    <BoaWorldpayForm />
+  </article>
+
+  <article class="boa-pay-sum" id="boa-pay-sum" data-pay-acc>
+    <button type="button" class="boa-pay-sum__row" data-pay-toggle aria-expanded="false">
+      <span class="boa-pay-sum__detail">Ver detalle</span>
+      <span class="boa-pay-sum__price">
+        <small id="boa-pay-sites">Precio del viaje por 1 Adulto pasajero(s)</small>
+        <strong id="boa-pay-total">USD. 0</strong>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M7.4 10.6 6 12l6 6 6-6-1.4-1.4L12 15.2z"/></svg>
+      </span>
+    </button>
+    <div class="boa-pay-sum__body" hidden data-pay-body></div>
+  </article>
+
+  <div class="boa-pay__nav">
+    <button type="button" class="boa-rev__back" id="boa-pay-back">Atrás</button>
+    <button type="button" class="boa-pay__go" id="boa-pay-go">Continuar</button>
+  </div>
+</section>
+<script>
+  const STORAGE_KEY = 'latam-checkout-selection';
+  const PAX_KEY = 'latam-passenger-draft';
+
+  function readJson(key, fallback) {
+    try {
+      return JSON.parse(sessionStorage.getItem(key) || 'null') ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function asText(value) {
+    if (value == null || value === '') return '';
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    if (typeof value === 'object') return String(value.name || value.label || value.city || '');
+    return '';
+  }
+
+  function money2(value) {
+    return Math.round((Number(value) || 0) * 100) / 100;
+  }
+
+  function publishedTotal(selection) {
+    const out = Number(selection?.outbound?.price || 0);
+    const back = Number(selection?.inbound?.price || 0);
+    const pax = Math.max(1, Number(selection?.adults || 1) + Number(selection?.children || 0));
+    return money2((out + back) * pax);
+  }
+
+  function perPassenger(selection) {
+    return money2(Number(selection?.outbound?.price || 0) + Number(selection?.inbound?.price || 0));
+  }
+
+  function sitesLabel(selection) {
+    const bits = [];
+    const adults = Number(selection?.adults || 1);
+    const children = Number(selection?.children || 0);
+    const infants = Number(selection?.infants || 0);
+    if (adults) bits.push(`${adults} ${adults === 1 ? 'Adulto' : 'Adultos'}`);
+    if (children) bits.push(`${children} ${children === 1 ? 'Niño' : 'Niños'}`);
+    if (infants) bits.push(`${infants} ${infants === 1 ? 'Bebé' : 'Bebés'}`);
+    return bits.join(', ') || '1 Adulto';
+  }
+
+  function travelers(selection, draft) {
+    const list = Array.isArray(draft?.travelers) ? draft.travelers : [];
+    const count = Math.max(1, Number(selection?.adults || 1) + Number(selection?.children || 0) + Number(selection?.infants || 0));
+    const rows = [];
+    for (let i = 0; i < count; i += 1) {
+      const t = list[i] || {};
+      const first = asText(t.first) || asText(draft?.firstName);
+      const last = asText(t.last) || asText(draft?.lastName);
+      rows.push(`${first} ${last}`.trim() || `Pasajero ${i + 1}`);
+    }
+    return rows;
+  }
+
+  const selection = readJson(STORAGE_KEY, null);
+  const draft = readJson(PAX_KEY, {});
+  const total = publishedTotal(selection);
+  const per = perPassenger(selection);
+  const sites = sitesLabel(selection);
+
+  const totalEl = document.getElementById('boa-pay-total');
+  const sitesEl = document.getElementById('boa-pay-sites');
+  const bodyEl = document.querySelector('#boa-pay-sum [data-pay-body]');
+  if (totalEl) totalEl.textContent = `USD. ${total}`;
+  if (sitesEl) sitesEl.textContent = `Precio del viaje por ${sites} pasajero(s)`;
+  if (bodyEl) {
+    bodyEl.innerHTML = travelers(selection, draft).map((name) => (
+      `<div class="boa-pay-sum__line"><span>${name}</span><strong>USD. ${per}</strong></div>`
+    )).join('');
+  }
+
+  const sumBtn = document.getElementById('boa-res-sum-btn');
+  if (sumBtn) {
+    sumBtn.innerHTML = `Resumen de compra USD. ${total.toFixed(2)} <svg viewBox="0 0 12 8" width="10" height="8" aria-hidden="true"><path d="M1 1.4 6 6.4 11 1.4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+  }
+  const sumTotal = document.querySelector('#boa-res-sum-menu .boa-res-sum__total strong');
+  if (sumTotal) sumTotal.textContent = `USD. ${total.toFixed(1)}`;
+
+  document.addEventListener('click', (e) => {
+    const toggle = e.target.closest('[data-pay-toggle]');
+    if (!toggle) return;
+    const card = toggle.closest('[data-pay-acc]');
+    if (!card) return;
+    const open = !card.classList.contains('is-open');
+    card.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const body = card.querySelector('[data-pay-body]');
+    if (body) {
+      if (open) body.removeAttribute('hidden');
+      else body.setAttribute('hidden', '');
+    }
+  });
+
+  const methodEl = document.getElementById('boa-pay-method');
+  const methodBody = document.querySelector('#boa-pay-method .boa-pay-method__body');
+  const nitEl = document.getElementById('boa-pay-nit');
+  const invoiceEl = document.getElementById('boa-pay-invoice');
+  const sumEl = document.getElementById('boa-pay-sum');
+  const navEl = document.querySelector('#boa-pay .boa-pay__nav');
+  const wpEl = document.getElementById('boa-wp');
+  const nitInput = document.getElementById('boa-pay-nit-input');
+  const razonInput = document.getElementById('boa-pay-razon-input');
+  const nitField = document.getElementById('boa-pay-nit-field');
+  const razonField = document.getElementById('boa-pay-razon-field');
+  let step = 'method';
+
+  function setError(field, input, message) {
+    const err = field?.querySelector('.boa-pay-field__err');
+    if (!field || !err) return;
+    if (message) {
+      field.classList.add('is-error');
+      err.textContent = message;
+      err.hidden = false;
+    } else {
+      field.classList.remove('is-error');
+      err.textContent = '';
+      err.hidden = true;
+    }
+  }
+
+  function validNit() {
+    const nit = String(nitInput?.value || '').trim();
+    const razon = String(razonInput?.value || '').trim();
+    let ok = true;
+    if (!nit) {
+      setError(nitField, nitInput, 'Este campo es requerido');
+      ok = false;
+    } else if (!/^(?=.*[a-zA-Z0-9])[a-zA-Z0-9-]+$/.test(nit)) {
+      setError(nitField, nitInput, 'Solo se permiten letras, números y guiones (-), y no puede estar compuesto solo por guiones');
+      ok = false;
+    } else setError(nitField, nitInput, '');
+    if (!razon) {
+      setError(razonField, razonInput, 'Este campo es requerido');
+      ok = false;
+    } else if (!/^[a-zA-ZÑñ0-9\s]*$/.test(razon)) {
+      setError(razonField, razonInput, 'Solo se permiten letras, números y espacios');
+      ok = false;
+    } else setError(razonField, razonInput, '');
+    return ok;
+  }
+
+  function showOverlay(done) {
+    const overlay = document.getElementById('boa-pay-overlay');
+    overlay?.removeAttribute('hidden');
+    overlay?.classList.add('is-on');
+    overlay?.setAttribute('aria-hidden', 'false');
+    window.setTimeout(() => {
+      overlay?.classList.remove('is-on');
+      overlay?.setAttribute('hidden', '');
+      overlay?.setAttribute('aria-hidden', 'true');
+      done();
+    }, 1200);
+  }
+
+  function showNitStep() {
+    step = 'nit';
+    document.getElementById('boa-pay')?.classList.remove('is-wp');
+    document.body.classList.remove('is-boa-wp');
+    wpEl?.setAttribute('hidden', '');
+    methodEl?.setAttribute('hidden', '');
+    methodBody?.removeAttribute('hidden');
+    nitEl?.removeAttribute('hidden');
+    invoiceEl?.removeAttribute('hidden');
+    sumEl?.removeAttribute('hidden');
+    navEl?.removeAttribute('hidden');
+    window.scrollTo(0, 0);
+    nitInput?.focus();
+  }
+
+  function showMethodStep() {
+    step = 'method';
+    document.getElementById('boa-pay')?.classList.remove('is-wp');
+    document.body.classList.remove('is-boa-wp');
+    wpEl?.setAttribute('hidden', '');
+    nitEl?.setAttribute('hidden', '');
+    invoiceEl?.setAttribute('hidden', '');
+    methodEl?.removeAttribute('hidden');
+    methodBody?.removeAttribute('hidden');
+    sumEl?.removeAttribute('hidden');
+    navEl?.removeAttribute('hidden');
+    window.scrollTo(0, 0);
+  }
+
+  function openPasarela() {
+    try {
+      sessionStorage.setItem('latam-boa-nit', JSON.stringify({
+        nit: String(nitInput?.value || '').trim(),
+        razon: String(razonInput?.value || '').trim(),
+      }));
+    } catch { /* ignore */ }
+    step = 'wp';
+    document.getElementById('boa-pay')?.classList.add('is-wp');
+    document.body.classList.add('is-boa-wp');
+    nitEl?.setAttribute('hidden', '');
+    invoiceEl?.setAttribute('hidden', '');
+    methodEl?.removeAttribute('hidden');
+    methodBody?.setAttribute('hidden', '');
+    sumEl?.setAttribute('hidden', '');
+    navEl?.setAttribute('hidden', '');
+    wpEl?.removeAttribute('hidden');
+    document.dispatchEvent(new CustomEvent('boa-wp-open'));
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('boa-pay-back')?.addEventListener('click', () => {
+    if (step === 'nit') showMethodStep();
+    else window.history.back();
+  });
+
+  document.addEventListener('boa-wp-cancel', () => {
+    showNitStep();
+  });
+
+  nitInput?.addEventListener('input', () => setError(nitField, nitInput, ''));
+  razonInput?.addEventListener('input', () => setError(razonField, razonInput, ''));
+
+  document.getElementById('boa-pay-go')?.addEventListener('click', () => {
+    if (step === 'method') {
+      showNitStep();
+      return;
+    }
+    if (!validNit()) {
+      (nitField?.classList.contains('is-error') ? nitInput : razonInput)?.focus();
+      return;
+    }
+    showOverlay(openPasarela);
+  });
+</script>

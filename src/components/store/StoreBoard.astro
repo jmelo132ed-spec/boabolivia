@@ -1,0 +1,703 @@
+---
+import { holdBagKg, holdBagPrice, bikeBagPrice, specialBagPrice } from '../../data/storeData';
+import { PORCENTAJE_DESCUENTO } from 'astro:env/client';
+---
+
+<section class="av-ancillaries" id="store-board">
+  <div class="av-ancillaries__main" id="ancillary-hub">
+    <section class="av-bag-decision">
+      <div class="av-bag-decision__head">
+        <a class="av-ancillaries__back" id="ancillary-back-pax" href="/pasajeros">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M15.4 4.6 13.9 3.2 5.2 12l8.7 8.8 1.5-1.4L8.1 12z"/></svg>
+          Regresar a datos personales
+        </a>
+        <h2>¿Necesitas más equipaje?</h2>
+        <p>Ahorra hasta un 45% al comprar tu equipaje ahora.</p>
+      </div>
+
+      <div class="av-bag-decision__options" role="radiogroup" aria-label="¿Necesitas más equipaje?">
+        <label class="av-bag-decision__option av-bag-decision__option--yes">
+          <img src="/images/tienda-assets/bag-yes.svg" alt="" width="155" height="63" />
+          <span class="av-bag-decision__text">
+            <span class="av-bag-decision__choice">
+              <input type="radio" name="baggage-decision" value="yes" id="bag-decision-yes" />
+              <span class="av-bag-radio" aria-hidden="true"></span>
+              Sí, quiero agregar equipaje
+            </span>
+            <span class="av-bag-decision__hint">Añade equipaje de bodega de hasta 23 kg</span>
+          </span>
+        </label>
+        <label class="av-bag-decision__option av-bag-decision__option--no">
+          <img src="/images/tienda-assets/bag-no.svg" alt="" width="161" height="64" />
+          <span class="av-bag-decision__text">
+            <span class="av-bag-decision__choice">
+              <input type="radio" name="baggage-decision" value="no" id="bag-decision-no" />
+              <span class="av-bag-radio" aria-hidden="true"></span>
+              No, llevo lo que necesito
+            </span>
+            <span class="av-bag-decision__hint">Viajaré con el artículo personal y el equipaje de mano (10 kg) incluido en mi tarifa.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <h1 class="av-ancillaries__hub-title">Personaliza tu viaje</h1>
+    <div class="av-ancillary-cards">
+      <button type="button" class="av-ancillary-card" id="ancillary-seats">
+        <span class="av-ancillary-card__art"><img src="/images/tienda-assets/ancillary-seats.svg" alt="" width="90" height="90" /></span>
+        <span class="av-ancillary-card__body">
+          <strong>Elige tu asiento</strong>
+          <p>Vuela en tu asiento favorito y con mejor precio que en el aeropuerto.</p>
+          <span class="av-ancillary-card__price">
+            <span class="av-ancillary-card__from">
+              <small>Desde</small>
+              <b id="ancillary-seats-price">USD 7,60</b>
+            </span>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8.6 4.6 10.1 3.2 18.8 12l-8.7 8.8-1.5-1.4L16 12z"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button type="button" class="av-ancillary-card" data-open-modal="bags">
+        <span class="av-ancillary-card__art"><img src="/images/tienda-assets/ancillary-bags.svg" alt="" width="90" height="90" /></span>
+        <span class="av-ancillary-card__body">
+          <strong>Equipaje adicional</strong>
+          <p>¡No esperes al aeropuerto! Ahorra tiempo y dinero añadiéndolo ahora.</p>
+          <span class="av-ancillary-card__price">
+            <span class="av-ancillary-card__from">
+              <small>Desde</small>
+              <b>USD {holdBagPrice.toFixed(2).replace('.', ',')}</b>
+            </span>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8.6 4.6 10.1 3.2 18.8 12l-8.7 8.8-1.5-1.4L16 12z"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button type="button" class="av-ancillary-card" data-open-modal="lounge">
+        <span class="av-ancillary-card__art"><img src="/images/tienda-assets/ancillary-lounge.svg" alt="" width="90" height="90" /></span>
+        <span class="av-ancillary-card__body">
+          <strong>Salas VIP BoA</strong>
+          <p>¡Disfruta de una experiencia VIP mientras esperas tu vuelo!</p>
+          <span class="av-ancillary-card__price">
+            <span class="av-ancillary-card__from">
+              <small>Desde</small>
+              <b>USD 53,30</b>
+            </span>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8.6 4.6 10.1 3.2 18.8 12l-8.7 8.8-1.5-1.4L16 12z"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button type="button" class="av-ancillary-card" data-open-modal="sports">
+        <span class="av-ancillary-card__art"><img src="/images/tienda-assets/ancillary-sports.svg" alt="" width="90" height="90" /></span>
+        <span class="av-ancillary-card__body">
+          <strong>Equipaje deportivo</strong>
+          <p>¡Con nosotros puedes volar y llevar tu pasión a todas partes!</p>
+          <span class="av-ancillary-card__price">
+            <span class="av-ancillary-card__from">
+              <small>Desde</small>
+              <b>USD {specialBagPrice.toFixed(2).replace('.', ',')}</b>
+            </span>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8.6 4.6 10.1 3.2 18.8 12l-8.7 8.8-1.5-1.4L16 12z"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button type="button" class="av-ancillary-card" data-open-modal="priority">
+        <span class="av-ancillary-card__art"><img src="/images/tienda-assets/ancillary-priority.svg" alt="" width="90" height="90" /></span>
+        <span class="av-ancillary-card__body">
+          <strong>Abordaje prioritario</strong>
+          <p>Evita filas y sé de los primeros en subir al avión.</p>
+          <span class="av-ancillary-card__price">
+            <span class="av-ancillary-card__from">
+              <small>Desde</small>
+              <b>USD 5,00</b>
+            </span>
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8.6 4.6 10.1 3.2 18.8 12l-8.7 8.8-1.5-1.4L16 12z"/></svg>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="av-modal" id="modal-bags" hidden>
+    <div class="av-modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-bags-title">
+      <header class="av-modal__head">
+        <h2 id="modal-bags-title">Equipaje adicional</h2>
+        <button type="button" class="av-modal__close" data-close-modal aria-label="Cerrar">×</button>
+      </header>
+      <nav class="av-modal-tabs" data-modal-tabs="bags" aria-label="Tramos del viaje"></nav>
+      <div class="av-modal__body">
+        <div class="av-modal-pax" id="modal-bags-pax"></div>
+        <div>
+          <div class="av-modal-included">
+            <span class="av-modal-chip">
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6.2 11.1 2.8 7.6l1.1-1.1 2.3 2.3 5.1-5.2 1.1 1.1z"/></svg>
+              1 equipaje de mano (10 kg) incluido
+            </span>
+            <span class="av-modal-chip">
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6.2 11.1 2.8 7.6l1.1-1.1 2.3 2.3 5.1-5.2 1.1 1.1z"/></svg>
+              2 equipajes de bodega (32 kg) incluidos
+            </span>
+          </div>
+          <article class="av-modal-item">
+            <img src="/images/tienda-assets/bag-hold.svg" alt="" width="56" height="56" />
+            <div>
+              <strong>Equipaje de bodega de {holdBagKg} kg (50 lbs)</strong>
+              <p>No debe exceder los 158 cm lineales (largo + ancho + alto)</p>
+              <small>Precio de la primera pieza <b>USD {holdBagPrice.toFixed(2).replace('.', ',')}</b></small>
+            </div>
+            <div class="av-modal-qty">
+              <button type="button" data-qty="hold" data-dir="-1" aria-label="Quitar maleta">−</button>
+              <span id="qty-hold">0</span>
+              <button type="button" data-qty="hold" data-dir="1" aria-label="Agregar maleta">+</button>
+            </div>
+            <div class="av-modal-item__total">Total <b id="total-hold">USD 0,00</b></div>
+          </article>
+        </div>
+      </div>
+      <footer class="av-modal__foot">
+        <label class="av-modal-check">
+          <input type="checkbox" id="same-bags" checked />
+          Mismo equipaje para todos los vuelos
+        </label>
+        <div class="av-modal__sum">Total para todos los vuelos <strong id="modal-bags-sum">USD 0,00</strong></div>
+        <button type="button" class="av-modal__save" data-close-modal>Guardar y salir</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="av-modal" id="modal-sports" hidden>
+    <div class="av-modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-sports-title">
+      <header class="av-modal__head">
+        <h2 id="modal-sports-title">Equipaje deportivo</h2>
+        <button type="button" class="av-modal__close" data-close-modal aria-label="Cerrar">×</button>
+      </header>
+      <nav class="av-modal-tabs" data-modal-tabs="sports" aria-label="Tramos del viaje"></nav>
+      <div class="av-modal__body">
+        <div class="av-modal-pax" id="modal-sports-pax"></div>
+        <div>
+          <article class="av-modal-item">
+            <img src="/images/tienda-assets/sport-bike.svg" alt="" width="56" height="56" />
+            <div>
+              <strong>Bicicleta</strong>
+              <p>No debe exceder los 23 kg, ni superar los 300 cm lineales (largo + ancho + alto)</p>
+              <small>Precio por pieza <b>USD {bikeBagPrice.toFixed(2).replace('.', ',')}</b></small>
+            </div>
+            <div class="av-modal-qty">
+              <button type="button" data-qty="bike" data-dir="-1" aria-label="Quitar bicicleta">−</button>
+              <span id="qty-bike">0</span>
+              <button type="button" data-qty="bike" data-dir="1" aria-label="Agregar bicicleta">+</button>
+            </div>
+            <div class="av-modal-item__total">Total <b id="total-bike">USD 0,00</b></div>
+          </article>
+          <article class="av-modal-item">
+            <img src="/images/tienda-assets/sport-golf.svg" alt="" width="56" height="56" />
+            <div>
+              <strong>Golf</strong>
+              <p>No debe exceder los 23 kg, ni superar los 300 cm lineales (largo + ancho + alto)</p>
+              <small>Precio por pieza <b>USD {specialBagPrice.toFixed(2).replace('.', ',')}</b></small>
+            </div>
+            <div class="av-modal-qty">
+              <button type="button" data-qty="golf" data-dir="-1" aria-label="Quitar golf">−</button>
+              <span id="qty-golf">0</span>
+              <button type="button" data-qty="golf" data-dir="1" aria-label="Agregar golf">+</button>
+            </div>
+            <div class="av-modal-item__total">Total <b id="total-golf">USD 0,00</b></div>
+          </article>
+        </div>
+      </div>
+      <footer class="av-modal__foot">
+        <label class="av-modal-check">
+          <input type="checkbox" id="same-sports" checked />
+          Mismo equipaje deportivo para todos los vuelos
+        </label>
+        <div class="av-modal__sum">Total para todos los vuelos <strong id="modal-sports-sum">USD 0,00</strong></div>
+        <button type="button" class="av-modal__save" data-close-modal>Guardar y salir</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="av-modal" id="modal-lounge" hidden>
+    <div class="av-modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-lounge-title">
+      <header class="av-modal__head">
+        <h2 id="modal-lounge-title">Salas VIP BoA</h2>
+        <button type="button" class="av-modal__close" data-close-modal aria-label="Cerrar">×</button>
+      </header>
+      <div class="av-modal__body">
+        <article class="av-modal-item">
+          <img src="/images/tienda-assets/ancillary-lounge.svg" alt="" width="56" height="56" />
+          <div>
+            <strong>Acceso a sala VIP</strong>
+            <p>Disfruta de una experiencia VIP mientras esperas tu vuelo.</p>
+            <small>Precio por pasajero <b>USD 53,30</b></small>
+          </div>
+          <div class="av-modal-qty">
+            <button type="button" data-qty="lounge" data-dir="-1" aria-label="Quitar sala VIP">−</button>
+            <span id="qty-lounge">0</span>
+            <button type="button" data-qty="lounge" data-dir="1" aria-label="Agregar sala VIP">+</button>
+          </div>
+          <div class="av-modal-item__total">Total <b id="total-lounge">USD 0,00</b></div>
+        </article>
+      </div>
+      <footer class="av-modal__foot">
+        <div class="av-modal__sum">Total <strong id="modal-lounge-sum">USD 0,00</strong></div>
+        <button type="button" class="av-modal__save" data-close-modal>Guardar y salir</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="av-modal" id="modal-priority" hidden>
+    <div class="av-modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-priority-title">
+      <header class="av-modal__head">
+        <h2 id="modal-priority-title">Abordaje prioritario</h2>
+        <button type="button" class="av-modal__close" data-close-modal aria-label="Cerrar">×</button>
+      </header>
+      <div class="av-modal__body">
+        <article class="av-modal-item">
+          <img src="/images/tienda-assets/ancillary-priority.svg" alt="" width="56" height="56" />
+          <div>
+            <strong>Abordaje prioritario</strong>
+            <p>Evita filas y sé de los primeros en subir al avión.</p>
+            <small>Precio por pasajero <b>USD 5,00</b></small>
+          </div>
+          <div class="av-modal-qty">
+            <button type="button" data-qty="priority" data-dir="-1" aria-label="Quitar abordaje">−</button>
+            <span id="qty-priority">0</span>
+            <button type="button" data-qty="priority" data-dir="1" aria-label="Agregar abordaje">+</button>
+          </div>
+          <div class="av-modal-item__total">Total <b id="total-priority">USD 0,00</b></div>
+        </article>
+      </div>
+      <footer class="av-modal__foot">
+        <div class="av-modal__sum">Total <strong id="modal-priority-sum">USD 0,00</strong></div>
+        <button type="button" class="av-modal__save" data-close-modal>Guardar y salir</button>
+      </footer>
+    </div>
+  </div>
+
+  <footer class="av-pax-bar" id="store-bar">
+    <button type="button" class="av-pax-bar__cta" id="store-go-pay">Ir a pagar</button>
+    <button type="button" class="av-pax-bar__handle" id="store-summary-toggle" aria-expanded="false">
+      <span>Resumen del viaje</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7.4 15.4 6 14l6-6 6 6-1.4 1.4L12 10.8z"/></svg>
+    </button>
+    <div class="av-pax-bar__drawer" id="store-summary-drawer" hidden></div>
+    <div class="av-pax-bar__row">
+      <div class="av-pax-bar__legs" id="store-bar-legs"></div>
+      <div class="av-pax-bar__meta">
+        <strong id="store-bar-count">1 pasajero</strong>
+        <span>Pasajeros</span>
+      </div>
+      <div class="av-pax-bar__price">
+        <strong id="store-bar-total">USD 0,00</strong>
+        <span>Total de tu reserva</span>
+      </div>
+    </div>
+  </footer>
+</section>
+
+<script define:vars={{ holdBagPrice, specialBagPrice, bikeBagPrice, PORCENTAJE_DESCUENTO }}>
+  const STORAGE_KEY = 'latam-checkout-selection';
+  const SEATS_KEY = 'latam-seat-selection';
+  const STORE_KEY = 'latam-store-selection';
+  const PAX_KEY = 'latam-passenger-draft';
+  const loungePrice = 53.3;
+  const priorityPrice = 5;
+  const seatFromPrice = 7.6;
+  const discountPct = Number(PORCENTAJE_DESCUENTO) || 0;
+  const DAYS_SHORT = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  const MONTHS_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'Sept', 'oct', 'nov', 'dic'];
+
+  function money(value) {
+    const n = Number(value) || 0;
+    const [int, dec] = n.toFixed(2).split('.');
+    return `USD ${int.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${dec}`;
+  }
+
+  function ticketAfterDiscount(original) {
+    const raw = Math.round((Number(original) || 0) * 100) / 100;
+    const tax = Math.round(raw * (233.56 / 1162.56) * 100) / 100;
+    const fare = Math.max(0, Math.round((raw - tax) * 100) / 100);
+    if (!(discountPct > 0)) return Math.round((fare + tax) * 100) / 100;
+    const fareAfter = Math.round(fare * (1 - Math.min(100, discountPct) / 100) * 100) / 100;
+    return Math.round((fareAfter + tax) * 100) / 100;
+  }
+
+  function readJson(key, fallback) {
+    try {
+      return JSON.parse(sessionStorage.getItem(key) || 'null') ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function emptyLeg() {
+    return { hold: 0, bike: 0, golf: 0 };
+  }
+
+  function cityCode(place, fallback) {
+    if (!place) return fallback || '';
+    if (typeof place === 'string') return fallback || place;
+    return place.code || fallback || '';
+  }
+
+  function cityName(place, fallback) {
+    if (!place) return fallback || '';
+    if (typeof place === 'string') return place;
+    return place.city || place.code || fallback || '';
+  }
+
+  function formatBarDate(iso) {
+    if (!iso) return '';
+    const d = new Date(`${iso}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return iso;
+    return `${DAYS_SHORT[d.getDay()]} ${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  function paxCount(selection) {
+    return Math.max(1, Number(selection.adults || 1) + Number(selection.children || 0) + Number(selection.infants || 0));
+  }
+
+  function tripBase(selection, discounted = true) {
+    const outRaw = Number(selection?.outbound?.price || 0);
+    const backRaw = Number(selection?.inbound?.price || 0);
+    const out = discounted ? ticketAfterDiscount(outRaw) : outRaw;
+    const back = discounted ? ticketAfterDiscount(backRaw) : backRaw;
+    const pax = Math.max(1, (selection?.adults || 0) + (selection?.children || 0));
+    return (out + back) * Math.max(1, pax);
+  }
+
+  function seatExtras(seats, selection) {
+    let total = 0;
+    if (seats?.outbound?.price) total += Number(seats.outbound.price);
+    if (selection?.trip === 'roundtrip' && seats?.inbound?.price) total += Number(seats.inbound.price);
+    return total;
+  }
+
+  function queryString(selection) {
+    const search = selection?.search || '';
+    return search.startsWith('?') ? search : search ? `?${search}` : '';
+  }
+
+  const board = document.getElementById('store-board');
+  const selection = readJson(STORAGE_KEY, null);
+  const seats = readJson(SEATS_KEY, { outbound: null, inbound: null });
+  const draft = readJson(PAX_KEY, {});
+  const state = readJson(STORE_KEY, {
+    cabin: 'personal',
+    holdCount: 0,
+    specialCount: 0,
+    bikeCount: 0,
+    golfCount: 0,
+    loungeCount: 0,
+    priorityCount: 0,
+    baggageDecision: '',
+    sameAllFlights: true,
+    sameSportsAllFlights: true,
+    selectedCarId: null,
+    selectedCarPrice: 0,
+    legs: { outbound: emptyLeg(), inbound: emptyLeg() },
+  });
+  state.loungeCount = Number(state.loungeCount || 0);
+  state.priorityCount = Number(state.priorityCount || 0);
+  if (state.baggageDecision !== 'yes' && state.baggageDecision !== 'no') state.baggageDecision = '';
+
+  if (!state.legs) state.legs = { outbound: emptyLeg(), inbound: emptyLeg() };
+  if (!state.legs.outbound) state.legs.outbound = emptyLeg();
+  if (!state.legs.inbound) state.legs.inbound = emptyLeg();
+  ['hold', 'bike', 'golf'].forEach((key) => {
+    state.legs.outbound[key] = Number(state.legs.outbound[key] || 0);
+    state.legs.inbound[key] = Number(state.legs.inbound[key] || 0);
+  });
+  if (!state.legs.outbound.hold && !state.legs.inbound.hold && state.holdCount) {
+    state.legs.outbound.hold = Number(state.holdCount || 0);
+  }
+  if (!state.legs.outbound.bike && !state.legs.outbound.golf && state.specialCount) {
+    state.legs.outbound.golf = Number(state.specialCount || 0);
+  }
+  if (typeof state.sameAllFlights !== 'boolean') state.sameAllFlights = true;
+  if (typeof state.sameSportsAllFlights !== 'boolean') state.sameSportsAllFlights = true;
+
+  if (!selection?.outbound) {
+    board.innerHTML = '<p class="av-ancillaries__empty">No encontramos tu selección de vuelos. Vuelve a elegir tus tarifas.</p>';
+  } else {
+    const roundtrip = selection.trip === 'roundtrip' && Boolean(selection.inbound);
+    const modalLeg = { bags: 'outbound', sports: 'outbound' };
+    const paxLabel = `${String(draft.firstName || '').trim()} ${String(draft.lastName || '').trim()}`.trim() || 'Adulto 1';
+
+    function legIds() {
+      return roundtrip ? ['outbound', 'inbound'] : ['outbound'];
+    }
+
+    function sumKey(key) {
+      return legIds().reduce((sum, id) => sum + Number(state.legs[id][key] || 0), 0);
+    }
+
+    function bagExtras() {
+      return sumKey('hold') * holdBagPrice
+        + sumKey('bike') * bikeBagPrice
+        + sumKey('golf') * specialBagPrice
+        + Number(state.loungeCount || 0) * loungePrice
+        + Number(state.priorityCount || 0) * priorityPrice;
+    }
+
+    function grandTotal() {
+      return tripBase(selection, true) + seatExtras(seats, selection) + bagExtras();
+    }
+
+    function saveStore() {
+      state.holdCount = sumKey('hold');
+      state.bikeCount = sumKey('bike');
+      state.golfCount = sumKey('golf');
+      state.specialCount = state.bikeCount + state.golfCount;
+      sessionStorage.setItem(STORE_KEY, JSON.stringify(state));
+    }
+
+    function setQty(kind, key, value) {
+      const next = Math.max(0, Math.min(5, value));
+      const current = modalLeg[kind];
+      const same = kind === 'bags' ? state.sameAllFlights : state.sameSportsAllFlights;
+      if (same && roundtrip) {
+        state.legs.outbound[key] = next;
+        state.legs.inbound[key] = next;
+      } else {
+        state.legs[current][key] = next;
+      }
+    }
+
+    function currentQty(kind, key) {
+      return Number(state.legs[modalLeg[kind]][key] || 0);
+    }
+
+    function renderModalTabs(kind) {
+      const nav = document.querySelector(`[data-modal-tabs="${kind}"]`);
+      if (!nav) return;
+      const fromCode = cityCode(selection.from);
+      const toCode = cityCode(selection.to);
+      const items = [{ id: 'outbound', label: `${fromCode} - ${toCode}` }];
+      if (roundtrip) items.push({ id: 'inbound', label: `${toCode} - ${fromCode}` });
+      nav.innerHTML = items.map((item) => `
+        <button type="button" class="av-modal-tab${modalLeg[kind] === item.id ? ' is-active' : ''}" data-modal-leg="${kind}:${item.id}">${item.label}</button>
+      `).join('');
+      nav.style.gridTemplateColumns = items.length === 1 ? '1fr' : '1fr 1fr';
+    }
+
+    function renderPax(id, amount) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = `
+        <span class="av-modal-pax__dot" aria-hidden="true"></span>
+        <strong>${paxLabel}</strong>
+        <span>${money(amount)}</span>
+      `;
+    }
+
+    function updateModal() {
+      const hold = currentQty('bags', 'hold');
+      const bike = currentQty('sports', 'bike');
+      const golf = currentQty('sports', 'golf');
+      const lounge = Number(state.loungeCount || 0);
+      const priority = Number(state.priorityCount || 0);
+      const holdEl = document.getElementById('qty-hold');
+      const bikeEl = document.getElementById('qty-bike');
+      const golfEl = document.getElementById('qty-golf');
+      const loungeEl = document.getElementById('qty-lounge');
+      const priorityEl = document.getElementById('qty-priority');
+      if (holdEl) holdEl.textContent = String(hold);
+      if (bikeEl) bikeEl.textContent = String(bike);
+      if (golfEl) golfEl.textContent = String(golf);
+      if (loungeEl) loungeEl.textContent = String(lounge);
+      if (priorityEl) priorityEl.textContent = String(priority);
+      document.querySelectorAll('[data-qty][data-dir="-1"]').forEach((btn) => {
+        const key = btn.getAttribute('data-qty');
+        if (key === 'lounge') { btn.disabled = lounge <= 0; return; }
+        if (key === 'priority') { btn.disabled = priority <= 0; return; }
+        const kind = key === 'hold' ? 'bags' : 'sports';
+        btn.disabled = currentQty(kind, key) <= 0;
+      });
+      const holdLine = hold * holdBagPrice;
+      const bikeLine = bike * bikeBagPrice;
+      const golfLine = golf * specialBagPrice;
+      const loungeLine = lounge * loungePrice;
+      const priorityLine = priority * priorityPrice;
+      const holdTotal = document.getElementById('total-hold');
+      const bikeTotal = document.getElementById('total-bike');
+      const golfTotal = document.getElementById('total-golf');
+      const loungeTotal = document.getElementById('total-lounge');
+      const priorityTotal = document.getElementById('total-priority');
+      if (holdTotal) holdTotal.textContent = money(holdLine);
+      if (bikeTotal) bikeTotal.textContent = money(bikeLine);
+      if (golfTotal) golfTotal.textContent = money(golfLine);
+      if (loungeTotal) loungeTotal.textContent = money(loungeLine);
+      if (priorityTotal) priorityTotal.textContent = money(priorityLine);
+      renderPax('modal-bags-pax', holdLine);
+      renderPax('modal-sports-pax', bikeLine + golfLine);
+      const bagsSum = document.getElementById('modal-bags-sum');
+      const sportsSum = document.getElementById('modal-sports-sum');
+      const loungeSum = document.getElementById('modal-lounge-sum');
+      const prioritySum = document.getElementById('modal-priority-sum');
+      if (bagsSum) bagsSum.textContent = money(sumKey('hold') * holdBagPrice);
+      if (sportsSum) sportsSum.textContent = money(sumKey('bike') * bikeBagPrice + sumKey('golf') * specialBagPrice);
+      if (loungeSum) loungeSum.textContent = money(loungeLine);
+      if (prioritySum) prioritySum.textContent = money(priorityLine);
+      const sameBags = document.getElementById('same-bags');
+      const sameSports = document.getElementById('same-sports');
+      if (sameBags) sameBags.checked = state.sameAllFlights;
+      if (sameSports) sameSports.checked = state.sameSportsAllFlights;
+      renderModalTabs('bags');
+      renderModalTabs('sports');
+    }
+
+    function updateTotals() {
+      const totalEl = document.getElementById('store-bar-total');
+      if (totalEl) totalEl.textContent = money(grandTotal());
+      const seatPrice = document.getElementById('ancillary-seats-price');
+      const extras = seatExtras(seats, selection);
+      if (seatPrice) seatPrice.textContent = extras > 0 ? money(extras) : money(seatFromPrice);
+      const drawer = document.getElementById('store-summary-drawer');
+      if (drawer && selection) {
+        drawer.innerHTML = `
+          <p><strong>Vuelo de ida</strong> ${cityName(selection.from)} hasta ${cityName(selection.to)}</p>
+          ${selection.inbound?.flight ? `<p><strong>Vuelo de regreso</strong> ${cityName(selection.to)} hasta ${cityName(selection.from)}</p>` : ''}
+          <p>Asientos ${money(extras)} · Equipaje ${money(bagExtras())}</p>
+        `;
+      }
+      updateModal();
+      saveStore();
+    }
+
+    function renderBar() {
+      const fromCode = cityCode(selection.from);
+      const toCode = cityCode(selection.to);
+      const count = paxCount(selection);
+      const legs = document.getElementById('store-bar-legs');
+      const countEl = document.getElementById('store-bar-count');
+      if (legs) {
+        legs.innerHTML = `
+          <div>
+            <strong>${fromCode} → ${toCode}</strong>
+            <span>${formatBarDate(selection.depart)}</span>
+          </div>
+          ${selection.trip === 'roundtrip' && selection.returnDate ? `<div>
+            <strong>${toCode} → ${fromCode}</strong>
+            <span>${formatBarDate(selection.returnDate)}</span>
+          </div>` : ''}
+        `;
+      }
+      if (countEl) countEl.textContent = `${count} pasajero${count === 1 ? '' : 's'}`;
+      updateTotals();
+    }
+
+    function openModal(id) {
+      const modal = document.getElementById(`modal-${id}`);
+      if (!modal) return;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.querySelectorAll('.av-modal').forEach((modal) => {
+        modal.hidden = true;
+      });
+      document.body.style.overflow = '';
+      saveStore();
+      updateTotals();
+    }
+
+    const qs = queryString(selection);
+    const backPax = document.getElementById('ancillary-back-pax');
+    if (backPax) backPax.setAttribute('href', `/pasajeros${qs}`);
+
+    document.getElementById('ancillary-seats')?.addEventListener('click', () => {
+      saveStore();
+      window.location.href = `/seleccion-asientos${qs}`;
+    });
+
+    document.querySelectorAll('[data-open-modal]').forEach((btn) => {
+      btn.addEventListener('click', () => openModal(btn.dataset.openModal));
+    });
+    document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+      btn.addEventListener('click', closeModal);
+    });
+    document.querySelectorAll('.av-modal').forEach((modal) => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      const tab = e.target.closest('[data-modal-leg]');
+      if (!tab) return;
+      const [kind, id] = String(tab.dataset.modalLeg).split(':');
+      modalLeg[kind] = id;
+      updateModal();
+    });
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-qty]');
+      if (!btn) return;
+      const key = btn.getAttribute('data-qty');
+      const dir = Number(btn.getAttribute('data-dir') || 0);
+      if (key === 'lounge' || key === 'priority') {
+        const field = key === 'lounge' ? 'loungeCount' : 'priorityCount';
+        state[field] = Math.max(0, Math.min(5, Number(state[field] || 0) + dir));
+        updateTotals();
+        return;
+      }
+      const kind = key === 'hold' ? 'bags' : 'sports';
+      setQty(kind, key, currentQty(kind, key) + dir);
+      updateTotals();
+    });
+
+    document.getElementById('same-bags')?.addEventListener('change', (e) => {
+      state.sameAllFlights = Boolean(e.target.checked);
+      if (state.sameAllFlights && roundtrip) {
+        state.legs.inbound.hold = state.legs.outbound.hold;
+      }
+      updateTotals();
+    });
+    document.getElementById('same-sports')?.addEventListener('change', (e) => {
+      state.sameSportsAllFlights = Boolean(e.target.checked);
+      if (state.sameSportsAllFlights && roundtrip) {
+        state.legs.inbound.bike = state.legs.outbound.bike;
+        state.legs.inbound.golf = state.legs.outbound.golf;
+      }
+      updateTotals();
+    });
+
+    document.getElementById('store-summary-toggle')?.addEventListener('click', () => {
+      const drawer = document.getElementById('store-summary-drawer');
+      const btn = document.getElementById('store-summary-toggle');
+      const open = drawer?.hidden;
+      if (drawer) drawer.hidden = !open;
+      btn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.getElementById('store-bar')?.classList.toggle('is-open', Boolean(open));
+    });
+
+    document.getElementById('store-go-pay')?.addEventListener('click', () => {
+      saveStore();
+      window.location.href = `/pagos${qs}`;
+    });
+
+    function syncBagDecision() {
+      const yes = document.getElementById('bag-decision-yes');
+      const no = document.getElementById('bag-decision-no');
+      if (yes) yes.checked = state.baggageDecision === 'yes';
+      if (no) no.checked = state.baggageDecision === 'no';
+    }
+
+    document.getElementById('bag-decision-yes')?.addEventListener('change', () => {
+      state.baggageDecision = 'yes';
+      saveStore();
+      openModal('bags');
+    });
+    document.getElementById('bag-decision-no')?.addEventListener('change', () => {
+      state.baggageDecision = 'no';
+      saveStore();
+    });
+    syncBagDecision();
+
+    renderBar();
+  }
+</script>

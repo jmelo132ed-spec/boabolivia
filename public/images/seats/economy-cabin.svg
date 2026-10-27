@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice">
+  <rect width="640" height="360" fill="#cfd6dc"/>
+  <ellipse cx="72" cy="168" rx="80" ry="118" fill="#b7d3e8"/>
+  <rect x="0" y="0" width="40" height="360" fill="#b8c0c7"/>
+  <g fill="#4f6e74">
+    <rect x="150" y="70" width="130" height="210" rx="14"/>
+    <rect x="300" y="58" width="140" height="230" rx="14"/>
+    <rect x="462" y="78" width="118" height="198" rx="14"/>
+  </g>
+  <g fill="#7ea3a8">
+    <rect x="162" y="88" width="106" height="120" rx="10"/>
+    <rect x="314" y="76" width="112" height="132" rx="10"/>
+    <rect x="474" y="94" width="94" height="110" rx="10"/>
+  </g>
+  <g fill="#c9e8ea">
+    <rect x="162" y="218" width="106" height="46" rx="8"/>
+    <rect x="314" y="218" width="112" height="50" rx="8"/>
+    <rect x="474" y="214" width="94" height="44" rx="8"/>
+  </g>
+</svg>

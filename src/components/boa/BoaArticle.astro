@@ -1,0 +1,75 @@
+---
+import type { BoaPage } from '../../data/boaPages';
+
+interface Props {
+  page: BoaPage;
+  query?: Record<string, string | undefined>;
+}
+const { page, query = {} } = Astro.props;
+const flight = query.flight || '';
+const date = query.date || '';
+---
+
+<article class="boa-article">
+  {page.kicker && <p class="boa-kicker">{page.kicker}</p>}
+  <nav class="boa-crumb">
+    <a href="/">Inicio</a>
+    <span>/</span>
+    <span>{page.title}</span>
+  </nav>
+  {page.intro && <p class="boa-article__intro">{page.intro}</p>}
+
+  {page.slug === 'estado-de-vuelo' && (
+    <form class="boa-status" action="/estado-de-vuelo" method="get">
+      <label>
+        <span>Número de vuelo</span>
+        <input type="text" name="flight" value={flight} placeholder="OB 123" />
+      </label>
+      <label>
+        <span>Fecha</span>
+        <input type="date" name="date" value={date} />
+      </label>
+      <button class="boa-search-btn" type="submit">Consultar</button>
+    </form>
+  )}
+  {page.slug === 'estado-de-vuelo' && flight && (
+    <div class="boa-status__result">
+      <p><strong>Vuelo {flight.toUpperCase()}</strong>{date ? ` · ${date}` : ''}</p>
+      <p>Programado. Presenta tus documentos en el aeropuerto según la hora límite de tu ruta. Para cambios usa el buscador o el Centro de Ayuda.</p>
+    </div>
+  )}
+
+  {page.sections.map((section) => (
+    <section class="boa-article__block">
+      {section.heading && <h2>{section.heading}</h2>}
+      {section.paragraphs?.map((text) => <p>{text}</p>)}
+      {section.list && (
+        <ul>
+          {section.list.map((item) => {
+            if (page.slug === 'mapa-de-sitio') {
+              const hrefMap: Record<string, string> = {
+                'Buscar vuelos': '/#buscar',
+                'Nuestros destinos': '/destinos',
+                'Nuestras tarifas': '/tarifas',
+                'Check-in online': '/#checkin',
+                'Centro de ayuda': '/ayuda',
+                Oficinas: '/oficinas',
+                'Contrato de transporte': '/legal/contrato',
+              };
+              return (
+                <li>
+                  <a href={hrefMap[item] || '/'}>{item}</a>
+                </li>
+              );
+            }
+            return <li>{item}</li>;
+          })}
+        </ul>
+      )}
+    </section>
+  ))}
+
+  <p class="boa-article__cta">
+    <a class="boa-search-btn" href="/#buscar">Buscar vuelo</a>
+  </p>
+</article>

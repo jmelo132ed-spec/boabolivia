@@ -1,0 +1,561 @@
+{
+  "title": "Reserva vuelos nacionales e internacionales | BoA - Boliviana de Aviación",
+  "url": "https://www.boa.bo/",
+  "bodyTextStart": "ES\n|\nCOLOMBIA\nEspañol\nEnglish\nPortuguês\nSelecciona el idioma\nIdioma\nEspañol\nContinuar\nViajes\nContáctanos\nCentro de Ayuda\nViajar\nBuscar vuelos\nNuestros destinos\nNuestras tarifas\nContrato de transporte\nMis vuelos\nCheck-in Online\nBusiness\nClase Business\nSiente Madrid\n\nHistoria, arte y gastronomía inolvidable\n\nReserva\nIniciar Check-in\nEstado De Vuelo\nIda y Vuelta\nSolo Ida\n\nPasajeros\n\nEconómica | 1 Adulto\nBuscar vuelo\nExperiencia\n¡Más beneficios para tu viaje!\n¡Lleva a tu amigo peludo!\n\nVer más >\n\nEmpaca tranquilo, el equipaje está incluido\n\nVer más >\n\nViaja y crea recuerdos con los más pequeños\n\nVer más >\n\nLa libertad de elegir tu asiento, SIN COSTO\n\nVer más >\n\nComodidad y seguridad para futuras mamás\n\nVer más >\n\nInformación\nAccesos Rápidos\n\nAvisos Importantes\n\nEntérate de las últimas noticias, eventos y anuncios importantes.\n\nNuestras Oficinas\n\nDescubre nuestras oficinas y horarios de atención. Estamos aquí para ayudarte cuando lo necesites.\n\nHora Límite\n\nAsegúrate de llegar a tiempo para iniciar tu viaje y mejorar tu experiencia.\n\nAsistencia Especial\n\nNos preocupamos por tus necesidades. Por eso contamos con servicio exclusivo ante los requerimientos de nuestros clientes.\n\nOtros Servicios\n\nTenemos más facilidades para ofrecerte\n\nClase Business\n\nExperimenta la diferencia de viajar en Business Class.\n\nVer más\nPrepárate\nMejora tu experiencia\n¿Cómo pago mi boleto?\n\nConocer más >\n\n¿Cómo solicito Servicios Especiales?\n\nSaber más >\n\n¿Qué documentos necesito?\n\nMás >\n\nNuestros destinos\n",
+  "fonts": [
+    "Lato 300 unloaded",
+    "Lato 400 unloaded",
+    "Lato 400 loaded",
+    "Lato 700 unloaded",
+    "Lato 700 loaded",
+    "Lato 900 unloaded",
+    "Lato 900 loaded",
+    "remixicon normal loaded"
+  ],
+  "vars": {
+    "--tw-contain-size": "",
+    "--tw-ring-offset-shadow": "0 0 #0000",
+    "--tw-contrast": "",
+    "--tw-backdrop-sepia": "",
+    "--tw-ring-shadow": "0 0 #0000",
+    "--tw-sepia": "",
+    "--tw-skew-x": "0",
+    "--tw-ordinal": "",
+    "--tw-backdrop-saturate": "",
+    "--tw-backdrop-blur": "",
+    "--tw-contain-style": "",
+    "--tw-shadow": "0 0 #0000",
+    "--tw-translate-x": "0",
+    "--tw-ring-inset": "",
+    "--tw-ring-offset-width": "0px",
+    "--tw-gradient-via-position": "",
+    "--tw-backdrop-invert": "",
+    "--tw-saturate": "",
+    "--tw-scroll-snap-strictness": "proximity",
+    "--tw-numeric-spacing": "",
+    "--tw-grayscale": "",
+    "--tw-border-spacing-x": "0",
+    "--tw-scale-x": "1",
+    "--tw-backdrop-hue-rotate": "",
+    "--tw-shadow-colored": "0 0 #0000",
+    "--tw-gradient-to-position": "",
+    "--tw-border-spacing-y": "0",
+    "--tw-brightness": "",
+    "--tw-numeric-fraction": "",
+    "--tw-backdrop-grayscale": "",
+    "--tw-hue-rotate": "",
+    "--tw-scale-y": "1",
+    "--tw-pan-y": "",
+    "--tw-backdrop-contrast": "",
+    "--tw-drop-shadow": "",
+    "--tw-skew-y": "0",
+    "--tw-ring-color": "rgb(59 130 246 / .5)",
+    "--tw-backdrop-brightness": "",
+    "--tw-slashed-zero": "",
+    "--tw-blur": "",
+    "--tw-invert": "",
+    "--tw-pan-x": "",
+    "--tw-translate-y": "0",
+    "--tw-backdrop-opacity": "",
+    "--tw-gradient-from-position": "",
+    "--tw-numeric-figure": "",
+    "--tw-rotate": "0",
+    "--tw-pinch-zoom": "",
+    "--tw-contain-paint": "",
+    "--tw-contain-layout": "",
+    "--tw-ring-offset-color": "#fff"
+  },
+  "links": [
+    {
+      "rel": "icon",
+      "href": "https://www.boa.bo/boa.svg"
+    },
+    {
+      "rel": "icon",
+      "href": "https://www.boa.bo/boa.svg"
+    },
+    {
+      "rel": "stylesheet",
+      "href": "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap"
+    },
+    {
+      "rel": "stylesheet",
+      "href": "https://www.boa.bo/assets/index-BPPwiJ2Y.css"
+    }
+  ],
+  "imgs": [
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/b3e6dda0-86a4-468b-9f68-6560d4699339.png",
+      "alt": "boa logo",
+      "w": 345,
+      "h": 183
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/72744808-7b84-4ebd-aafa-e86c2b8abc5c.jpg",
+      "alt": "",
+      "w": 540,
+      "h": 182
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/72744808-7b84-4ebd-aafa-e86c2b8abc5c.jpg",
+      "alt": "Navigation bar",
+      "w": 540,
+      "h": 182
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/e1a5531f-f4f6-4344-a070-a3e7708e6690.jpg",
+      "alt": "Banner",
+      "w": 1795,
+      "h": 753
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/8811fbf3-61ee-46b7-a34d-e567af4ada00.jpg",
+      "alt": "imagen de ¡Lleva a tu amigo peludo!",
+      "w": 510,
+      "h": 512
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/2598990a-7e2c-44e8-9730-158270469e45.jpg",
+      "alt": "imagen de Empaca tranquilo, el equipaje está incluido",
+      "w": 768,
+      "h": 768
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/72eb1e29-5d6a-426a-9a2f-7729d4db9abd.jpg",
+      "alt": "imagen de Viaja y crea recuerdos con los más pequeños",
+      "w": 626,
+      "h": 626
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/5e4dc155-88c3-457a-99d8-81aee2c304e1.jpg",
+      "alt": "imagen de La libertad de elegir tu asiento, SIN COSTO",
+      "w": 510,
+      "h": 512
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/bea0dd15-6f09-4060-a477-5f1045b080de.png",
+      "alt": "imagen de Comodidad y seguridad para futuras mamás",
+      "w": 446,
+      "h": 446
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/cfe66386-8e1f-4553-954a-c9ee86579e90.png",
+      "alt": "ícono de Avisos Importantes",
+      "w": 64,
+      "h": 64
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACRCAYAAAAsGjEdAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJzSURBVHgB7d0xjtNAGIDRcWARx8gRKGm322NAx5Ho4BjbbUvJEXIOkBIYFIuQdZwZzyRsZt6LLFlp88lOPHb+EAAAAAAAAAAAAAAAAAAAAAAAAAAAgNvx7uHDOm6BaobQiRjO3erNU9z/uf1x//3x6yZQrIuADuJZ79/aiKiO5gOaiGckogqaDmgmnpGICjUbUEI8IxEVaDKgjHhGIlqouYAWxDMS0QJNBVQQz0hEmVahIW9/v4ZdKPEnQBcb0zV3Cnv/8Gm9HbZPu2HxUShyJErU5JdoEV1Psz/jRXQdTV9IFNHlNb+UIaLL6mIxVUSX083tHCK6jG4CikRUX1cBRSKqq7uAIhHV02VAkYjq6DagSETlug4oElGZ7gOKRLScgPZEtIyADogon4COiCiPgCaIKJ2AThBRGgHNENF5AjpDRPMElEBEpwkokYimCSiDiJ4TUCYR/UtAC4jor6Yebb6Wb4+fN9vd9mMos74b7r6EG/c6kC0+Oz+sVkUf/rALm9XuVWmE/51TWKYK/wCyj2d1H49k4cYJKIN4nhNQIvFME1AC8ZwmoDPEM09AM8RznoBOEE8aAU0QTzoBHRFPHgEdEE8+Ae2JZxkBBfGU6D4g8ZTpOiDxlOs2IPHU0WVA4qmnu4DEU1dXAYmnvh7Hfq/DQuJ5rtex39nEM63nsd/JxHNa72O/zxLPPGO/Z4jnPGO/TxBPGmO/J4gnnbHfR8STx9jvA+LJZ+z3nniWMfY7iKdE92O/xVOm67Hf4inX7dhv8dTRxWLqcUTiqaeb2znGiOK+eFgkRhS3AAAAAAAAAAAAAAAAAAAAAAAAAAC8NL8AQ6eziyxe1XAAAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 144,
+      "h": 145
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/bc33a816-41e1-4da5-9f12-15c4103dc9b8.svg+xml",
+      "alt": "ícono de Nuestras Oficinas",
+      "w": 50,
+      "h": 50
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACRCAYAAAAsGjEdAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJzSURBVHgB7d0xjtNAGIDRcWARx8gRKGm322NAx5Ho4BjbbUvJEXIOkBIYFIuQdZwZzyRsZt6LLFlp88lOPHb+EAAAAAAAAAAAAAAAAAAAAAAAAAAAgNvx7uHDOm6BaobQiRjO3erNU9z/uf1x//3x6yZQrIuADuJZ79/aiKiO5gOaiGckogqaDmgmnpGICjUbUEI8IxEVaDKgjHhGIlqouYAWxDMS0QJNBVQQz0hEmVahIW9/v4ZdKPEnQBcb0zV3Cnv/8Gm9HbZPu2HxUShyJErU5JdoEV1Psz/jRXQdTV9IFNHlNb+UIaLL6mIxVUSX083tHCK6jG4CikRUX1cBRSKqq7uAIhHV02VAkYjq6DagSETlug4oElGZ7gOKRLScgPZEtIyADogon4COiCiPgCaIKJ2AThBRGgHNENF5AjpDRPMElEBEpwkokYimCSiDiJ4TUCYR/UtAC4jor6Yebb6Wb4+fN9vd9mMos74b7r6EG/c6kC0+Oz+sVkUf/rALm9XuVWmE/51TWKYK/wCyj2d1H49k4cYJKIN4nhNQIvFME1AC8ZwmoDPEM09AM8RznoBOEE8aAU0QTzoBHRFPHgEdEE8+Ae2JZxkBBfGU6D4g8ZTpOiDxlOs2IPHU0WVA4qmnu4DEU1dXAYmnvh7Hfq/DQuJ5rtex39nEM63nsd/JxHNa72O/zxLPPGO/Z4jnPGO/TxBPGmO/J4gnnbHfR8STx9jvA+LJZ+z3nniWMfY7iKdE92O/xVOm67Hf4inX7dhv8dTRxWLqcUTiqaeb2znGiOK+eFgkRhS3AAAAAAAAAAAAAAAAAAAAAAAAAAC8NL8AQ6eziyxe1XAAAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 144,
+      "h": 145
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/d3a62e89-14be-4fb1-aa49-658e6394c4db.svg+xml",
+      "alt": "ícono de Hora Límite",
+      "w": 50,
+      "h": 51
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACRCAYAAAAsGjEdAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJzSURBVHgB7d0xjtNAGIDRcWARx8gRKGm322NAx5Ho4BjbbUvJEXIOkBIYFIuQdZwZzyRsZt6LLFlp88lOPHb+EAAAAAAAAAAAAAAAAAAAAAAAAAAAgNvx7uHDOm6BaobQiRjO3erNU9z/uf1x//3x6yZQrIuADuJZ79/aiKiO5gOaiGckogqaDmgmnpGICjUbUEI8IxEVaDKgjHhGIlqouYAWxDMS0QJNBVQQz0hEmVahIW9/v4ZdKPEnQBcb0zV3Cnv/8Gm9HbZPu2HxUShyJErU5JdoEV1Psz/jRXQdTV9IFNHlNb+UIaLL6mIxVUSX083tHCK6jG4CikRUX1cBRSKqq7uAIhHV02VAkYjq6DagSETlug4oElGZ7gOKRLScgPZEtIyADogon4COiCiPgCaIKJ2AThBRGgHNENF5AjpDRPMElEBEpwkokYimCSiDiJ4TUCYR/UtAC4jor6Yebb6Wb4+fN9vd9mMos74b7r6EG/c6kC0+Oz+sVkUf/rALm9XuVWmE/51TWKYK/wCyj2d1H49k4cYJKIN4nhNQIvFME1AC8ZwmoDPEM09AM8RznoBOEE8aAU0QTzoBHRFPHgEdEE8+Ae2JZxkBBfGU6D4g8ZTpOiDxlOs2IPHU0WVA4qmnu4DEU1dXAYmnvh7Hfq/DQuJ5rtex39nEM63nsd/JxHNa72O/zxLPPGO/Z4jnPGO/TxBPGmO/J4gnnbHfR8STx9jvA+LJZ+z3nniWMfY7iKdE92O/xVOm67Hf4inX7dhv8dTRxWLqcUTiqaeb2znGiOK+eFgkRhS3AAAAAAAAAAAAAAAAAAAAAAAAAAC8NL8AQ6eziyxe1XAAAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 144,
+      "h": 145
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/icons/ff10dd7d-1b83-4369-bb5c-d29502569b69.svg+xml",
+      "alt": "ícono de Asistencia Especial",
+      "w": 51,
+      "h": 51
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACRCAYAAAAsGjEdAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJzSURBVHgB7d0xjtNAGIDRcWARx8gRKGm322NAx5Ho4BjbbUvJEXIOkBIYFIuQdZwZzyRsZt6LLFlp88lOPHb+EAAAAAAAAAAAAAAAAAAAAAAAAAAAgNvx7uHDOm6BaobQiRjO3erNU9z/uf1x//3x6yZQrIuADuJZ79/aiKiO5gOaiGckogqaDmgmnpGICjUbUEI8IxEVaDKgjHhGIlqouYAWxDMS0QJNBVQQz0hEmVahIW9/v4ZdKPEnQBcb0zV3Cnv/8Gm9HbZPu2HxUShyJErU5JdoEV1Psz/jRXQdTV9IFNHlNb+UIaLL6mIxVUSX083tHCK6jG4CikRUX1cBRSKqq7uAIhHV02VAkYjq6DagSETlug4oElGZ7gOKRLScgPZEtIyADogon4COiCiPgCaIKJ2AThBRGgHNENF5AjpDRPMElEBEpwkokYimCSiDiJ4TUCYR/UtAC4jor6Yebb6Wb4+fN9vd9mMos74b7r6EG/c6kC0+Oz+sVkUf/rALm9XuVWmE/51TWKYK/wCyj2d1H49k4cYJKIN4nhNQIvFME1AC8ZwmoDPEM09AM8RznoBOEE8aAU0QTzoBHRFPHgEdEE8+Ae2JZxkBBfGU6D4g8ZTpOiDxlOs2IPHU0WVA4qmnu4DEU1dXAYmnvh7Hfq/DQuJ5rtex39nEM63nsd/JxHNa72O/zxLPPGO/Z4jnPGO/TxBPGmO/J4gnnbHfR8STx9jvA+LJZ+z3nniWMfY7iKdE92O/xVOm67Hf4inX7dhv8dTRxWLqcUTiqaeb2znGiOK+eFgkRhS3AAAAAAAAAAAAAAAAAAAAAAAAAAC8NL8AQ6eziyxe1XAAAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 144,
+      "h": 145
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABLCAMAAAALZVrlAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAITgAACE4AUWWMWAAAAA/UExURUdwTP///////////////////////////////////////////////////////////////////////////////0qNmhgAAAAUdFJOUwBw76+/EGCAIN9Af4/Pn29QMJCgpdLJSgAAASdJREFUWMPtmNt2gyAQRQUGGCSmauf/v7VpNSmWiyC8NIv9mIe9TlTOcTkMnfdFWgEKG4jQ0APTQPUjIpqqRSPtjLUm/TTpbuqmbuqmbjorX/M01W2CvJHDTTYItMdSLQJt3K/8xZlTgPJYUlCEwlgfnKKUxEKgJNmxUoE2OGsRaAOwQaAdm/YsQNkkj4+lImzu4bgaK3Q4yOjXE/q5TqFY/qle/ECg8dhPyHyZWaKN5mr8pkP2957opAmYjHcmKsg0OZpY+7qymOmoSfT4SxYycVCyZBGkEqHfWUhzui0PGevL2U3/2vS7xUJWiXDKXIDT157DZJn5ssgWblz0EgW2T2DVXUt2bZkJoIWJ378bEJXgVSazOl8uxtVcNM3Mu7zI1NB5Q74ALfFS7nIUOhwAAAAASUVORK5CYII=",
+      "alt": "",
+      "w": 73,
+      "h": 75
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/2f027e69-22b7-4604-a292-255cd9afe6fd.png",
+      "alt": "imagen de ¿Cómo pago mi boleto?",
+      "w": 495,
+      "h": 800
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/ec60aec4-76cd-4d89-bb59-ccbb5e7aecd6.png",
+      "alt": "imagen de ¿Cómo solicito Servicios Especiales?",
+      "w": 756,
+      "h": 407
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/0722627f-5388-4543-a952-e5302274c81d.jpg",
+      "alt": "imagen de ¿Qué documentos necesito?",
+      "w": 626,
+      "h": 626
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/ba92e883-7490-4d61-bcca-c361c76a51e5.jpg",
+      "alt": "imagen de Nuestros destinos",
+      "w": 626,
+      "h": 626
+    },
+    {
+      "src": "https://cdnboa-aab8augderd2cff4.a02.azurefd.net/images/c6ab815d-6f07-492d-93b0-f174b9af57fb.png",
+      "alt": "Call to action background",
+      "w": 1380,
+      "h": 320
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAqCAYAAAAqAaJlAAAACXBIWXMAABCcAAAQnAEmzTo0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgB7dXBCYAwDEDRjOAIjuQGuond0BEcwRFiCxUU2uotkf4HOTXQf4sIAAAA0DFVneOMH/aWOINYyaHJ3gqOb2ve20yC46eTPhWDb6FqFpzCcmA1uBCaBLHQCnYV+hJ8uAu9VIL9hV4awUE8KgQH8ewWHOQP1PJSAQAAoCcn9OY+sbD70N0AAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 43,
+      "h": 42
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAqCAYAAAAqAaJlAAAACXBIWXMAABCcAAAQnAEmzTo0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgB7dXBCYAwDEDRjOAIjuQGuond0BEcwRFiCxUU2uotkf4HOTXQf4sIAAAA0DFVneOMH/aWOINYyaHJ3gqOb2ve20yC46eTPhWDb6FqFpzCcmA1uBCaBLHQCnYV+hJ8uAu9VIL9hV4awUE8KgQH8ewWHOQP1PJSAQAAoCcn9OY+sbD70N0AAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 43,
+      "h": 42
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAqCAYAAAAqAaJlAAAACXBIWXMAABCcAAAQnAEmzTo0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgB7dXBCYAwDEDRjOAIjuQGuond0BEcwRFiCxUU2uotkf4HOTXQf4sIAAAA0DFVneOMH/aWOINYyaHJ3gqOb2ve20yC46eTPhWDb6FqFpzCcmA1uBCaBLHQCnYV+hJ8uAu9VIL9hV4awUE8KgQH8ewWHOQP1PJSAQAAoCcn9OY+sbD70N0AAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 43,
+      "h": 42
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAqCAYAAAAqAaJlAAAACXBIWXMAABCcAAAQnAEmzTo0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgB7dXBCYAwDEDRjOAIjuQGuond0BEcwRFiCxUU2uotkf4HOTXQf4sIAAAA0DFVneOMH/aWOINYyaHJ3gqOb2ve20yC46eTPhWDb6FqFpzCcmA1uBCaBLHQCnYV+hJ8uAu9VIL9hV4awUE8KgQH8ewWHOQP1PJSAQAAoCcn9OY+sbD70N0AAAAASUVORK5CYII=",
+      "alt": "arrow",
+      "w": 43,
+      "h": 42
+    },
+    {
+      "src": "https://www.boa.bo/assets/iosa-D-KZA1e7.png",
+      "alt": "iata logo",
+      "w": 567,
+      "h": 236
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANsAAADbCAMAAADTXRRyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAITgAACE4AUWWMWAAAABIUExURUdwTP///////////////////////////////////////////////////////////////////////////////////////////wV68vgAAAAXdFJOUwAQ759AgGAg379wMM+QoFCvj39vsF/AWiOWzAAADZJJREFUeNrtndmCo6wSgAFZCtSo6Zm/3v9Nz4VboSayqDF9hpuZ6YkdP2ovARn7N6IHN6VstNbq9XBaSykN/xIiI7XrCguAMUNUtu2UluU9pVRqVVRxRJuUtlWN5Peh6toNKAFg26Io3uhkURTWViC2EDv3WUIuXbGggqqonZbGxGlyKRunWrv4ZVX7GUCju8qDamvdmCPsVbXeL64KfaUZlq4legSFOgBq8Q3SIxStk1fIi3JB4coTlUbquqJ85an21QGdyktsQbrZU0HRnPKd3NlRYKJw5lLjLvVj4rP64O82Tzt554u5Zr7JGKrjtLN8jpNW1ZJ9csjJ/qA7YIb5KDFh3R3SBaPbSXom08ZGMH2fjJY3DzHaXupdyU5kgW1UAs55VUCTXAU0j9GtpVjJT5U2N7yMrQT6KqCRcSrG9aBToKMnpgdTPAaqayuRUwVUcSmy0f0ExopOI4pgr2jWpYAA2xb1oHjbQ2unVNHa5XwI2wWnWOUDEHU8WxGIZYWXMxdOR1uRkY2r03LkRzybCmDzcmZRFS47Z+bS1WSqhFXyHDYVygWtO7QS4NIRGdr3CqqOZeO6mFJLW5+TvjIu1ZzAtq+TyD0hxFxinL2uqiLaYV8kkQlsj81L5JQzB1jCYXx2SiLlUWx6VQwMfl6cpYdvsiwY8cq1Q89lm1JLUJ+pBcqxBgA/Rw4NVi/ZpB018TPF22jqUx6YxWYJ21MMEvt839fUMHQXeBabnK+OScBOL1B723OHsCnEqrnVAwkNM5DMZVPsXkN5bPYf2zRgZkvIRs8eLpfN3JeNOJDyF7KNQAaxSmdrEZtbs0E6m43vSNybDW/NJnPZ2K3Z4P+AjWWxAWJ5azbMYjM3YzP/2F5efHM2zGGbJkb8YrZ4hb6UDX4ZG/fZ+G9iy3J1X8BmLmIz4+I0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",
+      "alt": "https logo",
+      "w": 219,
+      "h": 219
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANsAAADbCAMAAADTXRRyAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAITgAACE4AUWWMWAAAABFUExURUdwTP///////////////////////////////////////////////////////////////////////////////////////1fUNLcAAAAWdFJOUwAQ74Bgv58gQN9wMFCgz5B/j69vX7BtYSUZAAAHhklEQVR42u2caWOjOAyG8X1RjnSG//9T19gGn+Ro2mbC6vmSnRQwL5JlSSbbdQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgGWNn1faxLAtoez9GpdQZdUlrM3pSm4G2d6OnDs75SAg5lza1rLBTxknQ9n4Ym2VZQaOUZv2XlPJc0fGswf/s2gbGeiEEOpUo6T9E15FT2Q60vSfIZ1naflw4J/ZDnCqQ2JWN2w9rs5NlkafVJuTKB2PEftg14EzrG3Erto0l1MeSDrT9+1DG1Fm1eaNZsFL4rNoCZ9G21mtayv6M2kI3S/wvtJ2sXrPrNT2rtsiJ2v+S0jxGnshoH0XwB20rn0rxKpwiqW0FOOuy7Yc0n8XbaJvc5MybRWLGLrNZ/8RXeVMolND6FTa/qswnWHEN6MXdD9ennzq1zewCrpvFH/bPTIitCKR7m/r32K0VtD3QQfYPhSfSBmvH3TRidQi1afPegd9FG3PnJcW5lYZFmaIG7dodPPyesJ7E6H8hhNgg8MCMcOlnImaq2hBj1Obm2y92zQTOg8ijSzYdFhafhaiz0FXQ5rOCLUr/ntn48py2+mpDnfDw11Tay7dqG1pxkC1/X6JNZcI4pf0zV0PNWKGXl7wuNeVGe3aaGxdZym0fhH9IG9JE3h1IntUmyxUhrGvzz4TB1ekUvTOQfIvd8vXt52OFag6X9Q+Wy/ObGujaaN+O3u58OohqkehKyPgN/PLOkz+3/xLSlAVfW8TKbVgkjtPXeGjjIBSDu7gR/4M2OYfYyVIzon4eFjdS7+8/FDbI0JlhnmVYy+E0EOvB6dqO9MVNeRwGs/9WOOxBIDkzfyyamDtKXWiV8oThzJX4j8OuhrF3rnQvTL8mtpNTYzT3h/Yus1i2t07Q9n1cm1EMTqqo1OTMcNE9QxNe8NgLqe11lPWsz3CEto/SH70uSfZbxdhQWwhFx8P9sdlYnQ5SHC6ltxJIdwZjgnyAWoRQ29Ph7Yvy1HXH7Sq7tvUy4V7Rxb05sGDuvILt9tfrn0az1xR5oEKJef4cLttOG+LZtOvjc5LY+6EaxB7rV5siUtY4edtlyJzIqFSbe0Iiu0uO/AX46r5uyLFjSmYVNKuWgVpcPtvcGZci52Ixy/ClCt9cguzhQhXayr57NhNoqk1lJ8r9Lijzc9ld6O+UGMp7vKxXHY85yLbYlqT05a3QWMsMjQWQldo6mV/ZGSOtiII2nd+Or3JpVT5lX31Ug8WFIHHXqdrVMFWqHJ/lthSKO7RtjtqI0DK5iCpGG0uHM3Xurhv56lgPpKr4r2oLxFsRR62OxqO0R4/Z5ff2j4kXlOX1dPnw/JBjVQkXlUoaT4bGbFO7kFlG+mGJXloPdEWbmzVL7S0i3r8uz+vLrA8t5RwJ519JiufabKaRWxZJ5lG+eaRti9npA021kTKrNtUISxU5mtrSKbd23HKz8dixohVEHAx0S1umTjftNlYZ1Fe0dSzzEFXNdXOjv/YVbcn6M5Ta+vI8U7ng3dpSrxx0ZjYd3V19s7YOfaSLT6LNrVVDNd/MV7R1+mg+qbt6vl/UthcbutDmT0RFLam6L2lLvbIRK+iNvug92kSrAAwr41hqc46kixSQflGbvGa2oO05n5RLq267xHiVanOOFHdJpnr4B7TVmzXpyeH9BPScNnZY+tfatqzY8adRYj6iDeGGNJYXsfI5bRgdOSWptbnMU1F7inSTbUTdl7VVr8Zk57J2j+oxbS2nFPHUQluHYgxQRNwe8oq2huFYIRw/qY0dNS27Wtu6U4eH9YdMttC/a0hxZd6QY7NtwuVz2pa+Pd94rQ0NyyBvbp01tIn7DKeqBbCMlPJBbQq14mSIEtm9zbcamY9pqwxH6wVwLprqNBmov61tubSWHlrXb+jmvsqD2grDqVYlNGXSgh1Qta+dPhCW3jqvM0qSLbFy/299u0lNu6s55/EaR5uZ7d58M2wZRLa0i3YQDM4lF06Ko9Ywj2neo+dJnckcF050Xzr8Z50FzlcTQ3n1/UjkC3TFJbIJFNuXHDEFeyuu0+eBtt6IosZdXPi6hvfuPOQK1P31EzNvNVVvUNGw9zet4w2Jae/iyjCFzbR3z0wzVrKybjsuKBcmW8naUc/dnuwT4g/l35x1H6PJ8vykidHMb6fWwbzO9cnVDYKjeC/ohdn7Grje+/+9lMJhpOwTu9nvpQnfy3QWSD1aT+MjTUoWsR7trrL2K0zeWyyft8iGdPdp9q/WwcyNaPLqN+2EHhrintnrZ9+22/YdO59mfQOQ8AvbHzl+4td2ewGOX/zGbrGji7bO2DO/aw1+jl/829jPeqnyWwDP/QJIEh4jxYuYWrtm/a0GxVsgjjvwb69ttVDjjZrxDNpIe2KRM/ziTrdFjE/GyX8C2XY+9vqM4htQrVVanONHoLIqg8P7wN0JINULPWL4tVeKftxyrjspYsGG6xbl++IyyOEyEzKvb+Hg8UT/i5S1Thsvvq3AtUQdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P/gPxUyC4Gm+XdfAAAAAElFTkSuQmCC",
+      "alt": "verisign logo",
+      "w": 219,
+      "h": 219
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAMAAAANf8AYAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAITgAACE4AUWWMWAAAAA8UExURUdwTP///////////////////////////////////////////////////////////////////////////4/JsPUAAAATdFJOUwBgv5/PEJCAIN+P70Bwr6B/b1DdFsVmAAABJElEQVRIx8XWS4KDIAwAUEEEwkc7k/vfdaa2VJQEgU2zRJ8YooFp+mJY4RR4RATphG0AywPwFOBuWJBIxFxRdkUmWPXjkQ0QJHFYDUfkrvAm1NJNStRA/lFPLlROgrju59+0wMdgPOoCJZFZRbIHfUbnkmz5m2fja5qGmGViDAZ2GssayU0zT6zBvUi6NKFizHOEWLRU8CWaZ5y/VvrVsFKD/aLgTUTGaN4YzsgBAwMGv2OoTlHc4QcMDBg1YPSAEQPGDpjLIuwff9oljKH/BapytZrq/cfqM69WIXvMu1WEHpM60tpuPh3J+lYDR+OLrSbfIXWb0ZU9izGqtjfSpr6hkqYg55woo8kDggDe+MidXTbOrLUTz0YZGW4ObxrOBswl9z/VlG8Nu/64PgAAAABJRU5ErkJggg==",
+      "alt": "facebook",
+      "w": 51,
+      "h": 51
+    },
+    {
+      "src": "https://www.boa.bo/assets/instagram-AirKJaVE.png",
+      "alt": "instagram",
+      "w": 4322,
+      "h": 4320
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAITgAACE4AUWWMWAAAABCUExURUdwTP////////////////////////////////////////////////////////////////////////////////////VtkI8AAAAVdFJOUwAQv+9gQCCA359wkM+gr1Awf49vsBjyUdIAAAEUSURBVEjH7ZbLbsQgDEUvYBMDeXaG///VLjqVUmkM1FEXlXK20QlgbGPg5l/iYmTeiIjydCITETHzHt07i3NaJdQBwuxT5pO6Sf0lQt/uUQ0cF9xaMwDEaiQCSFa5AJitsgCumnFgu7yD7DJhsssTihaOvpywKl9A0pe9JiOWjuzVawaAuDTlGdKQ0d67dGRgkoYcOnJj7wG1JwNRjcuArB59TIbzdpm9eeWYzGd2R1Cj3btnFnOS7N6cYe6jk9t6VeERelWl1jN36/kJLXP9SCe51MMudc/NLvO1FwNidQVAscoJsD9WEfaly1f2LxZ3GWivWinnU4ui4od/IGsh92b+Y+bX8Jd+8BoDN20GvLn5Ez4BD+a1KK6cT0YAAAAASUVORK5CYII=",
+      "alt": "youtube",
+      "w": 60,
+      "h": 60
+    },
+    {
+      "src": "https://www.boa.bo/assets/twitter-CGYeuuR0.png",
+      "alt": "x",
+      "w": 1023,
+      "h": 1023
+    },
+    {
+      "src": "https://www.boa.bo/assets/logoBolivia2026-6RIkbCxl.png",
+      "alt": "logo bolivia",
+      "w": 1026,
+      "h": 1026
+    }
+  ],
+  "header": {
+    "tag": "NAV",
+    "id": "",
+    "className": "fixed z-40 flex w-full flex-col",
+    "color": "rgb(0, 0, 0)",
+    "background": "rgba(0, 0, 0, 0)",
+    "backgroundImage": "none",
+    "font": "lato, sans-serif | 16px | 400",
+    "height": "80px",
+    "width": "1909.6px",
+    "padding": "0px",
+    "margin": "0px",
+    "display": "flex",
+    "position": "fixed"
+  },
+  "body": {
+    "tag": "BODY",
+    "id": "",
+    "className": "",
+    "color": "rgb(0, 0, 0)",
+    "background": "rgba(0, 0, 0, 0)",
+    "backgroundImage": "none",
+    "font": "lato, sans-serif | 16px | 400",
+    "height": "5397.36px",
+    "width": "1920px",
+    "padding": "0px",
+    "margin": "0px -10.4px 0px 0px",
+    "display": "block",
+    "position": "static"
+  },
+  "sections": [
+    {
+      "tag": "MAIN",
+      "className": "pb-3",
+      "id": "",
+      "text": "ES\n|\nCOLOMBIA\nEspañol\nEnglish\nPortuguês\nSelecciona el idioma\nIdioma\nEspañol\nContinuar\nViajes\nContáctanos\nCentro de Ayuda\nViajar\nBuscar vuelos\nNuestros destinos\nNuestras tarifas\nContrato de transporte\nMis vuelos\nCheck-in Online\nBusiness\nClas",
+      "style": {
+        "tag": "MAIN",
+        "id": "",
+        "className": "pb-3",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "5397.36px",
+        "width": "1920px",
+        "padding": "0px 0px 12px",
+        "margin": "0px",
+        "display": "block",
+        "position": "static"
+      }
+    },
+    {
+      "tag": "NAV",
+      "className": "fixed z-40 flex w-full flex-col",
+      "id": "",
+      "text": "ES\n|\nCOLOMBIA\nEspañol\nEnglish\nPortuguês\nSelecciona el idioma\nIdioma\nEspañol\nContinuar\nViajes\nContáctanos\nCentro de Ayuda",
+      "style": {
+        "tag": "NAV",
+        "id": "",
+        "className": "fixed z-40 flex w-full flex-col",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "80px",
+        "width": "1909.6px",
+        "padding": "0px",
+        "margin": "0px",
+        "display": "flex",
+        "position": "fixed"
+      }
+    },
+    {
+      "tag": "HEADER",
+      "className": "relative flex w-full items-start justify-center",
+      "id": "",
+      "text": "Siente Madrid\n\nHistoria, arte y gastronomía inolvidable",
+      "style": {
+        "tag": "HEADER",
+        "id": "",
+        "className": "relative flex w-full items-start justify-center",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "284px",
+        "width": "1920px",
+        "padding": "0px",
+        "margin": "0px",
+        "display": "flex",
+        "position": "relative"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "lg-max-width mx-auto content-evenly bg-boa-white py-10 pb-[100px] lg:pt-[60px]",
+      "id": "",
+      "text": "Experiencia\n¡Más beneficios para tu viaje!\n¡Lleva a tu amigo peludo!\n\nVer más >\n\nEmpaca tranquilo, el equipaje está incluido\n\nVer más >\n\nViaja y crea recuerdos con los más pequeños\n\nVer más >\n\nLa libertad de elegir tu asiento, SIN COSTO\n\nVe",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "lg-max-width mx-auto content-evenly bg-boa-white py-10 pb-[100px] lg:pt-[60px]",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(255, 255, 255)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "890.05px",
+        "width": "1280px",
+        "padding": "60px 0px 100px",
+        "margin": "0px 320px",
+        "display": "block",
+        "position": "static"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "mx-auto bg-boa-gray py-10 lg:py-20",
+      "id": "",
+      "text": "Información\nAccesos Rápidos\n\nAvisos Importantes\n\nEntérate de las últimas noticias, eventos y anuncios importantes.\n\nNuestras Oficinas\n\nDescubre nuestras oficinas y horarios de atención. Estamos aquí para ayudarte cuando lo necesites.\n\nHora ",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "mx-auto bg-boa-gray py-10 lg:py-20",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgb(247, 247, 247)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "772.8px",
+        "width": "1920px",
+        "padding": "80px 0px",
+        "margin": "0px",
+        "display": "block",
+        "position": "static"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "relative mx-auto flex flex-col items-center justify-center md:h-[709px]",
+      "id": "",
+      "text": "Otros Servicios\n\nTenemos más facilidades para ofrecerte\n\nClase Business\n\nExperimenta la diferencia de viajar en Business Class.\n\nVer más",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "relative mx-auto flex flex-col items-center justify-center md:h-[709px]",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "709px",
+        "width": "1920px",
+        "padding": "0px",
+        "margin": "0px",
+        "display": "flex",
+        "position": "relative"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "lg-max-width mx-auto content-evenly bg-transparent py-10 lg:py-[100px]",
+      "id": "",
+      "text": "Prepárate\nMejora tu experiencia\n¿Cómo pago mi boleto?\n\nConocer más >\n\n¿Cómo solicito Servicios Especiales?\n\nSaber más >\n\n¿Qué documentos necesito?\n\nMás >\n\nNuestros destinos\n\nMás información >",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "lg-max-width mx-auto content-evenly bg-transparent py-10 lg:py-[100px]",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "1165.91px",
+        "width": "1280px",
+        "padding": "100px 0px",
+        "margin": "0px 320px",
+        "display": "block",
+        "position": "static"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "relative mx-auto flex h-60 items-start justify-center md:h-80 xl:h-[25rem]",
+      "id": "",
+      "text": "¡Inspírate!\n\nConoce nuestras rutas y elige tu próximo destino\n\nVer vuelos",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "relative mx-auto flex h-60 items-start justify-center md:h-80 xl:h-[25rem]",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "400px",
+        "width": "1920px",
+        "padding": "0px",
+        "margin": "0px",
+        "display": "flex",
+        "position": "relative"
+      }
+    },
+    {
+      "tag": "FOOTER",
+      "className": "",
+      "id": "",
+      "text": "Acerca de BoA\n\nBoA Institucional\n\nPerfil Corporativo\n\nAvisos Importantes\n\nSomos IOSA\n\nConvocatorias\n\nResponsabilidad Social\n\nInformación legal\n\nNuestras Tarifas\n\nContrato de Transporte\n\nDerechos y Responsabilidades\n\nTerminos y Condiciones\n\n",
+      "style": {
+        "tag": "FOOTER",
+        "id": "",
+        "className": "",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "623.6px",
+        "width": "1920px",
+        "padding": "0px",
+        "margin": "0px",
+        "display": "block",
+        "position": "static"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "relative w-full bg-gradient-to-r from-[#00306F] to-[#006DB2] md:px-10",
+      "id": "",
+      "text": "Acerca de BoA\n\nBoA Institucional\n\nPerfil Corporativo\n\nAvisos Importantes\n\nSomos IOSA\n\nConvocatorias\n\nResponsabilidad Social\n\nInformación legal\n\nNuestras Tarifas\n\nContrato de Transporte\n\nDerechos y Responsabilidades\n\nTerminos y Condiciones\n\n",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "relative w-full bg-gradient-to-r from-[#00306F] to-[#006DB2] md:px-10",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "linear-gradient(to right, rgb(0, 48, 111), rgb(0, 109, 178))",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "503.6px",
+        "width": "1920px",
+        "padding": "0px 40px",
+        "margin": "0px",
+        "display": "block",
+        "position": "relative"
+      }
+    },
+    {
+      "tag": "SECTION",
+      "className": "flex items-center justify-center py-5",
+      "id": "",
+      "text": "",
+      "style": {
+        "tag": "SECTION",
+        "id": "",
+        "className": "flex items-center justify-center py-5",
+        "color": "rgb(0, 0, 0)",
+        "background": "rgba(0, 0, 0, 0)",
+        "backgroundImage": "none",
+        "font": "lato, sans-serif | 16px | 400",
+        "height": "120px",
+        "width": "1920px",
+        "padding": "20px 0px",
+        "margin": "0px",
+        "display": "flex",
+        "position": "static"
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 479.8 390" xml:space="preserve">
+<g id="Logo_Boa">
+	<linearGradient id="boaIso0" gradientUnits="userSpaceOnUse" x1="73.3759" y1="-16177.2217" x2="339.4838" y2="-16177.2217" gradientTransform="matrix(1 0 0 -1 0 -15992)">
+		<stop offset="0" style="stop-color:#7B1019"/>
+		<stop offset="1" style="stop-color:#DD403B"/>
+	</linearGradient>
+	<path fill="url(#boaIso0)" d="M73.4,348.9c0,0,13.7,21.2,39.2,21.2c51.6,0,75.3-60,130.9-200.3c35.2-111.6,62.2-163.5,96.1-169
+		c0,0-66.4-13.3-119.5,122.1c-34.9,89-52.8,220.3-109.7,229.8c-15.6,2.1-12.8-3.4-19.7-5.7C85.7,345.4,78.5,351,73.4,348.9z"/>
+	<linearGradient id="boaIso1" gradientUnits="userSpaceOnUse" x1="302.6656" y1="-16217.7012" x2="360.564" y2="-16217.7012" gradientTransform="matrix(1 0 0 -1 0 -15992)">
+		<stop offset="0" style="stop-color:#828014"/>
+		<stop offset="1" style="stop-color:#BFC846"/>
+	</linearGradient>
+	<path fill="url(#boaIso1)" d="M302.7,217.7c0,0,14.8-14.2,21.7-13.4
+		c15,1.7,30.8,35.5,36.2,45.7c0,0-8.7-37.9-21.8-45.5c-12.1-7-21.3,0.7-21.3,0.7S304.7,214.1,302.7,217.7z"/>
+	<linearGradient id="boaIso2" gradientUnits="userSpaceOnUse" x1="316.4573" y1="-16112.1436" x2="406.4241" y2="-16112.1436" gradientTransform="matrix(1 0 0 -1 0 -15992)">
+		<stop offset="0" style="stop-color:#F48120"/>
+		<stop offset="1" style="stop-color:#FFC635"/>
+	</linearGradient>
+	<path fill="url(#boaIso2)" d="M316.5,111.3c0,0,18-20.8,28.4-21.2
+		c25.2-0.8,52.9,51.5,61.6,65.7c0,0-20-55.4-39.3-67.3c-17.2-10.6-32.7,3.8-32.7,3.8S319.5,105.9,316.5,111.3z"/>
+	<linearGradient id="boaIso3" gradientUnits="userSpaceOnUse" x1="297.1631" y1="-16031.1934" x2="387.5228" y2="-16031.1934" gradientTransform="matrix(1 0 0 -1 0 -15992)">
+		<stop offset="0" style="stop-color:#7B1019"/>
+		<stop offset="1" style="stop-color:#DD403B"/>
+	</linearGradient>
+	<path fill="url(#boaIso3)" d="M297.2,39.8c0,0,21.1-27.4,31.4-26.2
+		c22.5,2.6,50.4,44.6,58.9,58.4c0,0-15.5-50-37.2-62c-18.4-10.2-34.8,5.9-34.8,5.9S300.2,34.4,297.2,39.8z"/>
+	<linearGradient id="boaIso4" gradientUnits="userSpaceOnUse" x1="164.8894" y1="-16293.1309" x2="332.3257" y2="-16125.6943" gradientTransform="matrix(1 0 0 -1 0 -15992)">
+		<stop offset="0" style="stop-color:#F48120"/>
+		<stop offset="1" style="stop-color:#FFC635"/>
+	</linearGradient>
+	<path fill="url(#boaIso4)" d="M98.8,359.4c0,0,14.8,21.4,40.3,20.5
+		c33.9-1.1,74.8-43.1,130.4-183.4c36-81.2,60.3-116.4,91.4-117.3c0,0-64.4-27.5-125,106.3c-39.3,86.9-62.1,168.9-101.7,178.6
+		c-10.8,2.3-11.2-2.3-18.1-4.6C111.2,357.9,104,361.5,98.8,359.4z"/>
+	<linearGradient id="boaIso5" gradientUnits="userSpaceOnUse" x1="127.193" y1="-16284.2549" x2="335.4142" y2="-16284.2549" gradientTransform="matrix(1 0 0 -1 0 -15992)">
+		<stop offset="0" style="stop-color:#828014"/>
+		<stop offset="1" style="stop-color:#BFC846"/>
+	</linearGradient>
+	<path fill="url(#boaIso5)" d="M127.2,371c0,0,12,18.5,35.5,18.5
+		c26.3,0,55.2-30.6,96.3-101.8c35.2-69.1,48.8-88.7,76.5-91.4c0,0-44.5-16.8-93.8,64.3S179.6,371,152,375.8
+		c-5.1,0.6-7.3-3.9-10.6-5.5C137.5,368.5,132,372.1,127.2,371z"/>
+</g>
+</svg>
