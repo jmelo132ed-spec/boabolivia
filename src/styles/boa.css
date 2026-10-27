@@ -625,8 +625,17 @@
   border-radius: 8px;
 }
 @media (max-width: 860px) {
+  .boa-cal {
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: none;
+    box-sizing: border-box;
+  }
   .boa-cal__months { flex-direction: column; }
   .boa-cal__month:last-child { display: none; }
+  .boa-cal__month { padding: 0 8px 12px; }
+  .boa-cal__name { text-align: center; }
 }
 
 .boa-cookie {
@@ -852,16 +861,32 @@
   .boa-nav__links { display: none; }
   .boa-nav__inner { padding: 0 16px; }
   .boa-hero__bg { height: 360px; }
-  .boa-hero__inner { padding-top: 100px; }
+  .boa-hero__inner {
+    padding: 100px 16px 0;
+    height: auto;
+    min-height: 360px;
+  }
+  .boa-hero { padding-bottom: 48px; }
+  .boa-book { margin-top: 20px; }
   .boa-hero__card { padding: 24px 20px; }
+  .boa-hero__card h1,
+  .boa-hero__card p { white-space: normal; }
   .boa-hero__card h1 { font-size: 20px; line-height: 28px; }
   .boa-hero__card p { font-size: 14px; line-height: 20px; }
   .boa-fields, .boa-alt { grid-template-columns: 1fr; }
-  .boa-book__tab { font-size: 12px; padding: 0 8px; }
-  .boa-book__panel { padding: 16px; }
+  .boa-book__tabs { height: 52px; }
+  .boa-book__tab {
+    font-size: 11px;
+    padding: 0 4px;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .boa-book__tab svg { width: 14px; height: 14px; flex: none; }
+  .boa-book__panel { padding: 16px; overflow: visible; }
   .boa-search-btn { width: 100%; }
   .boa-exp__grid, .boa-info__grid, .boa-prep__grid, .boa-foot__grid { grid-template-columns: 1fr 1fr; }
   .boa-card--wide { grid-row: auto; min-height: 280px; }
+  .boa-paxbox { max-width: calc(100vw - 24px); }
 }
 @media (max-width: 640px) {
   .boa-exp__grid, .boa-info__grid, .boa-prep__grid, .boa-foot__grid { grid-template-columns: 1fr; }
